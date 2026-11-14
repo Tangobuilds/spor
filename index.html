@@ -467,6 +467,12 @@ body.has-tl .toast{bottom:calc(var(--sheet) + 78px)}body.sheet-open .toast{botto
 .keys{display:grid;gap:2px}.keys div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14.5px}
 kbd{display:inline-block;min-width:26px;text-align:center;font:600 12.5px/1 Figtree,system-ui,sans-serif;padding:5px 7px;border-radius:7px;background:var(--card);border:1px solid var(--line);border-bottom-width:2px;color:var(--ink)}
 .mig{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px auto 4px;max-width:340px;padding:14px 16px;border-radius:16px;background:var(--info);text-align:center;font-size:14px}.mig span{color:var(--ink2)}.mig .btn{margin-top:4px}
+.phint{display:flex;align-items:center;gap:12px;background:var(--info);border-radius:14px;padding:10px}.phint img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none}.phint span{display:flex;flex-direction:column;gap:1px;min-width:0}.phint small{font-size:12.5px;color:var(--ink2)}.phint b{font-size:16px}
+.rvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:4px;max-height:50vh;overflow:auto}
+.rv{position:relative;aspect-ratio:1;border:0;padding:0;border-radius:9px;overflow:hidden;background:var(--line);cursor:pointer;opacity:.38;transition:opacity .12s}
+.rv img{width:100%;height:100%;object-fit:cover;display:block}.rv.on{opacity:1;box-shadow:inset 0 0 0 3px var(--accent)}
+.rv.on::after{content:'✓';position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
+.rv span{position:absolute;left:0;right:0;top:0;background:#000a;color:#fff;font-size:11px;font-weight:600;padding:3px 0;text-align:center}
 .fchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:-4px 0 10px;padding:2px 0}.fchips::-webkit-scrollbar{display:none}
 .fchip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:6px 12px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .fchip.on{background:var(--accent);border-color:var(--accent);color:#fff}.fchip.clr{border-color:transparent;background:none;color:var(--ink2);font-weight:500;text-decoration:underline}
@@ -47876,28 +47882,63 @@ async function square(img,size,q){
   const c=document.createElement('canvas');c.width=c.height=size;
   c.getContext('2d').drawImage(img,(iw-s)/2,(ih-s)/2,s,s,0,0,size,size);return await toBlob(c,q);
 }
+/* ---------- what's already in Spor (dedupe + hints for the photo picker) ---------- */
+const nameBase=n=>String(n||'').toLowerCase().replace(/\.[a-z0-9]+$/,'').replace(/\s*\(\d+\)$/,'');
+function dupKeys(name,time,lat,lng,exifTime){const k=['n|'+nameBase(name)+'|'+time];if(exifTime&&lat!=null&&lng!=null)k.push('g|'+time+'|'+(+lat).toFixed(4)+'|'+(+lng).toFixed(4));if(exifTime)k.push('t|'+time+'|'+nameBase(name).replace(/\D/g,'').slice(-4));return k}
+async function haveKeys(){const h=new Set();try{for(const p of await DB.all('photos'))if(!p.deleted)for(const k of dupKeys(p.name,p.time,p.lat,p.lng,true))h.add(k)}catch(e){}return h}
+let NEWEST=null;
+async function newestPhoto(){if(NEWEST&&NEWEST.v===DATAV)return NEWEST.p;let best=null;
+  try{const real=new Set(realTrips().map(t=>t.id));for(const p of await DB.all('photos'))if(!p.deleted&&real.has(p.tripId)&&(!best||p.time>best.time))best=p}catch(e){}NEWEST={v:DATAV,p:best};return best}
+async function pickerHintHtml(){const p=await newestPhoto();if(!p)return'';const t=S.trips.find(x=>x.id===p.tripId);
+  const d=new Date(p.time),when=d.toLocaleDateString('da-DK',{weekday:'short',day:'numeric',month:'short',year:d.getFullYear()!==new Date().getFullYear()?'numeric':undefined})+' kl. '+d.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
+  return `<div class="phint"><img src="${thumbUrl(p)}" alt=""><span><small>Dit nyeste billede i Spor</small><b>${esc(when)}</b>${t?`<small>${esc(t.name)}</small>`:''}</span></div><p style="font-size:13.5px;color:var(--ink2);margin:8px 0 0">Vælg billeder taget efter det – billeder, der allerede er lagt ind, bliver sprunget over.</p>`}
+async function pickPhotosSheet(){
+  const hint=await pickerHintHtml();if(!hint){$('#file').click();return}
+  modal(`<h3>Tilføj billeder</h3>${hint}<div class="row" style="margin-top:14px"><button class="btn ghost" id="ppNo">Annullér</button><label class="btn accent" for="file" id="ppGo">Vælg billeder</label></div>`);
+  $('#ppNo').onclick=()=>closeModal();$('#ppGo').addEventListener('click',()=>setTimeout(closeModal,50));
+}
+function reviewImport(items){
+  return new Promise(res=>{
+    const urls=items.map(it=>{try{return URL.createObjectURL(it.f)}catch(e){return''}});
+    const ord=items.map((it,i)=>i).sort((a,b)=>(items[a].dup-items[b].dup)||items[a].time-items[b].time);
+    const nNew=items.filter(x=>!x.dup).length,nDup=items.length-nNew;
+    modal(`<h3>${nNew} ${nNew===1?'nyt billede':'nye billeder'}</h3><p style="font-size:14px;color:var(--ink2);margin:-4px 0 12px">${nDup} af dem, du valgte, ligger allerede i Spor og er fravalgt. Tryk på et billede for at vælge det til eller fra.</p>
+      <div class="rvg" id="rvG">${ord.map(i=>`<button class="rv${items[i].dup?' dup':' on'}" data-rv="${i}"><img src="${urls[i]}" alt="" loading="lazy">${items[i].dup?'<span>Findes</span>':''}</button>`).join('')}</div>
+      <div class="row" style="margin-top:14px"><button class="btn ghost" id="rvNo">Annullér</button><button class="btn accent" id="rvGo"></button></div>`);
+    const upd=()=>{const n=items.filter(x=>x.on).length;const b=$('#rvGo');b.textContent=n?`Læg ${n} ind`:'Intet valgt';b.disabled=!n};
+    items.forEach(x=>x.on=!x.dup);upd();
+    document.querySelectorAll('#rvG [data-rv]').forEach(b=>b.onclick=()=>{const it=items[+b.dataset.rv];it.on=!it.on;b.classList.toggle('on',it.on);upd()});
+    const done=v=>{setTimeout(()=>urls.forEach(u=>u&&URL.revokeObjectURL(u)),1500);closeModal(v)};
+    modalResolve=v=>res(v);$('#rvNo').onclick=()=>done(null);$('#rvGo').onclick=()=>done(items.filter(x=>x.on));
+  });
+}
 async function importFiles(list){
   const files=[...list].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|heic|heif|gif)$/i.test(f.name));
   if(!files.length)return toast('Ingen billeder fundet');
   let gps=0,nogps=0,fail=0,dup=0,heic=0;const added=[];
-  prog(true,0,files.length);
-  const have=new Set();try{for(const p of await DB.all('photos'))if(!p.deleted)have.add(p.name+'|'+p.time)}catch(e){}
-  for(let i=0;i<files.length;i++){
-    const f=files[i];
+  prog(true,0,files.length,'Tjekker billederne…');
+  const have=await haveKeys(),items=[];
+  for(let i=0;i<files.length;i++){const f=files[i];let meta=null;try{meta=await exifr.parse(f,{gps:true,exif:true,tiff:true,xmp:false,icc:false,iptc:false})}catch(e){}
+    let lat=meta&&meta.latitude,lng=meta&&meta.longitude;if(!(Number.isFinite(lat)&&Number.isFinite(lng))||(lat===0&&lng===0)){lat=null;lng=null}
+    const dt=meta&&(meta.DateTimeOriginal||meta.CreateDate||meta.ModifyDate),ex=dt instanceof Date&&!isNaN(dt);
+    const time=ex?dt.getTime():(f.lastModified||Date.now()),keys=dupKeys(f.name,time,lat,lng,ex);
+    const isDup=keys.some(k=>have.has(k));if(!isDup)keys.forEach(k=>have.add(k));
+    items.push({f,lat,lng,time,dup:isDup});prog(true,i+1,files.length,'Tjekker billederne…')}
+  prog(false);
+  let todo=items.filter(x=>!x.dup);dup=items.length-todo.length;
+  if(!todo.length){toast(items.length===1?'Billedet ligger allerede i Spor':`Alle ${items.length} billeder ligger allerede i Spor`,3500);return}
+  if(dup){const r=await reviewImport(items);if(!r)return;todo=r;dup=items.length-r.length}
+  prog(true,0,todo.length);
+  for(let i=0;i<todo.length;i++){
+    const{f,lat,lng,time}=todo[i];
     try{
-      let meta=null;try{meta=await exifr.parse(f,{gps:true,exif:true,tiff:true,xmp:false,icc:false,iptc:false})}catch(e){}
-      let lat=meta&&meta.latitude,lng=meta&&meta.longitude;
-      if(!(Number.isFinite(lat)&&Number.isFinite(lng))||(lat===0&&lng===0)){lat=null;lng=null}
-      const dt=meta&&(meta.DateTimeOriginal||meta.CreateDate||meta.ModifyDate);
-      const time=(dt instanceof Date&&!isNaN(dt))?dt.getTime():(f.lastModified||Date.now());
-      if(have.has(f.name+'|'+time)){dup++;prog(true,i+1,files.length);continue}have.add(f.name+'|'+time);
       const img=await decode(f);
       const full=await shrink(img,1800,.84),thumb=await square(img,200,.8);
       const p={id:uid(),tripId:S.trip.id,lat,lng,time,note:'',name:f.name,w:full.w,h:full.h,full:full.blob,thumb,created:Date.now()};
       if(lat!=null){const cc=countryOf(p);if(cc)p.cc=cc}
       await save('photos',p);S.photos.push(p);added.push(p);lat==null?nogps++:gps++;
     }catch(e){fail++;if(/\.hei[cf]$/i.test(f.name))heic++}
-    prog(true,i+1,files.length);
+    prog(true,i+1,todo.length);
   }
   prog(false);
   let msg=`${added.length} billede${added.length===1?'':'r'} tilføjet`;
@@ -47906,7 +47947,7 @@ async function importFiles(list){
   range.value=1000;refresh();
   const pl=added.filter(hasPos);if(pl.length)fitTo(placed());
 }
-document.addEventListener('click',e=>{const l=e.target.closest('label[for=file]');if(l&&isLife()){e.preventDefault();lifeUploadChoice()}},true);
+document.addEventListener('click',e=>{const l=e.target.closest('label[for=file]');if(!l||l.closest('#modal'))return;if(isLife()){e.preventDefault();lifeUploadChoice();return}if(S.photos.length||realTrips().length>1){e.preventDefault();pickPhotosSheet()}},true);
 $('#file').onchange=e=>{const fs=e.target.files;if(fs&&fs.length)importFiles(fs);e.target.value=''};
 let dragN=0;
 addEventListener('dragenter',e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes('Files')){dragN++;$('#drop').classList.add('on')}});
@@ -50400,8 +50441,9 @@ async function showWorldPoster(){
 }
 
 /* ---------- bulk import: auto chapters ---------- */
-function lifeUploadChoice(){
-  modal(`<h3>Tilføj billeder</h3>
+async function lifeUploadChoice(){
+  const hint=await pickerHintHtml();
+  modal(`<h3>Tilføj billeder</h3>${hint?`<div style="margin:-2px 0 12px">${hint}</div>`:''}
     <button class="trip" id="buAuto"><span style="font-size:20px">✨</span><span class="n">Lav kapitler automatisk<br><span class="c" style="font-weight:400">Vælg mange billeder – fra flere år. Spor finder rejserne ud fra dato og afstand hjemmefra.</span></span></button>
     <button class="trip" id="buOne"><span style="font-size:20px">📁</span><span class="n">Til et bestemt kapitel<br><span class="c" style="font-weight:400">Vælg kapitlet først.</span></span></button>
     <div class="row"><button class="btn ghost" id="buNo">Annullér</button></div>`);
@@ -50423,7 +50465,7 @@ async function bulkAnalyze(files){
     let meta=null;try{meta=await exifr.parse(f,{gps:true,exif:true,tiff:true,xmp:false,icc:false,iptc:false})}catch(e){}
     let lat=meta&&meta.latitude,lng=meta&&meta.longitude;if(!(Number.isFinite(lat)&&Number.isFinite(lng))||(lat===0&&lng===0)){lat=null;lng=null}
     const dt=meta&&(meta.DateTimeOriginal||meta.CreateDate||meta.ModifyDate);
-    items.push({f,lat,lng,time:(dt instanceof Date&&!isNaN(dt))?dt.getTime():(f.lastModified||Date.now())});
+    const ex=dt instanceof Date&&!isNaN(dt);items.push({f,lat,lng,exif:ex,time:ex?dt.getTime():(f.lastModified||Date.now())});
     if(++i%10===0)prog(true,i,files.length,'Læser datoer og steder…');
   }
   prog(false);
@@ -50497,12 +50539,12 @@ async function bulkImport(withHome,small,guess){
     }
   }
   if(!jobs.length)return toast('Intet at importere');
-  const have=new Set((await DB.all('photos')).filter(p=>!p.deleted).map(p=>p.name+'|'+p.time));
+  const have=await haveKeys();
   let n=0,dup=0,fail=0;prog(true,0,jobs.length,'Importerer billeder…');
   const max=small?1100:1800,q=small?.78:.84;
   for(let i=0;i<jobs.length;i++){
     const[tid,it]=jobs[i];
-    if(have.has(it.f.name+'|'+it.time)){dup++;prog(true,i+1,jobs.length,'Importerer billeder…');continue}
+    {const ks=dupKeys(it.f.name,it.time,it.lat,it.lng,it.exif!==false);if(ks.some(k=>have.has(k))){dup++;prog(true,i+1,jobs.length,'Importerer billeder…');continue}ks.forEach(k=>have.add(k))}
     try{
       const img=await decode(it.f);const full=await shrink(img,max,q),thumb=await square(img,200,.8);
       const pos=it.lat!=null?it:(guess&&it.near?it.near:null);
