@@ -45,7 +45,7 @@ button{cursor:pointer}
 #map{position:fixed;inset:0;width:100%;height:100%;touch-action:none;display:block}
 .top{position:fixed;left:0;right:0;top:0;padding:calc(var(--st) + 10px) 12px 0;display:flex;gap:8px;align-items:center;pointer-events:none;z-index:5}
 .top>*{pointer-events:auto}
-.brand{font-family:Newsreader,Georgia,serif;font-weight:700;font-size:22px;letter-spacing:-.02em;background:var(--paper);border-radius:14px;padding:6px 12px;box-shadow:0 2px 10px #0002}
+.brand{font-family:Newsreader,Georgia,serif;font-weight:700;font-size:22px;letter-spacing:-.02em;background:var(--paper);border-radius:14px;padding:6px 12px;box-shadow:0 2px 10px #0002;border:0;color:var(--ink);cursor:pointer;line-height:1.25}
 .brand span{color:var(--accent)}
 .pill{display:flex;align-items:center;gap:6px;background:var(--paper);border:0;border-radius:14px;padding:9px 12px;box-shadow:0 2px 10px #0002;font-weight:600;max-width:46vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pill .t{overflow:hidden;text-overflow:ellipsis}
@@ -368,8 +368,9 @@ body.has-tl .toast{bottom:calc(var(--sheet) + 78px)}body.sheet-open .toast{botto
 .wbars{z-index:3!important;position:absolute;left:12px;right:60px;top:calc(var(--st) + 14px);display:flex;gap:4px;z-index:2}
 .wrap:has(.w-paper) .wbars i,.wrap:has(.w-sun) .wbars i{background:#10252e2e}.wrap:has(.w-paper) .wbars b,.wrap:has(.w-sun) .wbars b{background:#10252e}
 .wbars i{flex:1;height:3px;border-radius:2px;background:#ffffff40;overflow:hidden}.wbars b{display:block;height:100%;width:0;background:#fff}
-.wrap .ws{right:56px}.wbars{right:104px!important}
+
 .wmark{position:absolute;left:28px;right:28px;bottom:calc(var(--sb) + 18px);display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;opacity:.55;pointer-events:none}.wmark b{font-family:Newsreader,Georgia,serif;font-size:16px;letter-spacing:-.01em}
+.wrap .wx.ws{right:56px}.wbars{right:104px!important}
 .wrap .wx{position:absolute;left:auto;bottom:auto;right:10px;top:calc(var(--st) + 4px);width:40px;height:40px;z-index:3;background:#ffffff22;color:inherit}.w-sun~.wx,.w-paper~.wx{color:#10252e}
 .wslide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(var(--st) + 60px) 28px calc(var(--sb) + 40px);background:var(--wb,#10252e);overflow:hidden}
 .wslide.wph{background:linear-gradient(180deg,#0b1a20cc 0%,#0b1a2055 40%,#0b1a20e6 100%),var(--wbg) center/cover no-repeat,#10252e}
@@ -473,6 +474,26 @@ kbd{display:inline-block;min-width:26px;text-align:center;font:600 12.5px/1 Figt
 .rv img{width:100%;height:100%;object-fit:cover;display:block}.rv.on{opacity:1;box-shadow:inset 0 0 0 3px var(--accent)}
 .rv.on::after{content:'✓';position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
 .rv span{position:absolute;left:0;right:0;top:0;background:#000a;color:#fff;font-size:11px;font-weight:600;padding:3px 0;text-align:center}
+.bknudge{background:var(--sun2)!important;border-color:transparent!important}
+.memc.slim{padding:4px 6px!important}.slimrow{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;color:var(--ink);font:inherit;text-align:left;padding:10px 8px;cursor:pointer;border-radius:10px}
+.setlink{margin-top:12px;border:1px solid var(--line)!important;border-radius:14px!important;background:var(--card)!important}
+.slimrow+.slimrow{border-top:1px solid var(--line);border-radius:0}.slimrow>svg:first-child{color:var(--accent);flex:none}.slimrow>svg:last-child{color:var(--ink3);flex:none}
+.slimrow span{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;font-size:14.5px}.slimrow small{font-size:12.5px;color:var(--ink2)}
+.capx{width:100%;min-height:180px;font-family:Newsreader,Georgia,serif;font-size:18px;line-height:1.5;border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--card);color:var(--ink);margin:8px 0 4px;resize:vertical}
+#capT{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);font:inherit;background:var(--card);color:var(--ink)}
+.capbanner{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:16px;background:var(--sun2);color:var(--ink);padding:12px 14px;margin:6px 0 8px;font:inherit;text-align:left;cursor:pointer}
+.capbanner svg{color:var(--sun);flex:none}.capbanner span{display:flex;flex-direction:column;gap:2px}.capbanner b{font-size:15px}.capbanner small{font-size:12.5px;color:var(--ink2)}
+.caprow{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;color:var(--ink);font:inherit;text-align:left;padding:10px 4px;border-top:1px solid var(--line);cursor:pointer}
+.caprow:first-of-type{margin-top:6px}.caprow svg{flex:none;color:var(--ink3)}.caprow span{display:flex;flex-direction:column;gap:1px;min-width:0}.caprow b{font-weight:600;font-size:14.5px}.caprow small{font-size:12.5px;color:var(--ink2)}
+.caprow.ready svg{color:var(--sun)}.caprow.ready small{color:var(--sun);font-weight:600}.caprow.open svg{color:var(--accent)}
+.envl{text-align:center;padding:8px 4px 0}.envl .env{width:96px;height:96px;margin:6px auto 10px;border-radius:50%;background:var(--sun2);color:var(--sun);display:grid;place-items:center}
+.envl h3{font-family:Newsreader,Georgia,serif;font-size:26px;margin:0 0 6px}.envl p{color:var(--ink2);font-size:14.5px;line-height:1.45}
+.letter{background:var(--card);border-radius:16px;padding:20px 20px 16px;box-shadow:inset 0 0 0 1px var(--line);max-height:62vh;overflow:auto}
+.letter .lmeta{font-size:12.5px;color:var(--ink2);margin-bottom:8px}.letter h3{font-family:Newsreader,Georgia,serif;font-size:24px;margin:0 0 10px}
+.letter .ltxt{font-family:Newsreader,Georgia,serif;font-size:19px;line-height:1.55;white-space:pre-wrap}.letter .lfoot{margin-top:16px;font-size:12.5px;color:var(--ink3);font-style:italic}
+.letter.fresh{animation:lOpen .7s cubic-bezier(.2,.8,.2,1) both}@keyframes lOpen{from{opacity:0;transform:translateY(24px) scale(.97)}}
+@media (prefers-reduced-motion:reduce){.letter.fresh{animation:none}}
+.danger-t{color:var(--danger)!important}
 .fchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:-4px 0 10px;padding:2px 0}.fchips::-webkit-scrollbar{display:none}
 .fchip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:6px 12px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .fchip.on{background:var(--accent);border-color:var(--accent);color:#fff}.fchip.clr{border-color:transparent;background:none;color:var(--ink2);font-weight:500;text-decoration:underline}
@@ -634,7 +655,7 @@ html[data-theme=dark] .kb{background:color-mix(in srgb,var(--kc) 26%,transparent
 <canvas id="map" aria-label="Kort over rejsens billeder"></canvas>
 
 <div class="top">
-  <div class="brand">Sp<span>o</span>r</div>
+  <button class="brand" id="brandBtn" aria-label="Indstillinger" title="Indstillinger">Sp<span>o</span>r</button>
   <button class="pill" id="tripBtn" aria-label="Skift rejse"><span class="cdot" id="cdot" style="display:none"></span><span id="tripIco" style="display:grid;place-items:center;color:var(--accent)"></span><span class="t" id="tripName">Rejse</span><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
   <div class="spacer"></div>
   <label class="btn accent" for="file"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg><span>Billeder</span></label>
@@ -659,7 +680,7 @@ html[data-theme=dark] .kb{background:color-mix(in srgb,var(--kc) 26%,transparent
 <input type="file" id="bulkFile" accept="image/*" multiple hidden>
 <input type="file" id="tlFile" accept=".json,.zip,application/json,application/zip" hidden>
 <input type="file" id="kmlFile" accept=".kml,.kmz,application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz" hidden>
-<input type="file" id="restoreFile" accept=".json,.zip,application/json,application/zip" hidden>
+<input type="file" id="restoreFile" accept=".json,.zip,application/json,application/zip" multiple hidden>
 <div class="selbar" id="selbar"><b id="selN"></b><button id="selAll">Alle</button><button id="selFav" aria-label="Favorit">★</button><button id="selPpl">Personer</button><button id="selMove">Flyt</button><button id="selDel" style="color:#ffb4ab">Slet</button><button id="selCancel" aria-label="Afslut valg">✕</button></div>
 
 <div class="timeline" id="timeline">
@@ -47087,19 +47108,20 @@ const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 
 /* ---------- storage (IndexedDB, memory fallback) ---------- */
 const DB=(()=>{
-  let dbp=null;const mem={trips:new Map(),photos:new Map(),days:new Map(),tiles:new Map(),places:new Map(),people:new Map()};
+  let dbp=null;const mem={trips:new Map(),photos:new Map(),days:new Map(),tiles:new Map(),places:new Map(),people:new Map(),capsules:new Map()};
   function open(){
     if(dbp)return dbp;
     dbp=new Promise(res=>{
       try{
-        const r=indexedDB.open('spor-rejsedagbog',4);
+        const r=indexedDB.open('spor-rejsedagbog',5);
         r.onupgradeneeded=()=>{const d=r.result,has=n=>d.objectStoreNames.contains(n);
           if(!has('trips'))d.createObjectStore('trips',{keyPath:'id'});
           if(!has('photos'))d.createObjectStore('photos',{keyPath:'id'}).createIndex('trip','tripId');
           if(!has('days'))d.createObjectStore('days',{keyPath:'key'});
           if(!has('tiles'))d.createObjectStore('tiles',{keyPath:'key'});
           if(!has('places'))d.createObjectStore('places',{keyPath:'id'});
-          if(!has('people'))d.createObjectStore('people',{keyPath:'id'})};
+          if(!has('people'))d.createObjectStore('people',{keyPath:'id'});
+          if(!has('capsules'))d.createObjectStore('capsules',{keyPath:'id'})};
         // an older copy of Spor open in another tab can block the upgrade: wait for it instead of silently falling back to memory
         r.onsuccess=()=>{const d=r.result;d.onversionchange=()=>{d.close();try{toast('Spor er opdateret i en anden fane – genindlæs siden',6000)}catch(e){}};res(d)};r.onerror=()=>res(null);
         r.onblocked=()=>{setTimeout(()=>{try{toast('Luk Spor i andre faner eller vinduer, så opdateringen kan blive færdig',8000)}catch(e){}},500)};
@@ -47107,19 +47129,34 @@ const DB=(()=>{
     });
     return dbp;
   }
-  function req(d,store,mode,fn){return new Promise((res,rej)=>{let out;const t=d.transaction(store,mode);const r=fn(t.objectStore(store));if(r)r.onsuccess=()=>{out=r.result};t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
+  // Some WebKit modes (private browsing, older iOS) refuse Blobs in IndexedDB: fall back to ArrayBuffers and turn them back into Blobs on read
+  let BLOBOK=true;const BK=['full','thumb'];const CV={},CA={},CACHED=new Set(['photos','days','trips','places','people','capsules']);const bump=s=>{CV[s]=(CV[s]||0)+1;delete CA[s]};
+  async function storable(o){const r={...o};for(const k of BK)if(r[k] instanceof Blob)r[k]={__ab:await r[k].arrayBuffer(),type:r[k].type||'image/jpeg'};return r}
+  function revive(o){if(o)for(const k of BK){const v=o[k];if(v&&v.__ab)o[k]=new Blob([v.__ab],{type:v.type})}return o}
+  function req(d,store,mode,fn){return new Promise((res,rej)=>{let out;let t;try{t=d.transaction(store,mode)}catch(e){rej(e);return}let r;try{r=fn(t.objectStore(store))}catch(e){rej(e);return}if(r)r.onsuccess=()=>{out=r.result};t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error||new Error('IndexedDB-fejl'));t.onabort=()=>rej(t.error)})}
   return{
-    async all(s){const d=await open();return d?req(d,s,'readonly',o=>o.getAll()):[...mem[s].values()]},
-    async photos(tripId){const d=await open();return d?req(d,'photos','readonly',o=>o.index('trip').getAll(tripId)):[...mem.photos.values()].filter(p=>p.tripId===tripId)},
-    async put(s,obj){if(s==='photos'){const{_c,_pl,...o}=obj;obj=o}const d=await open();if(!d){mem[s].set(obj.id??obj.key,obj);return}return req(d,s,'readwrite',o=>o.put(obj))},
-    async get(s,key){const d=await open();return d?req(d,s,'readonly',o=>o.get(key)):mem[s].get(key)},
-    async del(s,key){const d=await open();if(!d){mem[s].delete(key);return}return req(d,s,'readwrite',o=>o.delete(key))},
+    // whole-store reads are cached per store and dropped on any write, so the many views that need "all photos" share one read
+    async all(s){if(CA[s])return CA[s].slice();const v=CV[s]||0,d=await open();const L=d?await req(d,s,'readonly',o=>o.getAll()):[...mem[s].values()];if(s==='photos')L.forEach(revive);
+      if(CACHED.has(s)&&(CV[s]||0)===v)CA[s]=L;return L.slice()},
+    async photos(tripId){const d=await open();const L=d?await req(d,'photos','readonly',o=>o.index('trip').getAll(tripId)):[...mem.photos.values()].filter(p=>p.tripId===tripId);L.forEach(revive);return L},
+    async put(s,obj){bump(s);try{return await this._put(s,obj)}finally{bump(s)}},
+    async _put(s,obj){if(s==='photos'){const{_c,_pl,...o}=obj;obj=o}const d=await open();if(!d){mem[s].set(obj.id??obj.key,obj);return}
+      if(s==='photos'&&!BLOBOK)obj=await storable(obj);
+      try{return await req(d,s,'readwrite',o=>o.put(obj))}
+      catch(e){if(s==='photos'&&BLOBOK&&BK.some(k=>obj[k] instanceof Blob)){const so=await storable(obj);const r=await req(d,s,'readwrite',o=>o.put(so));BLOBOK=false;return r}throw e}},
+    async get(s,key){const d=await open();const r=d?await req(d,s,'readonly',o=>o.get(key)):mem[s].get(key);return s==='photos'?revive(r):r},
+    async del(s,key){bump(s);const d=await open();if(!d){mem[s].delete(key);bump(s);return}try{return await req(d,s,'readwrite',o=>o.delete(key))}finally{bump(s)}},
+    async keys(s){const d=await open();return d?req(d,s,'readonly',o=>o.getAllKeys()):[...mem[s].keys()]},
+    async getMany(s,keys){const d=await open();if(!d)return keys.map(k=>mem[s].get(k));
+      return new Promise((res,rej)=>{const out=new Array(keys.length);const t=d.transaction(s,'readonly'),o=t.objectStore(s);keys.forEach((k,i)=>{const r=o.get(k);r.onsuccess=()=>{out[i]=s==='photos'?revive(r.result):r.result}});t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error||new Error('IndexedDB-fejl'))})},
     async persistent(){return !!(await open())}
   };
 })();
 
 /* user changes go through save(): stamps time, marks for cloud sync */
-async function save(st,obj){DATAV++;PEOPLE=null;if(st==='photos')PHDAYS=null;obj.upd=Date.now();obj.dirty=1;await DB.put(st,obj);scheduleSync();if(st!=='days')visDirty()}
+let BKD=null;function bkDirty(){if(BKD==null)BKD=+(store.get('spor-bk-dirty')||0);BKD++;if(BKD%5===1||BKD<5)store.set('spor-bk-dirty',String(BKD))}
+addEventListener('pagehide',()=>{if(BKD!=null)store.set('spor-bk-dirty',String(BKD))});
+async function save(st,obj){DATAV++;if(st!=='tiles')bkDirty();PEOPLE=null;if(st==='photos')PHDAYS=null;obj.upd=Date.now();obj.dirty=1;await DB.put(st,obj);scheduleSync();if(st!=='days')visDirty()}
 let visT=null;function visDirty(){clearTimeout(visT);visT=setTimeout(()=>{if(typeof computeVisited==='function')computeVisited().then(()=>{requestDraw();if(isLife()&&S.tab==='stats')renderSheet()})},1500)}
 /* ---------- state ---------- */
 const S={trips:[],trip:null,photos:[],days:{},meta:{},keep:new Set(),q:'',ai:false,mode:'trip',info:null,cut:Infinity,tab:'diary',placing:null,viewer:null,highlight:null};
@@ -47258,6 +47295,7 @@ function nearestCity(lat,lng){
   }
   return best?{n:best.n,d:bd}:null;
 }
+function cityLabel(p){const c=nearestCity(p.lat,p.lng);return c?(c.d<12?c.n:c.d<150?`${Math.round(c.d)} km fra ${c.n}`:fmtCoord(p.lat,p.lng)):fmtCoord(p.lat,p.lng)}
 function placeOf(p){
   if(!hasPos(p))return null;if(p._pl!==undefined)return p._pl;
   const c=nearestCity(p.lat,p.lng);let r=null;
@@ -47483,6 +47521,72 @@ function dayGroups(){
 function tripStart(){const g=dayGroups();const k=(S.trip&&S.trip.start)||(g[0]&&g[0][0]);if(!k)return null;const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)}
 function dayNum(k){const f=tripStart();if(!f)return 1;const[y,m,d]=k.split('-').map(Number);return Math.round((new Date(y,m-1,d)-f)/864e5)+1}
 const isEmptyTrip=()=>!S.photos.length&&!dayGroups().length;
+/* ---------- time capsules: letters to your future self ---------- */
+S.caps=[];
+async function loadCaps(){try{S.caps=(await DB.all('capsules')).filter(c=>!c.deleted).sort((a,b)=>a.open.localeCompare(b.open))}catch(e){S.caps=[]}}
+const capReady=c=>!c.opened&&c.open<=dayKey(Date.now());
+function capIn(k){const n=Math.round((k2t(k)-k2t(dayKey(Date.now())))/864e5);if(n<=0)return'i dag';if(n===1)return'i morgen';if(n<45)return`om ${n} dage`;if(n<548)return`om ${Math.round(n/30.4)} måneder`;const y=n/365.25;return`om ${y<10?String(Math.round(y*2)/2).replace('.5',',5'):Math.round(y)} år`}
+function capAgo(t){const n=Math.floor((Date.now()-t)/864e5);if(n<1)return'i dag';if(n===1)return'i går';if(n<45)return`for ${n} dage siden`;if(n<548)return`for ${Math.round(n/30.4)} måneder siden`;const y=Math.round(n/365.25);return y===1?'for et år siden':`for ${y} år siden`}
+function addDays(k,n){const d=new Date(k2t(k));d.setDate(d.getDate()+n);return dayKey(d.getTime())}
+function addYears(k,n){const[y,m,d]=k.split('-').map(Number);return `${y+n}-${String(m).padStart(2,'0')}-${String(Math.min(d,28)).padStart(2,'0')}`}
+function capPresets(){const td=dayKey(Date.now()),L=[],t=todayChapter();
+  if(t&&t.end&&t.end>=td)L.push({k:addDays(t.end,1),t:`Når “${t.name}” er slut`});
+  L.push({k:addDays(td,30),t:'Om en måned'},{k:addYears(td,1),t:'Om et år'},{k:addYears(td,5),t:'Om 5 år'},{k:addYears(td,10),t:'Om 10 år'});
+  const born=store.get('spor-born');if(born){const[,m,d]=born.split('-');let k=`${td.slice(0,4)}-${m}-${d}`;if(k<=td)k=addYears(k,1);L.push({k,t:'På min næste fødselsdag'})}
+  return L}
+function composeCap(){
+  const P=capPresets();let pick=P.find(x=>/et år/.test(x.t))||P[0];
+  modal(`<h3>Brev til fremtiden</h3><p style="font-size:14px;color:var(--ink2);margin:-4px 0 12px">Skriv til dig selv. Brevet bliver forseglet og kan først åbnes på den dag, du vælger.</p>
+    <input type="text" id="capT" placeholder="Overskrift – fx Til mig, når jeg er hjemme igen" maxlength="90">
+    <textarea id="capX" class="capx" placeholder="Kære mig…"></textarea>
+    <p class="mlabel">Åbnes</p><div class="pick" id="capWhen">${P.map((x,i)=>`<button data-cw="${i}" class="${x===pick?'on':''}">${esc(x.t)}</button>`).join('')}<button data-cw="d">Vælg dato…</button></div>
+    <p id="capWhenTxt" style="font-size:13px;color:var(--ink2);margin:6px 0 0"></p>
+    <div class="row"><button class="btn ghost" id="capNo">Annullér</button><button class="btn accent" id="capGo" disabled>${svgI('lock',16)}Forsegl brevet</button></div>`);
+  const upd=()=>{$('#capWhenTxt').textContent=`Åbner ${fmtDay(pick.k).toLowerCase()} – ${capIn(pick.k)}.`;$('#capGo').disabled=!$('#capX').value.trim()};upd();
+  $('#capX').oninput=upd;setTimeout(()=>$('#capX').focus(),80);
+  document.querySelectorAll('#capWhen [data-cw]').forEach(b=>b.onclick=async()=>{
+    if(b.dataset.cw==='d'){const tmp={t:$('#capT').value,x:$('#capX').value};const v=await askDate('Hvornår må brevet åbnes?',addYears(dayKey(Date.now()),1));composeCapRestore(tmp,v);return}
+    pick=P[+b.dataset.cw];document.querySelectorAll('#capWhen [data-cw]').forEach(x=>x.classList.toggle('on',x===b));upd()});
+  $('#capNo').onclick=()=>closeModal();
+  $('#capGo').onclick=()=>sealCap($('#capT').value.trim(),$('#capX').value.trim(),pick.k);
+}
+function composeCapRestore(tmp,v){composeCap();$('#capT').value=tmp.t;$('#capX').value=tmp.x;
+  if(v&&v>dayKey(Date.now())){const b=document.querySelector('#capWhen [data-cw="d"]');b.classList.add('on');b.textContent=fmtShort(k2t(v));document.querySelectorAll('#capWhen [data-cw]').forEach(x=>{if(x!==b)x.classList.remove('on')});
+    $('#capGo').onclick=()=>sealCap($('#capT').value.trim(),$('#capX').value.trim(),v);$('#capWhenTxt').textContent=`Åbner ${fmtDay(v).toLowerCase()} – ${capIn(v)}.`}
+  else if(v)toast('Vælg en dato efter i dag');$('#capGo').disabled=!$('#capX').value.trim()}
+async function sealCap(title,text,k){
+  if(!text)return;const t=todayChapter(),pl=t&&t.place&&t.place.name;
+  const c={id:uid(),title,text,written:Date.now(),open:k,opened:0,tripId:t?t.id:null,where:[pl,t&&t.name].filter(Boolean)[0]||''};
+  await save('capsules',c);await loadCaps();closeModal();toast(`Brevet er forseglet til ${fmtDay(k).toLowerCase()}`,3500);renderSheet();
+}
+function capBannerHtml(){const r=S.caps.filter(capReady);if(!r.length)return'';const c=r[0];
+  return `<button class="capbanner" data-capo="${c.id}">${svgI('mail',22)}<span><b>${r.length>1?`Du har ${r.length} breve fra dig selv`:'Du har et brev fra dig selv'}</b><small>Skrevet ${esc(capAgo(c.written))}${c.where?' · '+esc(c.where):''} – tryk for at åbne</small></span></button>`}
+function bindCaps(){document.querySelectorAll('[data-capo]').forEach(b=>b.onclick=()=>openCap(b.dataset.capo));const n=$('#capNew');if(n)n.onclick=composeCap}
+function capCardHtml(){
+  const L=S.caps,rows=L.slice().sort((a,b)=>(capReady(b)-capReady(a))||(!!a.opened-!!b.opened)||(a.opened?b.opened-a.opened:a.open.localeCompare(b.open))).slice(0,6);
+  return `<div class="card wide capc"><div class="mh" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div class="k">${svgI('mail',16)}Tidskapsler${L.length?' · '+L.length:''}</div><button class="btn small ${L.length?'ghost':'accent'}" id="capNew">Skriv et brev</button></div>
+    ${L.length?rows.map(c=>`<button class="caprow ${capReady(c)?'ready':c.opened?'open':'sealed'}" data-capo="${c.id}">${svgI(capReady(c)||c.opened?'mail':'lock',18)}<span><b>${esc(c.title||'Brev til fremtiden')}</b><small>${capReady(c)?'Klar til at blive åbnet':c.opened?`Skrevet ${esc(fmtShort(c.written))} · åbnet`:`Åbner ${esc(fmtShort(k2t(c.open)))} · ${capIn(c.open)}`}</small></span></button>`).join('')
+      :`<p class="sub" style="margin:6px 0 0;font-size:13.5px">Skriv et brev til dig selv, som først kan åbnes om en måned, et år eller ti – fx hvordan det er at være i Grønland lige nu, og hvad du håber på.</p>`}</div>`}
+async function openCap(id){
+  const c=S.caps.find(x=>x.id===id);if(!c)return;
+  if(capReady(c)){
+    modal(`<div class="envl"><div class="env">${svgI('mail',54)}</div><h3>Et brev fra dig selv</h3><p>Skrevet ${esc(fmtDay(dayKey(c.written)).toLowerCase())}${c.where?` · ${esc(c.where)}`:''}<br>– ${esc(capAgo(c.written))}.</p><div class="row" style="justify-content:center"><button class="btn ghost" id="cpLater">Senere</button><button class="btn accent" id="cpOpen">Åbn brevet</button></div></div>`);
+    $('#cpLater').onclick=()=>closeModal();
+    $('#cpOpen').onclick=async()=>{c.opened=Date.now();await save('capsules',c);await loadCaps();readCap(c,true);renderSheet()};return}
+  if(c.opened)return readCap(c);
+  menu([{i:'calendar',t:'Skift åbningsdato',s:`Nu: ${fmtShort(k2t(c.open))} (${capIn(c.open)})`,f:async()=>{const v=await askDate('Hvornår må brevet åbnes?',c.open);if(!v)return;if(v<=dayKey(Date.now()))return toast('Vælg en dato efter i dag');c.open=v;await save('capsules',c);await loadCaps();renderSheet();toast(`Brevet åbner nu ${fmtDay(v).toLowerCase()}`)}},
+    {i:'mail',t:'Bryd forseglingen nu',s:'Læs brevet før tid',f:async()=>{if(!await ask({title:'Bryd forseglingen?',text:`Brevet er forseglet til ${fmtDay(c.open).toLowerCase()}. Vil du læse det nu?`,ok:'Åbn nu'}))return;c.opened=Date.now();await save('capsules',c);await loadCaps();readCap(c,true);renderSheet()}},
+    '-',{i:'trash',t:'Slet brevet',danger:1,f:async()=>{if(!await ask({title:'Slet brevet?',text:'Det forseglede brev slettes for altid.',ok:'Slet',danger:true}))return;c.deleted=true;await save('capsules',c);await loadCaps();renderSheet();toast('Brevet er slettet')}}],
+    `Forseglet ${capIn(c.open)}`);
+}
+function readCap(c,fresh){
+  const days=Math.max(0,Math.round(((c.opened||Date.now())-c.written)/864e5));
+  modal(`<div class="letter${fresh?' fresh':''}"><div class="lmeta">${esc(fmtDay(dayKey(c.written)))}${c.where?` · ${esc(c.where)}`:''}</div>${c.title?`<h3>${esc(c.title)}</h3>`:''}<div class="ltxt">${esc(c.text)}</div>
+    <div class="lfoot">${days?`Forseglet i ${fmtN(days)} ${days===1?'dag':'dage'}`:'Skrevet i dag'}</div></div>
+    <div class="row"><button class="btn ghost danger-t" id="lDel">Slet</button><button class="btn accent" id="lOk">Luk</button></div>`);
+  $('#lOk').onclick=()=>closeModal();
+  $('#lDel').onclick=async()=>{if(!await ask({title:'Slet brevet?',text:'Brevet slettes for altid.',ok:'Slet',danger:true}))return;c.deleted=true;await save('capsules',c);await loadCaps();renderSheet()};
+}
 /* ---------- go to date ---------- */
 async function goDate(k){
   if(!k)return;
@@ -47596,7 +47700,7 @@ function renderDiary(){
     </section>`;
   }
   const todayK=dayKey(Date.now());
-  body.innerHTML=cloudCardHtml()+tripProgressHtml()+(ql?'':dailyHtml()+chapterCardHtml()+'<div id="mem"></div>')+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="writeToday"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Skriv om i dag</button><button class="btn small" id="storyBtn"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl</button><button class="btn small icon" id="dMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>
+  body.innerHTML=cloudCardHtml()+(ql?'':capBannerHtml()+backupNudgeHtml())+tripProgressHtml()+(ql?'':dailyHtml()+chapterCardHtml()+'<div id="mem"></div>')+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="writeToday"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Skriv om i dag</button><button class="btn small" id="storyBtn"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl</button><button class="btn small icon" id="dMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>
     <div class="qrow"><input class="search" id="q" type="search" placeholder="Søg i dagbogen…" value="${esc(S.q)}" autocomplete="off">${ql?'<button class="btn small ghost" id="qx">Ryd</button>':''}<button class="btn small ghost qic" id="goDateBtn" aria-label="Gå til dato" title="Gå til dato (G)">${svgI('calendar',18)}</button>${S.photos.length?`<button class="btn small ghost" id="selGo" title="Vælg flere billeder">Vælg</button>`:''}</div>
     ${ql?`<div class="qinfo">${groups.length} ${groups.length===1?'dag matcher':'dage matcher'} “${esc(S.q)}”</div>`:''}`+h;
   $('#storyBtn').onclick=startStory;
@@ -47605,8 +47709,9 @@ function renderDiary(){
   const sg=$('#selGo');if(sg)sg.onclick=()=>{S.sel?endSelect():startSelect()};
   const addDay=async()=>{const v=await askDate('Hvilken dag vil du skrive om?',todayK);if(v)openDay(v)};
   $('#dMore').onclick=()=>menu([
-    {i:'mic',t:'Livsinterview',s:'Claude spørger – du fortæller',f:()=>interview(S.trip)},
+    {i:'mic',t:'Livsinterview',s:`${S.ai?'Claude':'Spor'} spørger – du fortæller`,f:()=>interview(S.trip)},
     {i:'calendar',t:'Skriv om en anden dag',f:addDay},
+    {i:'mail',t:'Tidskapsel',s:'Skriv et brev til dig selv i fremtiden',f:composeCap},
     S.photos.length&&{i:'select',t:'Vælg billeder',s:'Flyt, slet eller placér flere på én gang',f:startSelect},
     {i:'image',t:'Tilføj billeder',f:()=>$('#file').click()},
     '-',
@@ -47623,7 +47728,7 @@ function renderDiary(){
   body.querySelectorAll('[data-stamp]').forEach(b=>b.onclick=()=>stampDay(b.dataset.stamp));
   body.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>reorderDay(b.dataset.sort));
   bindSearch();
-  bindCloudCard();fillMemories();
+  bindCloudCard();bindNudge();bindCaps();fillMemories();
   body.querySelectorAll('[data-meta]').forEach(b=>b.onclick=()=>editMeta(b.dataset.meta));
   body.querySelectorAll('[data-ppl]').forEach(b=>b.onclick=async()=>{const k=b.dataset.ppl;const r=await pickPeople(pplOf(S.meta[k]),'Hvem var med '+fmtDay(k).toLowerCase()+'?');if(!r)return;S.meta[k]={...(S.meta[k]||{}),people:r};S.keep.add(k);await save('days',dayRec(k));renderSheet()});
   bindChapterCard();bindDaily();
@@ -47722,8 +47827,8 @@ function renderStats(){
     <div class="card"><div class="v">${all.length}</div><div class="k">billeder</div></div>
     <div class="card"><div class="v">${places}</div><div class="k">forskellige steder</div></div>
     <div class="card wide"><div class="k">Lande</div><div class="v">${countries.length}</div><div class="chips">${countries.map(c=>`<span class="chip">${esc(c)}</span>`).join('')||'<span class="sub">Ingen billeder med position endnu</span>'}</div></div>
-    ${N?`<div class="card clickable" data-show="${N.id}"><div class="k">Nordligste punkt</div><div class="sub"><b>${fmtCoord(N.lat,N.lng)}</b><br>${fmtShort(N.time)}</div></div>`:''}
-    ${Sx?`<div class="card clickable" data-show="${Sx.id}"><div class="k">Sydligste punkt</div><div class="sub"><b>${fmtCoord(Sx.lat,Sx.lng)}</b><br>${fmtShort(Sx.time)}</div></div>`:''}
+    ${N?`<div class="card clickable" data-show="${N.id}"><div class="k">Nordligste punkt</div><div class="sub"><b>${esc(cityLabel(N))}</b><br>${N.lat.toFixed(1).replace('.',',')}°N · ${fmtShort(N.time)}</div></div>`:''}
+    ${Sx?`<div class="card clickable" data-show="${Sx.id}"><div class="k">Sydligste punkt</div><div class="sub"><b>${esc(cityLabel(Sx))}</b><br>${Math.abs(Sx.lat).toFixed(1).replace('.',',')}°${Sx.lat<0?'S':'N'} · ${fmtShort(Sx.time)}</div></div>`:''}
     ${far&&far.d>1?`<div class="card clickable" data-show="${far.p.id}"><div class="k">Længst fra start</div><div class="sub"><b>${fmtKm(far.d)} km</b><br>${fmtShort(far.p.time)}</div></div>`:''}
     ${best&&best.d>1?`<div class="card clickable" data-fitday="${best.k}"><div class="k">Længste dagsetape</div><div class="sub"><b>${fmtKm(best.d)} km</b><br>${esc(fmtDay(best.k))}</div></div>`:''}
     <div class="card wide"><div class="k">Skrivedage</div><div class="v">${st.n} ${st.n===1?'dag':'dage'} i træk</div><div class="sub">${st.today?'Du har skrevet i dag 🔥':st.n?'Skriv i dag for at holde gang i den':'Skriv et par linjer i dag for at starte'}</div>${calendarHtml()}</div>
@@ -47968,7 +48073,42 @@ async function loadTrip(id,quiet=false){
   refresh();if(!quiet)fitTo(placed().length?placed():S.trip.track&&S.trip.track.length?trackPts(S.trip):(S.trip.place?[S.trip.place]:[]),false);
 }
 async function newTrip(name,demo=false){const t={id:uid(),name,created:Date.now()};if(demo){t.demo=true;await DB.put('trips',t)}else await save('trips',t);S.trips.push(t);return t}
-$('#tripBtn').onclick=openTrips;
+$('#tripBtn').onclick=openTrips;$('#brandBtn').onclick=()=>openSettings();
+async function openSettings(focus){
+  const life=isLife();
+  modal(`<h3>Indstillinger</h3>
+    <div class="sect">Udseende</div>
+    <div class="pick" id="themePick">${[['auto','Automatisk'],['light','Lyst'],['dark','Mørkt']].map(([v,t])=>`<button data-th="${v}" class="${(store.get('spor-theme')||'auto')===v?'on':''}">${t}</button>`).join('')}</div>
+    <div class="sect">Kodelås</div>
+    <div id="lockBox">${lockBoxHtml()}</div>
+    <div class="sect">Lagerplads</div>
+    <div id="storBox"></div>
+    <div class="sect">Kort uden net</div>
+    <div id="mapBox"></div>
+    <div class="sect">Sky</div>
+    <div id="cloudBox"></div>
+    <div class="sect">Backup og gendannelse</div>
+    ${(()=>{const lb=+(store.get('spor-lastbackup')||0),d=lb?Math.floor((Date.now()-lb)/864e5):null;return `<p style="font-size:13.5px;margin:0 0 8px;color:var(--ink2)">${lb?`Sidste backup: <b style="color:var(--ink)">${d===0?'i dag':d===1?'i går':`for ${d} dage siden`}</b>.`:'<b style="color:var(--ink)">Du har ikke taget en backup endnu.</b>'} En backup er én fil (eller flere ved store biblioteker) med alle billeder, noter, kapitler og steder – gem den i Filer eller på din computer.</p>`})()}
+    <div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn small accent" id="mLifeZip">${svgI('save',16)}Backup af hele livet</button><button class="btn small ghost" id="mImp">Gendan fra backup</button></div>
+    <div class="sect">Eksport</div>
+    <div class="row" style="justify-content:flex-start;flex-wrap:wrap">${life?'<button class="btn small ghost" id="mLifeMd">Mit liv som tekst (.md)</button>':`<button class="btn small ghost" id="mExp">Backup af kapitlet</button><button class="btn small ghost" id="mMd">Dagbog som tekst (.md)</button><button class="btn small ghost" id="mBook">Rejsebog med billeder</button>`}</div>
+    ${matchMedia('(pointer:fine)').matches?'<div class="sect">Tastatur</div><button class="btn small ghost" id="mKeys">Vis tastaturgenveje</button>':''}
+    <div class="sect">Om Spor</div><p style="font-size:13px;color:var(--ink2);margin:0">${window.SPOR_PWA?'Offline-udgaven. Dagbogen og billederne gemmes kun på denne enhed – tag en backup jævnligt.':`Claude-udgaven. Dagbogen gemmes på denne enhed${CLOUD.on?' og privat på din Claude-konto':''}.`}</p>
+    <div class="row"><button class="btn accent" id="setOk">Færdig</button></div>`);
+  const on=(id,fn)=>{const b=$('#'+id);if(b)b.onclick=fn};
+  on('setOk',()=>closeModal());
+  on('mMd',()=>{closeModal();exportMarkdown()});
+  on('mBook',()=>{closeModal();exportBook()});
+  on('mLifeMd',()=>{closeModal();exportLifeMd()});
+  on('mLifeZip',()=>{closeModal();exportLifeZip()});
+  storageHtml().then(h=>{const b=$('#storBox');if(b)b.innerHTML=h});
+  on('mExp',()=>{closeModal();exportTrip()});
+  on('mImp',()=>{closeModal();$('#restoreFile').click()});
+  on('mKeys',showKeys);
+  renderCloudBox();renderMapBox();bindLockBox();
+  document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{store.set('spor-theme',b.dataset.th);applyTheme();document.querySelectorAll('[data-th]').forEach(x=>x.classList.toggle('on',x===b))});
+  if(focus){const el=$('#'+focus);if(el)setTimeout(()=>el.scrollIntoView({block:'center',behavior:'smooth'}),60)}
+}
 async function openTrips(){
   if(!S.info)S.info=await chapterInfo();
   const life=isLife(),ch=realTrips(),demo=S.trips.filter(t=>t.demo);
@@ -47984,35 +48124,14 @@ async function openTrips(){
       ${life?'<span></span>':`<div style="display:flex;gap:8px"><button class="btn small ghost" id="mEdit">Redigér “${esc(S.trip.name.length>18?S.trip.name.slice(0,17)+'…':S.trip.name)}”</button><button class="btn small ghost" id="mDel" style="color:#b3261e">Slet</button></div>`}
       <button class="btn small accent" id="mNew">+ Nyt kapitel</button>
     </div>
-    ${matchMedia('(pointer:fine)').matches?'<button class="linkbtn" id="mKeys" style="margin-top:10px">Tastaturgenveje</button>':''}
-    <div class="sect">Udseende</div>
-    <div class="pick" id="themePick">${[['auto','Automatisk'],['light','Lyst'],['dark','Mørkt']].map(([v,t])=>`<button data-th="${v}" class="${(store.get('spor-theme')||'auto')===v?'on':''}">${t}</button>`).join('')}</div>
-    <div class="sect">Kodelås</div>
-    <div id="lockBox">${lockBoxHtml()}</div>
-    <div class="sect">Lagerplads</div>
-    <div id="storBox"></div>
-    <div class="sect">Kort uden net</div>
-    <div id="mapBox"></div>
-    <div class="sect">Sky</div>
-    <div id="cloudBox"></div>
-    <div class="sect">Eksport og backup</div>
-    <p style="font-size:13px;margin-bottom:8px">${life?'Hele livet som tekst, eller gendan et kapitel fra en backup-fil.':'Backup-filen indeholder alt i kapitlet – billeder, noter, vejr – og kan gendannes på enhver enhed.'}</p>
-    <div class="row" style="justify-content:flex-start;flex-wrap:wrap">${life?'<button class="btn small ghost" id="mLifeMd">Mit liv som tekst (.md)</button>':`<button class="btn small ghost" id="mExp">Gem backup af kapitlet</button><button class="btn small ghost" id="mMd">Dagbog som tekst (.md)</button><button class="btn small ghost" id="mBook">📖 Rejsebog med billeder</button>`}<button class="btn small ghost" id="mImp">Gendan fra backup</button></div>
-    <div class="row" style="justify-content:flex-start;margin-top:8px"><button class="btn small accent" id="mLifeZip">💾 Backup af hele livet (.zip)</button></div>`);
+    <button class="slimrow setlink" id="mSet">${svgI('settings',18)}<span><b>Indstillinger og backup</b><small>Udseende, kodelås, kort uden net, ${CLOUD.avail?'sky, ':''}backup og gendannelse</small></span>${svgI('chevron',16)}</button>`);
   const on=(id,fn)=>{const b=$('#'+id);if(b)b.onclick=fn};
   on('mLife',()=>{closeModal();loadLife()});
   on('mMd',()=>{closeModal();exportMarkdown()});
   on('mBook',()=>{closeModal();exportBook()});
-  on('mLifeMd',()=>{closeModal();exportLifeMd()});
-  on('mLifeZip',()=>{closeModal();exportLifeZip()});
-  storageHtml().then(h=>{const b=$('#storBox');if(b)b.innerHTML=h});
-  on('mExp',()=>{closeModal();exportTrip()});
-  on('mImp',()=>{closeModal();$('#restoreFile').click()});
   on('mNew',()=>editChapter(null));
-  {const k=$('#mKeys');if(k)k.onclick=showKeys}
   on('mEdit',()=>editChapter(S.trip));
-  renderCloudBox();renderMapBox();bindLockBox();
-  document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{store.set('spor-theme',b.dataset.th);applyTheme();document.querySelectorAll('[data-th]').forEach(x=>x.classList.toggle('on',x===b))});
+  on('mSet',()=>openSettings());
   document.querySelectorAll('[data-trip]').forEach(b=>b.onclick=()=>{closeModal();loadTrip(b.dataset.trip)});
   on('mDel',()=>{closeModal();setTimeout(()=>deleteChapter(S.trip),30)});
 }
@@ -48210,7 +48329,7 @@ async function cloudInit(){
 function scheduleSync(){if(!CLOUD.on)return;countPending().then(updateCloudUI);clearTimeout(CLOUD.timer);CLOUD.timer=setTimeout(()=>syncNow(false),2500)}
 async function countPending(){
   const demo=new Set((await DB.all('trips')).filter(t=>t.demo).map(t=>t.id));
-  let n=0;for(const st of ['trips','days','photos','places'])for(const x of await DB.all(st))if(x.dirty&&!x.demo&&!demo.has(x.tripId))n++;
+  let n=0;for(const st of ['trips','days','photos','places','people','capsules'])for(const x of await DB.all(st))if(x.dirty&&!x.demo&&!demo.has(x.tripId))n++;
   CLOUD.pending=n;return n;
 }
 async function syncNow(withPull){
@@ -48231,7 +48350,8 @@ async function push(){
            ...days.filter(x=>x.dirty&&!demo.has(x.tripId)).map(x=>['days',x]),
            ...photos.filter(x=>x.dirty&&!demo.has(x.tripId)).map(x=>['photos',x]),
            ...(await DB.all('places')).filter(x=>x.dirty).map(x=>['places',x]),
-           ...(await DB.all('people')).filter(x=>x.dirty).map(x=>['people',x])];
+           ...(await DB.all('people')).filter(x=>x.dirty).map(x=>['people',x]),
+           ...(await DB.all('capsules')).filter(x=>x.dirty).map(x=>['capsules',x])];
   CLOUD.pending=q.length;updateCloudUI();
   for(const[st,x] of q){
     if(!navigator.onLine){CLOUD.state='offline';return}
@@ -48244,6 +48364,7 @@ async function push(){
     if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='days'){id='d_'+x.tripId+'_'+x.day;body={kind:'day',tripId:x.tripId,day:x.day,note:x.note||'',keep:!!x.keep,w:x.w||null,temp:x.temp??null,mood:x.mood||null,people:x.people||[],cover:x.cover||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='places'){id='pl_'+x.id;body={kind:'place',id:x.id,name:x.name,desc:(x.desc||'').slice(0,4000),lat:x.lat,lng:x.lng,cat:x.cat||'andet',st:x.st||'besogt',layer:x.layer||'',note:x.note||'',date:x.date||null,visits:x.visits||[],created:x.created||0,deleted:!!x.deleted,upd:x.upd||0}}
+    else if(st==='capsules'){id='c_'+x.id;body={kind:'capsule',id:x.id,title:x.title||'',text:x.text||'',written:x.written||0,open:x.open||'',opened:x.opened||0,tripId:x.tripId||null,where:x.where||'',deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='people'){id='pe_'+x.id;body={kind:'person',id:x.id,name:x.name,group:x.group||null,rel:x.rel||'',photo:x.photo||null,self:x.self||0,born:x.born||'',home:x.home||'',bio:x.bio||'',deleted:!!x.deleted,upd:x.upd||0}}
     else{id='p_'+x.id;body={kind:'photo',id:x.id,tripId:x.tripId,lat:x.lat??null,lng:x.lng??null,time:x.time,note:x.note||'',fav:!!x.fav,people:x.people||[],ord:x.ord??null,approx:x.approx?1:0,name:x.name||'',w:x.w||0,h:x.h||0,thumbAsset:x.thumbAsset||null,fullAsset:x.fullAsset||null,deleted:!!x.deleted,upd:x.upd||0}}
     await ucol().doc(id).set(body);
@@ -48271,6 +48392,10 @@ async function pull(){
       const l=await DB.get('places',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('places',r.id);changed=true;S.placesChanged=1}continue}
       const{kind,...rest}=r;await DB.put('places',{...rest,dirty:0});changed=true;S.placesChanged=1;
+    }else if(r.kind==='capsule'){
+      const l=await DB.get('capsules',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
+      if(r.deleted){if(l){await DB.del('capsules',r.id);changed=true;S.capsChanged=1}continue}
+      const{kind,...rest}=r;await DB.put('capsules',{...rest,dirty:0});changed=true;S.capsChanged=1;
     }else if(r.kind==='person'){
       const l=await DB.get('people',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('people',r.id);changed=true;S.persons=null}continue}
@@ -48291,6 +48416,7 @@ async function pull(){
   if(remoteTrips.size)for(const t of await DB.all('trips'))
     if(!remoteTrips.has(t.id)&&!t.demo&&!t.deleted&&!used(t.id)&&t.name==='Min rejse'){await DB.del('trips',t.id);changed=true}
   if(S.placesChanged){S.placesChanged=0;await loadPlaces();requestDraw()}
+  if(S.capsChanged){S.capsChanged=0;await loadCaps()}
   if(changed){DATAV++;
     S.trips=(await DB.all('trips')).filter(t=>!t.deleted).sort((a,b)=>a.created-b.created);
     if(isLife()){await loadLife(true);return}
@@ -48304,7 +48430,7 @@ async function setCloud(on){
   store.set('spor-cloud',on?'on':'off');CLOUD.on=on;
   if(on){
     // mark everything not yet in the cloud as pending
-    for(const st of ['trips','days','photos','places'])for(const x of await DB.all(st)){if(x.demo||isDemo(x.tripId)||x.dirty)continue;x.dirty=1;x.upd=x.upd||Date.now();await DB.put(st,x)}
+    for(const st of ['trips','days','photos','places','people','capsules'])for(const x of await DB.all(st)){if(x.demo||isDemo(x.tripId)||x.dirty)continue;x.dirty=1;x.upd=x.upd||Date.now();await DB.put(st,x)}
     for(const p of S.photos)if(!p.demo)p.dirty=1;
     await syncNow(true);toast('Skysynkronisering er slået til');
   }else{CLOUD.state='off';toast('Gemmer kun på denne enhed')}
@@ -48346,7 +48472,7 @@ function renderCloudBox(){
 }
 addEventListener('online',()=>syncNow(true));
 addEventListener('offline',()=>{if(CLOUD.on){CLOUD.state='offline';countPending().then(updateCloudUI)}});
-$('#cq').onclick=async()=>{await openTrips();const b=$('#cloudBox');if(b)b.scrollIntoView({block:'center',behavior:'smooth'})};
+$('#cq').onclick=()=>openSettings('cloudBox');
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')syncNow(true)});
 setInterval(()=>{if(CLOUD.on&&(CLOUD.pending||Date.now()-(CLOUD.last||0)>120000))syncNow(true)},60000);
 
@@ -49011,7 +49137,7 @@ function chapterRow(t){
 function renderLife(){
   const body=$('#body');const ch=realTrips();
   if(S.tab==='stats')return renderLifeStats();
-  const head=onboardingHtml()+backupNudgeHtml()+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="lNew">+ Nyt kapitel</button><button class="btn small" id="lStory"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl mit liv</button><button class="btn small icon" id="lMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>`;
+  const head=capBannerHtml()+onboardingHtml()+backupNudgeHtml()+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="lNew">+ Nyt kapitel</button><button class="btn small" id="lStory"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl mit liv</button><button class="btn small icon" id="lMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>`;
   if(!ch.length){body.innerHTML=head+`<div class="empty"><h2>Dit liv på ét kort</h2><p>Et liv består af kapitler: rejser, steder du har boet, skoler, job, tjeneste og store begivenheder. Opret et kapitel, sæt det på kortet, og fyld det med billeder og dagbog.</p></div>`;bindLife();return}
   const rows=ch.map(t=>({t,r:chRange(t,S.info&&S.info.get(t.id))})).sort((a,b)=>b.r.sort-a.r.sort);
   let h='',year=null;
@@ -49024,13 +49150,14 @@ function renderLife(){
 function bindLife(){
   const n=$('#lNew');if(n)n.onclick=()=>editChapter(null);
   const ls=$('#lStory');if(ls)ls.onclick=startLifeStory;
-  const nb=$('#nudgeBk');if(nb)nb.onclick=exportLifeZip;
+  bindNudge();bindCaps();
   bindOnboarding();
   const lm=$('#lMore');if(lm)lm.onclick=()=>menu([
     {i:'image',t:'Tilføj mange billeder',s:'Sorteres automatisk i kapitler',f:()=>$('#bulkFile').click()},
     {i:'map',t:'Importér Google-kort',s:'KML/KMZ fra My Maps',f:()=>$('#kmlFile').click()},
     {i:'compass',t:'Importér Google-tidslinje',s:'Find bosteder og rejser automatisk',f:howToTimeline},
     '-',
+    {i:'mail',t:'Tidskapsel',s:'Skriv et brev til dig selv i fremtiden',f:composeCap},
     {i:'mic',t:'Livsinterview',s:'Vælg et kapitel og fortæl',f:async()=>{const t=await chooseChapter('Hvilket kapitel vil du fortælle om?');if(t)interview(t)}},
     S.ai&&{i:'sparkle',t:'Skriv mit livs historie',f:aiLife},
     {i:'book',t:'Livsbog',s:'Hele dit liv som en smuk bog med billeder',f:exportLifeBook},
@@ -49055,6 +49182,7 @@ async function renderLifeStats(){
   const prof=await profileCardHtml();
   $('#body').innerHTML=`<div class="cards" style="margin-top:8px">
     ${prof}
+    ${capCardHtml()}
     <div id="memCard" class="card wide skel"><i></i><i></i><i style="width:60%"></i></div>
     <div id="funCard" class="card wide skel"><i></i><i></i><i style="width:60%"></i></div>
     <div id="bioCard" class="card wide skel"><i></i><i></i><i style="width:60%"></i></div>
@@ -49075,7 +49203,7 @@ async function renderLifeStats(){
     ${homes.length?`<div class="card wide"><div class="k">Steder du har boet</div>${homes.map(t=>`<div class="sub clickable" data-chap="${t.id}">🏠 <b>${esc(t.place&&t.place.name||t.name)}</b> · ${esc(fmtRange(t,info.get(t.id)))}</div>`).join('')}</div>`:''}
   </div>`;
   document.querySelectorAll('[data-chap]').forEach(b=>b.onclick=()=>loadTrip(b.dataset.chap));
-  bindCountries();bindYear();bindBand();fillPeopleCard();fillBioCard();fillFunCard();fillMemCard();bindProfileCard();
+  bindCountries();bindYear();bindBand();fillPeopleCard();fillBioCard();fillFunCard();fillMemCard();bindCaps();bindProfileCard();
   const gp=$('#goPlaces');if(gp)gp.onclick=()=>{S.tab='places';document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab==='places'));renderSheet()};
 }
 
@@ -49256,8 +49384,10 @@ async function renamePerson(a,b){
 function chapterCardHtml(){
   const t=S.trip;if(!t||t.demo)return'';const mem=t.memories||[],pp=pplOf(t);
   const show=mem.slice(-3).reverse();
+  if(!mem.length&&!t.story)return `<div class="card memc slim"><button class="slimrow" id="ivGo">${svgI('mic',18)}<span><b>Livsinterview</b><small>${S.ai?'Claude':'Spor'} spørger ind til ${esc(t.name)} – du svarer med dine egne ord</small></span>${svgI('chevron',16)}</button>
+    <button class="slimrow" id="chPpl">${svgI('users',18)}<span>${pp.length?'Med: <b>'+esc(pp.join(', '))+'</b>':'<b>Hvem var med?</b><small>Markér personerne i kapitlet</small>'}</span>${svgI('chevron',16)}</button></div>`;
   return `<div class="card memc"><div class="mh"><div class="k">${svgI('mic',16)}Erindringer${mem.length?' · '+mem.length:''}</div><button class="btn small ${mem.length?'ghost':'accent'}" id="ivGo">${mem.length?'Fortsæt interview':'Start livsinterview'}</button></div>
-    ${mem.length?show.map(m=>`<button class="m" data-mem="${mem.indexOf(m)}"><b>${esc(m.q)}</b><span>${esc(m.a)}</span></button>`).join('')+(mem.length>3?`<button class="linkbtn" id="memAll">Vis alle ${mem.length}</button>`:''):`<div class="sub" style="margin-top:6px;font-size:13px;color:var(--ink2)">Claude stiller spørgsmål om ${esc(t.name)}, og du svarer med dine egne ord. Svarene gemmes her og bliver til råstof til din selvbiografi.</div>`}
+    ${mem.length?show.map(m=>`<button class="m" data-mem="${mem.indexOf(m)}"><b>${esc(m.q)}</b><span>${esc(m.a)}</span></button>`).join('')+(mem.length>3?`<button class="linkbtn" id="memAll">Vis alle ${mem.length}</button>`:''):`<div class="sub" style="margin-top:6px;font-size:13px;color:var(--ink2)">${S.ai?'Claude':'Spor'} stiller spørgsmål om ${esc(t.name)}, og du svarer med dine egne ord. Svarene gemmes her og bliver til råstof til din selvbiografi.</div>`}
     ${t.story?`<div class="sect" style="margin-top:10px">Fortælling</div><div style="white-space:pre-wrap;font-size:14px;max-height:${S.storyOpen?'none':'7.5em'};overflow:hidden" id="stTxt">${esc(t.story)}</div><div class="row" style="justify-content:flex-start;gap:12px;margin-top:4px">${t.story.length>260?`<button class="linkbtn" id="stMore">${S.storyOpen?'Vis mindre':'Læs hele'}</button>`:''}<button class="linkbtn" id="stEdit">Redigér</button></div>`:''}
     ${mem.length>=2&&S.ai?`<button class="linkbtn" id="memStory" style="display:block;margin-top:6px">✨ ${t.story?'Skriv fortællingen igen':'Lav erindringerne om til en fortælling'}</button>`:''}
     <button class="pline" id="chPpl">${svgI('users',16)} ${pp.length?'Med: <b>'+esc(pp.join(', '))+'</b>':'Hvem var med i dette kapitel?'}</button></div>`;
@@ -49822,10 +49952,11 @@ async function computeStats0(){
     L.push(T('💓',`≈ ${fmtN(Math.round(d*24*60*70/1e6))} mio.`,'hjerteslag indtil nu'));L.push(T('😴',`≈ ${fmtY(d/3)}`,'har du sovet'))}
   L.push(T('📚',ch.length,'kapitler i dit liv'));
   const kc={};for(const t of ch)kc[kindOf(t)]=(kc[kindOf(t)]||0)+1;
-  L.push(T('🧩',Object.entries(kc).sort((a,b)=>b[1]-a[1]).map(([k,n])=>KINDS[k][0]+n).join(' '),'kapitler pr. type',null,1));
-  const tripR=ch.filter(isTrip).map(R).filter(Boolean),away=unionDays(tripR);
+  {const PLK={rejse:['rejse','rejser'],bosted:['bosted','bosteder'],uddannelse:['uddannelse','uddannelser'],arbejde:['job','job'],militaer:['militært','militære'],begivenhed:['begivenhed','begivenheder']};
+  L.push(T('🧩',Object.entries(kc).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${n} ${(PLK[k]||[k,k])[n===1?0:1]}`).join(' · '),'kapitler pr. type',null,1))}
+  const tripR=ch.filter(isTrip).map(R).filter(Boolean).map(r=>[r[0],Math.min(r[1],today)]).filter(r=>r[1]>r[0]),away=unionDays(tripR);
   if(away)L.push(T('🧳',fmtN(Math.round(away))+' dage','væk hjemmefra på rejser og øvelser'));
-  if(away&&lifeDays)L.push(T('🌍',fmtP(pct(away,lifeDays)),`af ${birth?'dit liv':'tiden siden dit første kapitel'} på farten`));
+  if(away&&lifeDays)L.push(T('🌍',fmtP(Math.min(100,pct(away,lifeDays))),`af ${birth?'dit liv':'tiden siden dit første kapitel'} på farten`));
   const homes=ch.filter(t=>kindOf(t)==='bosted').map(t=>({t,r:R(t)})).filter(x=>x.r);
   if(homes.length){L.push(T('🏠',homes.length,homes.length===1?'bosted':'bosteder'));const lg=homes.sort((a,b)=>(b.r[1]-b.r[0])-(a.r[1]-a.r[0]))[0];
     L.push(T('🏡',fmtY((lg.r[1]-lg.r[0])/864e5),`længst boet: ${lg.t.name}`,()=>loadTrip(lg.t.id)));
@@ -50013,7 +50144,7 @@ const ICO={
   city:'M3 21h18|M5 21V10l6-3v14|M11 21V4l8 4v13|M14.5 11h1|M14.5 14.5h1|M7.5 13.5h1',fork:'M7 3v18|M4.5 3v5a2.5 2.5 0 0 0 5 0V3|M17 21V3c-2.5 1.5-3.5 4.5-3.5 8h3.5',
   bed:'M3 19V6|M3 15h18v4|M21 15v-2.5A2.5 2.5 0 0 0 18.5 10H11v5|M7 12.3a1.8 1.8 0 1 0 0-.01',landmark:'M3 21h18|M4 9.5h16|M12 3l8.5 4.5h-17z|M6.5 9.5v8.5|M10.3 9.5v8.5|M13.7 9.5v8.5|M17.5 9.5v8.5',
   pin:'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z|M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
-  mic:'M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z|M5 11a7 7 0 0 0 14 0|M12 18v3',calendar:'M4 5h16v16H4z|M4 10h16|M8 3v4|M16 3v4',
+  mic:'M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z|M5 11a7 7 0 0 0 14 0|M12 18v3',calendar:'M4 5h16v16H4z|M4 10h16|M8 3v4|M16 3v4',settings:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z|M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 4.7 15a1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 9 4.7a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z',chevron:'M9 6l6 6-6 6',
   select:'M4 4h16v16H4z|M8 12.5l3 3 5-6.5',image:'M3 5h18v14H3z|M3 16l5-5 4 4 3-3 6 6|M15.5 9.5a1 1 0 1 0 0-.01',
   sparkle:'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z|M19 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z',
   map:'M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z|M9 4v14|M15 6v14',book:'M3 5h6a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H3z|M21 5h-6a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H21z',
@@ -50051,7 +50182,7 @@ const ageOf=b=>{if(!b)return null;const d=new Date(b),n=new Date();let a=n.getFu
 async function profileCardHtml(){
   const me=S.me||await getMe();S.me=me;const ch=realTrips(),vis=VIS?VIS.size:0;
   const ph=me.photo&&S.photos.find(p=>p.id===me.photo);
-  const bits=[me.born&&`${ageOf(me.born)} år`,me.home,`${ch.length} kapitler`,vis&&`${vis} ${vis===1?'land':'lande'}`].filter(Boolean);
+  const bits=[me.born&&`${ageOf(me.born)} år`,me.home,`${ch.length} ${ch.length===1?'kapitel':'kapitler'}`,vis&&`${vis} ${vis===1?'land':'lande'}`].filter(Boolean);
   return `<div class="card wide prof"><button class="pav" id="meAv" aria-label="Profilbillede">${ph?`<img src="${thumbUrl(ph)}" alt="">`:(me.name?`<span>${esc(me.name.trim().charAt(0).toUpperCase())}</span>`:svgI('users',26,1.6))}</button>
     <div class="pinfo"><div class="pn">${me.name?esc(me.name):'Dit liv'}</div><div class="pm">${esc(bits.join(' · '))}</div>${me.bio?`<div class="pb">${esc(me.bio)}</div>`:''}</div>
     <button class="btn small ghost" id="meEdit">${me.name?'Redigér':'Om mig'}</button></div>`;
@@ -50065,7 +50196,7 @@ async function editMe(){
     <div style="flex:1"><p class="mlabel">Hjemby</p><input type="text" id="meH" value="${esc(me.home||'')}" placeholder="Fx Aarhus"></div></div>
     <p class="mlabel">Et par ord om dig</p><textarea id="meBio" class="dnote" style="border-color:var(--line);min-height:70px;margin:0 0 12px" placeholder="Fx Soldat, eventyrer og ved at skrive mit livs historie">${esc(me.bio||'')}</textarea>
     ${cands.length?`<p class="mlabel">Profilbillede</p><div class="pgrid" id="meP">${cands.map(p=>`<button data-mp="${p.id}" class="${p.id===photo?'on':''}"><img src="${thumbUrl(p)}" alt="" loading="lazy"></button>`).join('')}</div>`:''}
-    <p style="font-size:12px;color:var(--ink3);margin:0 0 12px">Bruges i din livsbog, i statistikken og når Claude skriver din historie.</p>
+    <p style="font-size:12px;color:var(--ink3);margin:0 0 12px">Bruges i din livsbog, i statistikken og i fortællingen om dit liv.</p>
     <div class="row"><button class="btn ghost" id="meNo">Annullér</button><button class="btn accent" id="meOk">Gem</button></div>`);
   document.querySelectorAll('#meP [data-mp]').forEach(b=>b.onclick=()=>{photo=photo===b.dataset.mp?null:b.dataset.mp;document.querySelectorAll('#meP [data-mp]').forEach(x=>x.classList.toggle('on',x.dataset.mp===photo))});
   $('#meNo').onclick=()=>closeModal();
@@ -50689,20 +50820,32 @@ async function exportLifeZip(){
   const trips=(await DB.all('trips')).filter(t=>!t.deleted&&!t.demo),ids=new Set(trips.map(t=>t.id));
   const days=(await DB.all('days')).filter(d=>!d.deleted&&ids.has(d.tripId));
   const places=(await DB.all('places')).filter(p=>!p.deleted);
-  const photos=(await DB.all('photos')).filter(p=>!p.deleted&&ids.has(p.tripId));
-  const z=new JSZip(),strip=o=>{const{dirty,_c,_pl,full,thumb,...r}=o;return r};
-  const man={app:'spor',v:2,type:'life',made:Date.now(),trips:trips.map(strip),days:days.map(strip),places:places.map(strip),people:(await DB.all('people')).filter(x=>!x.deleted).map(strip),photos:[]};
-  prog(true,0,photos.length,'Pakker billeder…');let miss=0;
-  for(let i=0;i<photos.length;i++){const p=photos[i],m=strip(p);
-    try{const f=await getBlob(p,'full'),t=await getBlob(p,'thumb');if(f){z.file('photos/'+p.id+'.jpg',f);m.file=1}if(t){z.file('thumbs/'+p.id+'.jpg',t);m.th=1}if(!f&&!t)miss++}catch(e){miss++}
-    man.photos.push(m);if(i%10===0)prog(true,i+1,photos.length,'Pakker billeder…')}
-  z.file('spor.json',JSON.stringify(man));
-  prog(true,0,100,'Laver zip-fil…');
-  const blob=await z.generateAsync({type:'blob',compression:'STORE'},md=>prog(true,Math.round(md.percent),100,'Laver zip-fil…'));
-  prog(false);
-  if(await saveFile(`spor-hele-livet-${dayKey(Date.now())}.zip`,blob,`Backup gemt (${(blob.size/1e6).toFixed(0)} MB)${miss?` – ${miss} billeder manglede`:''}`)){store.set('spor-lastbackup',String(Date.now()));renderSheet()}
+  const people=(await DB.all('people')).filter(x=>!x.deleted);
+  const strip=o=>{const{dirty,_c,_pl,full,thumb,...r}=o;return r};
+  const base={app:'spor',v:3,type:'life',made:Date.now(),trips:trips.map(strip),days:days.map(strip),places:places.map(strip),people:people.map(strip),capsules:(await DB.all('capsules')).filter(x=>!x.deleted).map(strip)};
+  // photos are read in small batches so a big library never sits in memory at once; big backups are split into parts
+  const keys=await DB.keys('photos'),LIMIT=window.SPOR_BKLIMIT||(window.SPOR_PWA?150e6:400e6),files=[];
+  let z=new JSZip(),man={...base,photos:[]},bytes=0,miss=0,done=0,total=0;
+  const flush=async last=>{if(!man.photos.length&&files.length)return;man.part=files.length+1;z.file('spor.json',JSON.stringify(man));
+    prog(true,0,100,`Laver zip-fil${files.length||!last?` (del ${files.length+1})`:''}…`);
+    files.push(await z.generateAsync({type:'blob',compression:'STORE'},md=>prog(true,Math.round(md.percent),100,`Laver zip-fil${files.length||!last?` (del ${files.length+1})`:''}…`)));
+    z=new JSZip();man={...base,photos:[]};bytes=0};
+  prog(true,0,keys.length,'Pakker billeder…');
+  for(let i=0;i<keys.length;i+=40){
+    const batch=(await DB.getMany('photos',keys.slice(i,i+40))).filter(p=>p&&!p.deleted&&ids.has(p.tripId));
+    for(const p of batch){const m=strip(p);total++;
+      try{const f=await getBlob(p,'full'),t=await getBlob(p,'thumb');if(f){z.file('photos/'+p.id+'.jpg',f);m.file=1;bytes+=f.size}if(t){z.file('thumbs/'+p.id+'.jpg',t);m.th=1;bytes+=t.size}if(!f&&!t)miss++}catch(e){miss++}
+      man.photos.push(m);if(bytes>LIMIT)await flush(false)}
+    done=Math.min(keys.length,i+40);prog(true,done,keys.length,'Pakker billeder…')}
+  await flush(true);prog(false);
+  const stamp=dayKey(Date.now()),n=files.length,mb=files.reduce((a,b)=>a+b.size,0)/1e6;
+  let ok=true;
+  for(let i=0;i<n;i++){const fn=n>1?`spor-hele-livet-${stamp}-del${i+1}af${n}.zip`:`spor-hele-livet-${stamp}.zip`;
+    const r=await saveFile(fn,files[i],n>1?`Del ${i+1} af ${n} gemt`:`Backup gemt (${mb.toFixed(0)} MB)${miss?` – ${miss} billeder manglede`:''}`,n>1?{title:`Backup del ${i+1} af ${n}`,text:`${(files[i].size/1e6).toFixed(0)} MB · gem alle ${n} dele samme sted, fx i Filer.`}:{title:'Backuppen er klar',text:`${total} billeder · ${mb.toFixed(0)} MB. Gem den i Filer eller på din computer.`});
+    if(!r){ok=false;break}}
+  if(ok){store.set('spor-lastbackup',String(Date.now()));store.set('spor-lastbackup-n',String(total));BKD=0;store.set('spor-bk-dirty','0');renderSheet()}
 }
-async function restoreZip(file){
+async function restoreZip(file,multi){
   let z,man;try{z=await JSZip.loadAsync(file);man=JSON.parse(await z.file('spor.json').async('string'));if(man.app!=='spor')throw 0}catch(e){return toast('Filen er ikke en Spor-backup',3500)}
   const newer=async(st,key,upd)=>{const l=await DB.get(st,key);return !l||(l.upd||0)<(upd||0)||l.deleted};
   let nt=0,np=0,nd=0,npl=0;const total=man.photos.length;
@@ -50710,6 +50853,7 @@ async function restoreZip(file){
   for(const d of man.days||[])if(await newer('days',d.key,d.upd)){await save('days',{...d});nd++}
   for(const p of man.places||[])if(await newer('places',p.id,p.upd)){await save('places',{...p});npl++}
   for(const p of man.people||[])if(await newer('people',p.id,p.upd))await save('people',{...p});S.persons=null;
+  for(const c of man.capsules||[])if(await newer('capsules',c.id,c.upd))await save('capsules',{...c});await loadCaps();
   prog(true,0,total,'Gendanner billeder…');
   for(let i=0;i<total;i++){const m=man.photos[i];
     if(await newer('photos',m.id,m.upd)){const{file,th,...r}=m;
@@ -50718,7 +50862,7 @@ async function restoreZip(file){
     if(i%10===0)prog(true,i+1,total,'Gendanner billeder…')}
   prog(false);
   S.trips=(await DB.all('trips')).filter(t=>!t.deleted).sort((a,b)=>a.created-b.created);await loadPlaces();
-  toast(`Gendannet: ${nt} kapitler, ${np} billeder, ${nd} dage, ${npl} steder`,5000);await loadLife();
+  toast(`Gendannet${man.part&&multi?` (del ${man.part})`:''}: ${np} billeder${nt?`, ${nt} kapitler`:''}${nd?`, ${nd} dage`:''}${npl?`, ${npl} steder`:''}`,5000);await loadLife();
 }
 
 /* ---------- storage ---------- */
@@ -50829,12 +50973,14 @@ async function lifeSearchHtml(q){
   const ph=S.photos.filter(p=>hit(p.note)&&(!lfOn()||lfPhoto(p))).slice(0,30);
   const pl=S.places.filter(p=>hit(p.name)||hit(p.note)||hit(p.layer)).slice(0,30);
   const cs=VIS?[...VIS.keys()].filter(c=>hit(c)):[];
-  const n=chs.length+days.length+ph.length+pl.length+cs.length+pp.length;
+  const at=q.length>=3?S.photos.filter(p=>hasPos(p)&&(!lfOn()||lfPhoto(p))&&hit(placeOf(p)||'')).sort((a,b)=>b.time-a.time):[];LFIDS=at.map(p=>p.id);
+  const n=chs.length+days.length+ph.length+pl.length+cs.length+pp.length+at.length;
   const mk=s=>{S.q=q;return markHits(s)};
   let h=`<div class="qinfo">${n} ${n===1?'resultat':'resultater'} for “${esc(q)}”</div>`;
   if(cs.length)h+=`<div class="sect">Lande</div>${cs.map(c=>`<button class="cl" data-cnt="${esc(c)}"><span>${mk(c)}</span></button>`).join('')}`;
   if(pp.length)h+=`<div class="sect">Personer</div><div class="chips">${pp.map(x=>`<button class="chip" data-person="${esc(x.n)}" style="border:0">👥 ${mk(x.n)}</button>`).join('')}</div>`;
   if(chs.length)h+=`<div class="sect">Kapitler</div>${chs.map(chapterRow).join('')}`;
+  if(at.length)h+=`<div class="sect">Billeder taget her · ${at.length}</div><div class="fgrid">${at.slice(0,120).map(p=>`<button class="th" data-fph="${p.id}"><img src="${thumbUrl(p)}" alt="" loading="lazy">${p.fav?'<span class="fav">★</span>':''}</button>`).join('')}</div>`;
   if(days.length)h+=`<div class="sect">Dagbog</div>${days.map(d=>`<button class="prow" data-sday="${d.tripId}|${d.day}"><span class="pe">📖</span><span class="pm"><b>${esc(fmtDay(d.day))}</b><span>${esc(tn(d.tripId))}</span><span style="white-space:normal;color:var(--ink)">${mk(snip(d.note))}</span></span></button>`).join('')}`;
   if(ph.length)h+=`<div class="sect">Billedtekster</div>${ph.map(p=>`<button class="prow" data-sph="${p.id}"><img src="${thumbUrl(p)}" alt="" style="width:40px;height:40px;border-radius:8px;object-fit:cover"><span class="pm"><b>${esc(fmtShort(p.time))} · ${esc(tn(p.tripId))}</b><span style="white-space:normal;color:var(--ink)">${mk(snip(p.note))}</span></span></button>`).join('')}`;
   if(pl.length)h+=`<div class="sect">Steder</div>${pl.map(p=>`<button class="prow ${stOf(p)}" data-spl="${p.id}" style="--kc:${CAT[catOf(p)][2]}"><span class="pe">${cBadge(catOf(p),30)}</span><span class="pm"><b>${mk(p.name)}</b><span>${esc(countryOf(p)||'')}</span></span><span class="ps">${PST[stOf(p)][1]}</span></button>`).join('')}`;
@@ -50916,10 +51062,13 @@ function bindOnboarding(){
   const h=$('#onbHide');if(h)h.onclick=()=>{store.set('spor-onb-hide','1');renderSheet()};
 }
 function backupNudgeHtml(){
-  if(CLOUD.on||!realTrips().length)return'';const last=+(store.get('spor-lastbackup')||0);if(!last)return'';
-  const d=Math.floor((Date.now()-last)/864e5);if(d<30)return'';
-  return `<div class="warn" style="background:var(--info)"><b>Sidste backup: for ${d} dage siden</b>Du har ikke skyen slået til, så alt ligger kun på denne enhed.<div class="row"><button class="btn small accent" id="nudgeBk">Tag backup nu</button></div></div>`;
+  if(CLOUD.on||!realTrips().length)return'';
+  const last=+(store.get('spor-lastbackup')||0),snz=+(store.get('spor-bk-snooze')||0),ch=BKD??+(store.get('spor-bk-dirty')||0);
+  if(Date.now()<snz)return'';const d=last?Math.floor((Date.now()-last)/864e5):null;
+  const need=window.SPOR_PWA?(last?(d>=7&&ch>=10)||ch>=150:ch>=20):(last?d>=30&&ch>=10:ch>=60);if(!need)return'';
+  return `<div class="warn bknudge"><b>${last?`Sidste backup: for ${d} ${d===1?'dag':'dage'} siden`:'Du har ikke taget en backup endnu'}</b>${ch>=10?`Der er kommet ${ch>=500?'mange':'ca. '+ch} ændringer til siden. `:''}Alt ligger kun på denne telefon – en backup-fil i Filer eller på computeren redder dagbogen, hvis telefonen går tabt.<div class="row"><button class="btn small accent" id="nudgeBk">Tag backup nu</button><button class="btn small ghost" id="nudgeLater">Om 3 dage</button></div></div>`;
 }
+function bindNudge(){const nb=$('#nudgeBk');if(nb)nb.onclick=exportLifeZip;const nl=$('#nudgeLater');if(nl)nl.onclick=()=>{store.set('spor-bk-snooze',String(Date.now()+3*864e5));renderSheet()}}
 
 /* ---------- downloads, backup ---------- */
 let DLp=null;
@@ -50927,17 +51076,21 @@ function downloads(){if(!DLp)DLp=(async()=>{try{return window.claude&&claude.use
 const slug=s=>s.toLowerCase().replace(/æ/g,'ae').replace(/ø/g,'oe').replace(/å/g,'aa').normalize('NFKD').replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,40)||'rejse';
 function b64(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)})}
 function unb64(u){const[h,d]=u.split(',');const bin=atob(d);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:(h.match(/data:([^;]+)/)||[])[1]||'image/jpeg'})}
-async function saveFileLocal(filename,data,okMsg){
+async function saveFileLocal(filename,data,okMsg,info){
   const blob=data instanceof Blob?data:new Blob([data]);
+  if(info||blob.size>2e6){
+    const go=await new Promise(res=>{modal(`<h3>${esc((info&&info.title)||'Filen er klar')}</h3><p style="font-size:14.5px;color:var(--ink2);margin:-4px 0 4px">${esc((info&&info.text)||`${filename} · ${(blob.size/1e6).toFixed(1).replace('.',',')} MB`)}</p><p style="font-size:13px;color:var(--ink3);margin:0 0 6px">${esc(filename)}</p><div class="row"><button class="btn ghost" id="sfNo">Annullér</button><button class="btn accent" id="sfGo">Gem fil</button></div>`);
+      modalResolve=res;$('#sfNo').onclick=()=>closeModal(false);$('#sfGo').onclick=()=>closeModal(true)});
+    if(!go)return false}
   try{const f=new File([blob],filename,{type:blob.type||'application/octet-stream'});
     if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:filename});toast(okMsg);return true}}
   catch(e){if(e&&e.name==='AbortError')return false}
   try{const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);toast(okMsg);return true}
   catch(e){toast('Filen kunne ikke gemmes',3500);return false}
 }
-async function saveFile(filename,data,okMsg){
+async function saveFile(filename,data,okMsg,info){
   const dl=await downloads();
-  if(!dl)return saveFileLocal(filename,data,okMsg);
+  if(!dl)return saveFileLocal(filename,data,okMsg,info);
   try{await dl.save({filename,data});toast(okMsg);return true}
   catch(e){if(!e||e.code!=='declined')toast(e&&e.code==='rate_limited'?'Vent et øjeblik og prøv igen':'Filen kunne ikke gemmes',3500);return false}
 }
@@ -50952,8 +51105,10 @@ async function exportTrip(){
   await saveFile(`spor-${slug(S.trip.name)}-${dayKey(Date.now())}.json`,new Blob(parts,{type:'application/json'}),'Backup gemt');
 }
 $('#restoreFile').onchange=async e=>{
-  const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
-  if(/\.zip$/i.test(f.name)||f.type==='application/zip')return restoreZip(f);
+  const all=[...(e.target.files||[])];e.target.value='';if(!all.length)return;
+  const zips=all.filter(f=>/\.zip$/i.test(f.name)||f.type==='application/zip');
+  if(zips.length){zips.sort((a,b)=>a.name.localeCompare(b.name,'da',{numeric:true}));for(let i=0;i<zips.length;i++){if(zips.length>1)toast(`Gendanner del ${i+1} af ${zips.length}…`,1500);await restoreZip(zips[i],zips.length>1)}return}
+  const f=all[0];
   let d;try{d=JSON.parse(await f.text());if(d.app!=='spor'||!Array.isArray(d.photos))throw 0}catch(_){return toast('Filen er ikke en Spor-backup',3000)}
   let name=(d.trip&&d.trip.name)||'Gendannet rejse';if(S.trips.some(t=>t.name===name))name+=' (gendannet)';
   const t=await newTrip(name);
@@ -51067,6 +51222,7 @@ async function boot(){
   if(!(await DB.persistent()))toast('Din browser tillader ikke lokal lagring – billeder forsvinder, når siden lukkes',5000);
   try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
   cloudInit();
+  await loadCaps();{const r=S.caps.filter(capReady);if(r.length){renderSheet();setTimeout(()=>toast(r.length>1?`📬 Du har ${r.length} breve fra dig selv`:'📬 Du har et brev fra dig selv',9000,{label:'Åbn',undo:()=>openCap(r[0].id)}),1200)}}
 }
 addEventListener('resize',()=>setSheet(sheetIx));
 /* ---------- keyboard shortcuts ---------- */
