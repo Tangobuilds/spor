@@ -494,6 +494,11 @@ kbd{display:inline-block;min-width:26px;text-align:center;font:600 12.5px/1 Figt
 .letter.fresh{animation:lOpen .7s cubic-bezier(.2,.8,.2,1) both}@keyframes lOpen{from{opacity:0;transform:translateY(24px) scale(.97)}}
 @media (prefers-reduced-motion:reduce){.letter.fresh{animation:none}}
 .danger-t{color:var(--danger)!important}
+.chap.sub{margin-left:22px;width:calc(100% - 22px);position:relative}.chap.sub::before{content:'';position:absolute;left:-13px;top:-6px;bottom:50%;width:10px;border-left:2px solid var(--line);border-bottom:2px solid var(--line);border-bottom-left-radius:8px}
+.trip.sub{margin-left:22px;width:calc(100% - 22px)}
+.parhead{padding:4px 2px 10px}.parhead p{font-size:14.5px;color:var(--ink2);margin:4px 0 10px;line-height:1.45}
+.crumb{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--info);color:var(--ink2);border-radius:20px;padding:6px 12px 6px 8px;margin:4px 0 8px;font:inherit;font-size:13.5px;cursor:pointer}.crumb svg{transform:rotate(180deg)}.crumb b{color:var(--ink)}
+.card.kids{padding:12px 12px 6px!important}.card.kids .k{margin-bottom:8px}.card.kids .chap.sub{margin-left:0;width:100%}.card.kids .chap.sub::before{display:none}
 .fchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:-4px 0 10px;padding:2px 0}.fchips::-webkit-scrollbar{display:none}
 .fchip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;padding:6px 12px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .fchip.on{background:var(--accent);border-color:var(--accent);color:#fff}.fchip.clr{border-color:transparent;background:none;color:var(--ink2);font-weight:500;text-decoration:underline}
@@ -47669,7 +47674,10 @@ function tripProgressHtml(){
 }
 function renderDiary(){
   const body=$('#body');
-  if(isEmptyTrip()){body.innerHTML=emptyHtml();const d=$('#demoBtn');if(d)d.onclick=makeDemo;{const mb=$('#migBtn');if(mb)mb.onclick=()=>$('#restoreFile').click()}const w=$('#writeToday');if(w)w.onclick=async()=>{if(realTrips().length>1&&kindOf(S.trip)!=='rejse'){const v=await askDate('Hvilken dag vil du skrive om?',S.trip.start||dayKey(Date.now()));if(v)openDay(v)}else openDay(dayKey(Date.now()))};bindCloudCard();bindChapterCard();bindDaily();return}
+  if(isEmptyTrip()&&kidsOf(S.trip).length){const ks=kidsOf(S.trip),n=ks.reduce((a,k)=>a+((S.info&&S.info.get(k.id)||{}).n||0),0);
+    body.innerHTML=`<div class="parhead"><p>${esc(S.trip.name)} samler ${ks.length} ${ks.length===1?'underkapitel':'underkapitler'}${n?` med ${n} billeder`:''}. Åbn et underkapitel for at se dagbogen, eller skriv om hele perioden.</p><div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn small" id="parEdit">Redigér ${esc(S.trip.name)}</button><button class="btn small ghost" id="parIv">${svgI('mic',16)}Livsinterview</button></div></div>`+familyHtml();
+    bindFamily();$('#parEdit').onclick=()=>editChapter(S.trip);$('#parIv').onclick=()=>interview(S.trip);return}
+  if(isEmptyTrip()){body.innerHTML=familyHtml()+emptyHtml();bindFamily();const d=$('#demoBtn');if(d)d.onclick=makeDemo;{const mb=$('#migBtn');if(mb)mb.onclick=()=>$('#restoreFile').click()}const w=$('#writeToday');if(w)w.onclick=async()=>{if(realTrips().length>1&&kindOf(S.trip)!=='rejse'){const v=await askDate('Hvilken dag vil du skrive om?',S.trip.start||dayKey(Date.now()));if(v)openDay(v)}else openDay(dayKey(Date.now()))};bindCloudCard();bindChapterCard();bindDaily();return}
   const allGroups=dayGroups(),ql=(S.q||'').trim().toLowerCase(),qf=fold(ql);
   const groups=ql?allGroups.filter(([k,items])=>fold(dayHay(k,items)).includes(qf)):allGroups;
   const unplaced=sorted().filter(p=>!hasPos(p));
@@ -47700,7 +47708,7 @@ function renderDiary(){
     </section>`;
   }
   const todayK=dayKey(Date.now());
-  body.innerHTML=cloudCardHtml()+(ql?'':capBannerHtml()+backupNudgeHtml())+tripProgressHtml()+(ql?'':dailyHtml()+chapterCardHtml()+'<div id="mem"></div>')+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="writeToday"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Skriv om i dag</button><button class="btn small" id="storyBtn"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl</button><button class="btn small icon" id="dMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>
+  body.innerHTML=cloudCardHtml()+(ql?'':capBannerHtml()+backupNudgeHtml()+familyHtml())+tripProgressHtml()+(ql?'':dailyHtml()+chapterCardHtml()+'<div id="mem"></div>')+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="writeToday"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Skriv om i dag</button><button class="btn small" id="storyBtn"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl</button><button class="btn small icon" id="dMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>
     <div class="qrow"><input class="search" id="q" type="search" placeholder="Søg i dagbogen…" value="${esc(S.q)}" autocomplete="off">${ql?'<button class="btn small ghost" id="qx">Ryd</button>':''}<button class="btn small ghost qic" id="goDateBtn" aria-label="Gå til dato" title="Gå til dato (G)">${svgI('calendar',18)}</button>${S.photos.length?`<button class="btn small ghost" id="selGo" title="Vælg flere billeder">Vælg</button>`:''}</div>
     ${ql?`<div class="qinfo">${groups.length} ${groups.length===1?'dag matcher':'dage matcher'} “${esc(S.q)}”</div>`:''}`+h;
   $('#storyBtn').onclick=startStory;
@@ -47728,7 +47736,7 @@ function renderDiary(){
   body.querySelectorAll('[data-stamp]').forEach(b=>b.onclick=()=>stampDay(b.dataset.stamp));
   body.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>reorderDay(b.dataset.sort));
   bindSearch();
-  bindCloudCard();bindNudge();bindCaps();fillMemories();
+  bindCloudCard();bindNudge();bindCaps();bindFamily();fillMemories();
   body.querySelectorAll('[data-meta]').forEach(b=>b.onclick=()=>editMeta(b.dataset.meta));
   body.querySelectorAll('[data-ppl]').forEach(b=>b.onclick=async()=>{const k=b.dataset.ppl;const r=await pickPeople(pplOf(S.meta[k]),'Hvem var med '+fmtDay(k).toLowerCase()+'?');if(!r)return;S.meta[k]={...(S.meta[k]||{}),people:r};S.keep.add(k);await save('days',dayRec(k));renderSheet()});
   bindChapterCard();bindDaily();
@@ -47803,7 +47811,7 @@ function renderStats(){
   const body=$('#body');
   if(!S.photos.length){
     const notes=Object.values(S.days).filter(v=>(v||'').trim()),words=notes.reduce((a,v)=>a+wordsOf(v),0)+(S.trip.memories||[]).reduce((a,m)=>a+wordsOf(m.a),0)+wordsOf(S.trip.story);
-    if(!notes.length&&!(S.trip.memories||[]).length){body.innerHTML=emptyHtml();const d=$('#demoBtn');if(d)d.onclick=makeDemo;{const mb=$('#migBtn');if(mb)mb.onclick=()=>$('#restoreFile').click()}const w=$('#writeToday');if(w)w.onclick=()=>openDay(dayKey(Date.now()));bindCloudCard();bindChapterCard();return}
+    if(!notes.length&&!(S.trip.memories||[]).length){body.innerHTML=familyHtml()+emptyHtml();bindFamily();const d=$('#demoBtn');if(d)d.onclick=makeDemo;{const mb=$('#migBtn');if(mb)mb.onclick=()=>$('#restoreFile').click()}const w=$('#writeToday');if(w)w.onclick=()=>openDay(dayKey(Date.now()));bindCloudCard();bindChapterCard();return}
     body.innerHTML=`<div class="cards" style="margin-top:8px"><div class="card"><div class="v">${notes.length}</div><div class="k">dage skrevet</div></div><div class="card"><div class="v">${fmtN(words)}</div><div class="k">ord</div></div>
       <div class="card"><div class="v">${(S.trip.memories||[]).length}</div><div class="k">erindringer</div></div><div class="card"><div class="v">${pplOf(S.trip).length}</div><div class="k">personer</div></div>
       ${weatherCardHtml()}${tripPeopleHtml()}</div>`;
@@ -48070,7 +48078,9 @@ async function loadTrip(id,quiet=false){
   S.photos=(await DB.photos(S.trip.id)).filter(p=>!p.deleted);S.days={};S.meta={};S.keep=new Set();
   for(const d of await DB.all('days'))if(d.tripId===S.trip.id&&!d.deleted){S.days[d.day]=d.note||'';if(d.keep)S.keep.add(d.day);if(d.w||d.mood||d.temp!=null||d.cover||(d.people&&d.people.length))S.meta[d.day]={people:d.people||[],w:d.w||null,temp:d.temp??null,mood:d.mood||null,...(d.cover?{cover:d.cover}:{})}}
   $('#tripName').textContent=S.trip.name;$('#tripIco').innerHTML=svgI(KICO[kindOf(S.trip)],17,2);$('#tripIco').style.color=KINDS[kindOf(S.trip)][2];range.value=1000;S.highlight=null;updateCloudUI();
-  refresh();if(!quiet)fitTo(placed().length?placed():S.trip.track&&S.trip.track.length?trackPts(S.trip):(S.trip.place?[S.trip.place]:[]),false);
+  if(kidsOf(S.trip).length&&!S.info)try{S.info=await chapterInfo()}catch(e){}
+  refresh();if(!quiet){const ks=kidsOf(S.trip),kp=ks.flatMap(k=>{const x=S.info&&S.info.get(k.id);return x&&x.pts&&x.pts.length?x.pts:k.place?[k.place]:[]});
+    fitTo(placed().length?[...placed(),...kp]:kp.length?(S.trip.place?[...kp,S.trip.place]:kp):S.trip.track&&S.trip.track.length?trackPts(S.trip):(S.trip.place?[S.trip.place]:[]),false)}
 }
 async function newTrip(name,demo=false){const t={id:uid(),name,created:Date.now()};if(demo){t.demo=true;await DB.put('trips',t)}else await save('trips',t);S.trips.push(t);return t}
 $('#tripBtn').onclick=openTrips;$('#brandBtn').onclick=()=>openSettings();
@@ -48112,14 +48122,14 @@ async function openSettings(focus){
 async function openTrips(){
   if(!S.info)S.info=await chapterInfo();
   const life=isLife(),ch=realTrips(),demo=S.trips.filter(t=>t.demo);
-  const rows=[...ch].sort((a,b)=>chRange(b,S.info.get(b.id)).sort-chRange(a,S.info.get(a.id)).sort);
-  const rowBtn=t=>{const x=S.info.get(t.id)||{};const[e,,col]=KINDS[kindOf(t)];
-    return `<button class="trip ${!life&&t.id===S.trip.id?'on':''}" data-trip="${t.id}">${t.demo?'<span style="font-size:18px">🧪</span>':kBadge(kindOf(t),32)}<span class="n">${esc(t.name)}<br><span class="c" style="font-weight:400">${esc(fmtRange(t,x))}</span></span><span class="c">${x.n||0} bill.</span></button>`};
+  const rows=nestRows(ch);
+  const rowBtn=(t,dep)=>{const x=S.info.get(t.id)||{};const[e,,col]=KINDS[kindOf(t)];
+    return `<button class="trip ${!life&&t.id===S.trip.id?'on':''}${dep?' sub':''}" data-trip="${t.id}">${t.demo?'<span style="font-size:18px">🧪</span>':kBadge(kindOf(t),32)}<span class="n">${esc(t.name)}<br><span class="c" style="font-weight:400">${esc(fmtRange(t,x))}</span></span><span class="c">${x.n||0} bill.</span></button>`};
   modal(`<h3>Dit liv</h3>
     <button class="trip ${life?'on':''}" id="mLife"><span class="kb" style="--kc:var(--accent);width:32px;height:32px">${svgI('compass',18)}</span><span class="n">Hele livet<br><span class="c" style="font-weight:400">Alle kapitler på ét kort og en tidslinje</span></span><span class="c">${ch.length} kap.</span></button>
     <div class="sect">Kapitler</div>
-    ${rows.map(rowBtn).join('')||'<p style="font-size:14px">Ingen kapitler endnu.</p>'}
-    ${demo.map(rowBtn).join('')}
+    ${rows.map(r=>rowBtn(r.t,r.d)).join('')||'<p style="font-size:14px">Ingen kapitler endnu.</p>'}
+    ${demo.map(t=>rowBtn(t,0)).join('')}
     <div class="row" style="justify-content:space-between;margin-top:12px;flex-wrap:wrap">
       ${life?'<span></span>':`<div style="display:flex;gap:8px"><button class="btn small ghost" id="mEdit">Redigér “${esc(S.trip.name.length>18?S.trip.name.slice(0,17)+'…':S.trip.name)}”</button><button class="btn small ghost" id="mDel" style="color:#b3261e">Slet</button></div>`}
       <button class="btn small accent" id="mNew">+ Nyt kapitel</button>
@@ -48361,7 +48371,7 @@ async function push(){
       const mem=S.photos.find(p=>p.id===x.id);if(mem){mem.thumbAsset=x.thumbAsset;mem.fullAsset=x.fullAsset}
     }
     let id,body;
-    if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,deleted:!!x.deleted,upd:x.upd||0}}
+    if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,parent:x.parent||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='days'){id='d_'+x.tripId+'_'+x.day;body={kind:'day',tripId:x.tripId,day:x.day,note:x.note||'',keep:!!x.keep,w:x.w||null,temp:x.temp??null,mood:x.mood||null,people:x.people||[],cover:x.cover||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='places'){id='pl_'+x.id;body={kind:'place',id:x.id,name:x.name,desc:(x.desc||'').slice(0,4000),lat:x.lat,lng:x.lng,cat:x.cat||'andet',st:x.st||'besogt',layer:x.layer||'',note:x.note||'',date:x.date||null,visits:x.visits||[],created:x.created||0,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='capsules'){id='c_'+x.id;body={kind:'capsule',id:x.id,title:x.title||'',text:x.text||'',written:x.written||0,open:x.open||'',opened:x.opened||0,tripId:x.tripId||null,where:x.where||'',deleted:!!x.deleted,upd:x.upd||0}}
@@ -48383,7 +48393,7 @@ async function pull(){
     if(r.kind==='trip'){
       const l=await DB.get('trips',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('trips',r.id);changed=true}continue}
-      await DB.put('trips',{...(l||{}),id:r.id,name:r.name,created:r.created,start:r.start||null,end:r.end||null,kind:r.ckind||'rejse',place:r.place||null,note:r.note||'',people:r.people||[],memories:r.memories||[],story:r.story||null,cover:r.cover||null,track:r.track||null,src:r.src||undefined,upd:r.upd,dirty:0});changed=true;
+      await DB.put('trips',{...(l||{}),id:r.id,name:r.name,created:r.created,start:r.start||null,end:r.end||null,kind:r.ckind||'rejse',place:r.place||null,note:r.note||'',people:r.people||[],memories:r.memories||[],story:r.story||null,cover:r.cover||null,track:r.track||null,src:r.src||undefined,parent:r.parent||undefined,upd:r.upd,dirty:0});changed=true;
     }else if(r.kind==='day'){
       const key=r.tripId+'|'+r.day,l=await DB.get('days',key);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('days',key);changed=true}continue}
@@ -49048,8 +49058,29 @@ async function chapterInfo(all){
     const t=S.trips.find(t=>t.id===id);if(t&&t.place){const c=countryOf({lat:t.place.lat,lng:t.place.lng,_c:undefined});if(c)x.countries.add(c)}}
   return m;
 }
+/* ---------- sub-chapters: a chapter can be part of another (one level) ---------- */
+function familyHtml(){
+  if(!S.trip||isLife())return'';const par=parentOf(S.trip),ks=kidsOf(S.trip);
+  if(ks.length&&!S.info){chapterInfo().then(i=>{S.info=i;renderSheet()});}
+  if(par)return `<button class="crumb" data-fam="${par.id}">${svgI('chevron',14)}<span>Del af <b>${esc(par.name)}</b></span></button>`;
+  if(!ks.length)return'';
+  return `<div class="card kids"><div class="k" style="display:flex;justify-content:space-between;align-items:center">Underkapitler · ${ks.length}<button class="linkbtn" id="kidAdd">+ Tilføj</button></div>${nestRows(ks).map(r=>chapterRow(r.t,true)).join('')}</div>`;
+}
+function bindFamily(){document.querySelectorAll('[data-fam]').forEach(b=>b.onclick=()=>loadTrip(b.dataset.fam));
+  document.querySelectorAll('.kids [data-chap]').forEach(b=>b.onclick=()=>loadTrip(b.dataset.chap));
+  const a=$('#kidAdd');if(a)a.onclick=()=>editChapter(null,{parent:S.trip.id,kind:kindOf(S.trip)})}
+const parentOf=t=>t&&t.parent?S.trips.find(x=>x.id===t.parent&&!x.deleted&&!x.demo)||null:null;
+const kidsOf=t=>t?realTrips().filter(x=>x.parent===t.id):[];
+function nestRows(list){
+  const ids=new Set(list.map(t=>t.id)),R=t=>chRange(t,S.info&&S.info.get(t.id)).sort;
+  const top=list.filter(t=>!t.parent||!ids.has(t.parent)).sort((a,b)=>R(b)-R(a)),out=[];
+  for(const t of top){out.push({t,d:0});for(const k of list.filter(x=>x.parent===t.id).sort((a,b)=>R(b)-R(a)))out.push({t:k,d:1})}
+  return out;
+}
 function chRange(t,x){
-  const s=t.start||(x&&x.min!=null?dayKey(x.min):null),e=t.end||(x&&x.max!=null?dayKey(x.max):null);
+  let s=t.start||(x&&x.min!=null?dayKey(x.min):null),e=t.end||(x&&x.max!=null?dayKey(x.max):null);
+  if(!t.start&&!t.parent&&S.trips){const ks=S.trips.filter(k=>k.parent===t.id&&!k.deleted);if(ks.length){const rs=ks.map(k=>chRange(k,S.info&&S.info.get(k.id))).filter(r=>r.s);
+    if(rs.length){s=rs.map(r=>r.s).sort()[0];const es=rs.map(r=>r.e||r.s).sort();e=t.end||es[es.length-1]}}}
   return{s,e,sort:s?k2t(s):(x&&x.min)||0};
 }
 function fmtRange(t,x){
@@ -49078,7 +49109,7 @@ function fitLife(anim=true){
 }
 let lastPins=[];
 function chapterPins(){
-  const list=isLife()?realTrips().filter(t=>t.place):(S.trip&&S.trip.place?[S.trip]:[]);
+  const list=isLife()?realTrips().filter(t=>t.place):[S.trip,...kidsOf(S.trip)].filter(t=>t&&t.place);
   const out=[];
   for(const t of list){
     if(S.cut!==Infinity&&isLife()){const r=chRange(t,S.info&&S.info.get(t.id));if(r.sort&&r.sort>S.cut)continue}
@@ -49126,12 +49157,13 @@ function coverOf(t){
   if(t.cover){const c=S.photos.find(p=>p.id===t.cover);if(c)return c}
   return COV.get(t.id)||null;
 }
-function chapterRow(t){
-  const x=S.info&&S.info.get(t.id)||{n:0,days:0,km:0,countries:new Set()};
+function chapterRow(t,sub){
+  const x=S.info&&S.info.get(t.id)||{n:0,days:0,km:0,countries:new Set()};const nk=sub?0:kidsOf(t).length;
   const[e,label,col]=KINDS[kindOf(t)];
   const bits=[];if(x.n)bits.push(`${x.n} bill.`);if(x.days)bits.push(`${x.days} ${x.days===1?'dag':'dage'} skrevet`);if(x.km>5)bits.push(`${fmtKm(x.km)} km`);if(t.memories&&t.memories.length)bits.push(`${svgI('mic',13)}${t.memories.length}`);if(t.people&&t.people.length)bits.push(svgI('users',13)+' '+esc(t.people.slice(0,3).join(', '))+(t.people.length>3?' …':''));
-  const cv=coverOf(t);
-  return `<button class="chap" data-chap="${t.id}" style="--kc:${col}">${cv?`<span class="ce cv"><img src="${thumbUrl(cv)}" alt="" loading="lazy"><i>${svgI(KICO[kindOf(t)])}</i></span>`:`<span class="ce" style="background:none;width:auto;height:auto">${kBadge(kindOf(t),44)}</span>`}<span class="cm"><b>${esc(t.name)}</b>
+  if(nk)bits.unshift(`${nk} ${nk===1?'underkapitel':'underkapitler'}`);
+  const cv=coverOf(t)||(nk?kidsOf(t).map(coverOf).find(Boolean):null);
+  return `<button class="chap${sub?' sub':''}${nk?' par':''}" data-chap="${t.id}" style="--kc:${col}">${cv?`<span class="ce cv"><img src="${thumbUrl(cv)}" alt="" loading="lazy"><i>${svgI(KICO[kindOf(t)])}</i></span>`:`<span class="ce" style="background:none;width:auto;height:auto">${kBadge(kindOf(t),44)}</span>`}<span class="cm"><b>${esc(t.name)}</b>
     <span>${esc(fmtRange(t,x))}${t.place&&t.place.name?' · '+esc(t.place.name):''}</span>${bits.length?`<span class="cb">${bits.join(' · ')}</span>`:''}</span></button>`;
 }
 function renderLife(){
@@ -49139,9 +49171,9 @@ function renderLife(){
   if(S.tab==='stats')return renderLifeStats();
   const head=capBannerHtml()+onboardingHtml()+backupNudgeHtml()+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="lNew">+ Nyt kapitel</button><button class="btn small" id="lStory"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl mit liv</button><button class="btn small icon" id="lMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>`;
   if(!ch.length){body.innerHTML=head+`<div class="empty"><h2>Dit liv på ét kort</h2><p>Et liv består af kapitler: rejser, steder du har boet, skoler, job, tjeneste og store begivenheder. Opret et kapitel, sæt det på kortet, og fyld det med billeder og dagbog.</p></div>`;bindLife();return}
-  const rows=ch.map(t=>({t,r:chRange(t,S.info&&S.info.get(t.id))})).sort((a,b)=>b.r.sort-a.r.sort);
+  const rows=nestRows(ch).map(({t,d})=>({t,d,r:chRange(t,S.info&&S.info.get(t.id))}));
   let h='',year=null;
-  for(const{t,r} of rows){const y=r.s?r.s.slice(0,4):'Uden dato';if(y!==year){year=y;h+=/^\d{4}$/.test(y)?`<button class="yr yrb" data-yj="${y}" aria-label="Gå til en dato i ${y}">${y}<span>${svgI('calendar',16)}</span></button>`:`<div class="yr">${y}</div>`}h+=chapterRow(t)}
+  for(const{t,d,r} of rows){if(d){h+=chapterRow(t,true);continue}const y=r.s?r.s.slice(0,4):'Uden dato';if(y!==year){year=y;h+=/^\d{4}$/.test(y)?`<button class="yr yrb" data-yj="${y}" aria-label="Gå til en dato i ${y}">${y}<span>${svgI('calendar',16)}</span></button>`:`<div class="yr">${y}</div>`}h+=chapterRow(t)}
   body.innerHTML=head+`<div class="qrow"><input class="search" id="lq" type="search" placeholder="Søg i hele dit liv…" value="${esc(S.lq)}" autocomplete="off"></div><div class="fchips" id="lf">${lfChipsHtml()}</div><div id="lres"></div>`+`<div id="ltl"${lqOn()?' style="display:none"':''}><div id="mem"></div><div class="tl">${h}</div></div>`;
   bindLife();fillMemories();bindLifeSearch();
   document.querySelectorAll('[data-yj]').forEach(b=>b.onclick=()=>yearJump(+b.dataset.yj));
@@ -49220,9 +49252,13 @@ async function editChapter(t,pre){
     <p class="mlabel">Sted på kortet</p><div class="row" style="justify-content:flex-start;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
       <span style="font-size:14px" id="cPlaceTxt">${d.place?'📍 '+esc(d.place.name||fmtCoord(d.place.lat,d.place.lng)):'<span style="color:var(--ink3)">Intet sted valgt</span>'}</span>
       <button class="btn small ghost" id="cPick">${d.place?'Flyt':'Vælg på kortet'}</button>${d.place?'<button class="btn small ghost" id="cNoPlace">Fjern</button>':''}</div>
+    ${(()=>{const hasKids=!isNew&&kidsOf(t).length,opts=realTrips().filter(x=>x.id!==d.id&&!x.parent).sort((a,b)=>a.name.localeCompare(b.name,'da'));
+      if(hasKids)return `<p class="mlabel">Underkapitler</p><p style="font-size:13.5px;margin:0 0 12px;color:var(--ink2)">${kidsOf(t).map(k=>esc(k.name)).join(', ')}</p>`;
+      if(!opts.length)return'';
+      return `<p class="mlabel">Del af et større kapitel</p><select id="cParent" class="din" style="width:100%;margin-bottom:4px"><option value="">Nej – det er et kapitel for sig</option>${opts.map(x=>`<option value="${x.id}" ${d.parent===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select><p style="font-size:12px;color:var(--ink3);margin:0 0 12px">Fx Grønland og Bornholm som underkapitler af Militær.</p>`})()}
     <p class="mlabel">Hvem var med</p><input type="text" id="cPeople" value="${esc((d.people||[]).join(', '))}" placeholder="Navne adskilt af komma, fx Anna, Mads">
     <p class="mlabel">Om kapitlet</p><textarea id="cNote" class="dnote" style="margin:0 0 12px;border-color:var(--line);min-height:70px" placeholder="Hvad handlede denne periode om?">${esc(d.note||'')}</textarea>
-    ${isNew?'':'<div class="row" style="justify-content:flex-start;margin-bottom:10px;gap:8px;flex-wrap:wrap"><button class="btn small ghost" id="cMerge">Slå sammen med et andet kapitel…</button><button class="btn small ghost" id="cDel" style="color:#c4362b">🗑️ Slet kapitel</button></div>'}
+    ${isNew?'':`<div class="row" style="justify-content:flex-start;margin-bottom:10px;gap:8px;flex-wrap:wrap">${!d.parent?'<button class="btn small ghost" id="cSub">+ Tilføj underkapitel</button>':''}<button class="btn small ghost" id="cMerge">Slå sammen med et andet kapitel…</button><button class="btn small ghost" id="cDel" style="color:#c4362b">🗑️ Slet kapitel</button></div>`}
     <div class="row"><button class="btn ghost" id="cNo">Annullér</button><button class="btn accent" id="cOk">${isNew?'Opret':'Gem'}</button></div>`);
   let kind=kindOf(d),place=d.place||null;
   document.querySelectorAll('#cKind button').forEach(b=>b.onclick=()=>{kind=b.dataset.k;document.querySelectorAll('#cKind button').forEach(x=>x.classList.toggle('on',x===b))});
@@ -49231,11 +49267,13 @@ async function editChapter(t,pre){
     if(a&&b&&b<a){toast('Slutdatoen er før startdatoen');return null}
     let obj=t;if(isNew){obj={id:uid(),created:Date.now()};S.trips.push(obj)}
     Object.assign(obj,{name,kind,start:a,end:b,note:$('#cNote').value.trim(),place,people:[...new Set($('#cPeople').value.split(',').map(normName).filter(Boolean))]});
+    {const ps=$('#cParent');if(ps){if(ps.value)obj.parent=ps.value;else delete obj.parent}}
     await save('trips',obj);if(S.info&&!S.info.has(obj.id))S.info.set(obj.id,{n:0,days:0,km:0,pts:[],countries:new Set(),min:null,max:null});
     return obj;
   };
   $('#cNo').onclick=()=>closeModal();
   const mg=$('#cMerge');if(mg)mg.onclick=()=>{closeModal();mergeChapter(t)};
+  const cs=$('#cSub');if(cs)cs.onclick=()=>{closeModal();setTimeout(()=>editChapter(null,{parent:t.id,kind:kindOf(t)}),30)};
   const cd=$('#cDel');if(cd)cd.onclick=()=>{closeModal();setTimeout(()=>deleteChapter(t),30)};
   const np=$('#cNoPlace');if(np)np.onclick=()=>{place=null;$('#cPlaceTxt').innerHTML='<span style="color:var(--ink3)">Intet sted valgt</span>';np.remove()};
   $('#cPick').onclick=async()=>{const obj=await collect();if(!obj)return;closeModal();startPlacingChapter(obj)};
@@ -50100,12 +50138,13 @@ async function deleteChapter(t){
   const ps=(await DB.all('photos')).filter(p=>p.tripId===t.id&&!p.deleted),ds=(await DB.all('days')).filter(d=>d.tripId===t.id&&!d.deleted);
   const has=ps.length||ds.some(d=>(d.note||'').trim())||(t.memories||[]).length;
   const go=async keepTo=>{
-    if(keepTo){await mergeInto(t,keepTo);toast(`“${t.name}” er slettet – indholdet ligger nu i “${keepTo.name}”`,4500);return isLife()?loadLife(true):loadTrip(keepTo.id)}
+    const kids=S.trips.filter(k=>k.parent===t.id);
+    if(keepTo){for(const k of kids){if(k.id===keepTo.id||keepTo.parent)delete k.parent;else k.parent=keepTo.id;await save('trips',k)}await mergeInto(t,keepTo);toast(`“${t.name}” er slettet – indholdet ligger nu i “${keepTo.name}”`,4500);return isLife()?loadLife(true):loadTrip(keepTo.id)}
     const idx=S.trips.indexOf(t);S.trips=S.trips.filter(x=>x!==t);
     const after=async()=>{if(S.trip&&S.trip.id===t.id){if(realTrips().length)await loadLife();else{const n=await newTrip('Min rejse');await loadTrip(n.id)}}else if(isLife())await loadLife(true);else refresh()};
     await after();
     toast(`“${t.name}” er slettet`,8000,{label:'Fortryd',undo:async()=>{S.trips.splice(Math.max(0,idx),0,t);await loadTrip(t.id);toast('Kapitlet er tilbage')},
-      done:async()=>{for(const p of ps)await softDelPhoto(p);for(const d of ds)await softDel('days',d);await softDel('trips',t)}});
+      done:async()=>{for(const k of kids){delete k.parent;await save('trips',k)}for(const p of ps)await softDelPhoto(p);for(const d of ds)await softDel('days',d);await softDel('trips',t)}});
   };
   if(!has){if(await ask({title:`Slet “${t.name}”?`,text:'Kapitlet er tomt. Du kan fortryde lige bagefter.',ok:'Slet',danger:true}))go(null);return}
   modal(`<h3>🗑️ Slet “${esc(t.name)}”?</h3><p>Kapitlet indeholder ${[ps.length&&`${ps.length} ${ps.length===1?'billede':'billeder'}`,ds.length&&`${ds.length} ${ds.length===1?'dag':'dage'} med dagbog`,(t.memories||[]).length&&`${t.memories.length} erindringer`].filter(Boolean).join(', ')}.</p>
