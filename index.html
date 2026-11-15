@@ -47439,7 +47439,7 @@ canvas.addEventListener('click',e=>{
   for(const pn of lastPins)if(Math.hypot(pn.x-x,pn.y-y)<22){
     if(pn.list.length>1){const pl=pn.list.map(t=>t.place);const sp=Math.max(...pl.map(q=>q.lat))-Math.min(...pl.map(q=>q.lat))+Math.max(...pl.map(q=>q.lng))-Math.min(...pl.map(q=>q.lng));
       if(sp>.01&&T.k<2500)fitTo(pl);else pickChapter(pn.list);return}
-    if(isLife())loadTrip(pn.t.id);else editChapter(pn.t);return}
+    if(isLife()||!S.trip||pn.t.id!==S.trip.id)loadTrip(pn.t.id);else editChapter(pn.t);return}
   let best=null,bd=1e9;
   for(const c of lastClusters){const d=Math.hypot(c.x-x,c.y-y);if(d<bd){bd=d;best=c}}
   if(!best||bd>30){hitPlace(x,y);return}
@@ -47807,8 +47807,16 @@ function pipPolys(f){
 }
 function inFeat(f,[x,y]){
   for(const P of pipPolys(f)){const xx=P.wrap&&x<0?x+360:x;if(xx<P.x0||xx>P.x1||y<P.y0||y>P.y1)continue;let c=false;for(const r of P.rings)if(inRing(r,xx,y))c=!c;if(c)return true}return false}
+function familyStatsHtml(){
+  const ks=kidsOf(S.trip);if(!ks.length||!S.info)return'';const xs=ks.map(k=>S.info.get(k.id)||{});
+  const n=xs.reduce((a,x)=>a+(x.n||0),0),d=xs.reduce((a,x)=>a+(x.days||0),0),km=xs.reduce((a,x)=>a+(x.km||0),0),cs=new Set(xs.flatMap(x=>[...(x.countries||[])]));
+  const ppl=new Set(ks.flatMap(pplOf));
+  return `<div class="sect" style="margin-top:8px">Samlet for ${ks.length} underkapitler</div><div class="cards"><div class="card"><div class="v">${fmtN(n)}</div><div class="k">billeder</div></div><div class="card"><div class="v">${fmtN(d)}</div><div class="k">dage skrevet</div></div>
+    <div class="card"><div class="v">${fmtKm(km)}</div><div class="k">km</div></div><div class="card"><div class="v">${cs.size||ppl.size}</div><div class="k">${cs.size?(cs.size===1?'land':'lande'):'personer'}</div></div></div>${cs.size?`<p style="font-size:13.5px;color:var(--ink2);margin:6px 2px 10px">${[...cs].map(esc).join(' · ')}${ppl.size?` · med ${[...ppl].slice(0,5).map(esc).join(', ')}${ppl.size>5?' m.fl.':''}`:''}</p>`:''}`;
+}
 function renderStats(){
   const body=$('#body');
+  if(kidsOf(S.trip).length&&!S.photos.length){if(!S.info){chapterInfo().then(i=>{S.info=i;renderSheet()});return}body.innerHTML=familyStatsHtml()+familyHtml();bindFamily();return}
   if(!S.photos.length){
     const notes=Object.values(S.days).filter(v=>(v||'').trim()),words=notes.reduce((a,v)=>a+wordsOf(v),0)+(S.trip.memories||[]).reduce((a,m)=>a+wordsOf(m.a),0)+wordsOf(S.trip.story);
     if(!notes.length&&!(S.trip.memories||[]).length){body.innerHTML=familyHtml()+emptyHtml();bindFamily();const d=$('#demoBtn');if(d)d.onclick=makeDemo;{const mb=$('#migBtn');if(mb)mb.onclick=()=>$('#restoreFile').click()}const w=$('#writeToday');if(w)w.onclick=()=>openDay(dayKey(Date.now()));bindCloudCard();bindChapterCard();return}
@@ -49299,15 +49307,19 @@ function startPlacingChapter(t){
 async function lifeData(){
   const ps=(await DB.all('photos')).filter(p=>!p.deleted),ds=(await DB.all('days')).filter(d=>!d.deleted);
   const info=await chapterInfo();
-  return realTrips().map(t=>({t,x:info.get(t.id),r:chRange(t,info.get(t.id)),
+  const all=realTrips().map(t=>({t,x:info.get(t.id),r:chRange(t,info.get(t.id)),par:parentOf(t),
     days:ds.filter(d=>d.tripId===t.id&&(d.note||'').trim()).sort((a,b)=>a.day<b.day?-1:1),
     notes:ps.filter(p=>p.tripId===t.id&&(p.note||'').trim()).sort((a,b)=>a.time-b.time)})).sort((a,b)=>a.r.sort-b.r.sort);
+  // keep each sub-chapter right after its parent, so the life story reads in one piece
+  const ids=new Set(all.map(c=>c.t.id)),out=[];
+  for(const c of all)if(!c.par||!ids.has(c.par.id)){out.push(c);for(const k of all)if(k.par&&k.par.id===c.t.id)out.push({...k,sub:1})}
+  return out;
 }
 async function buildLifeMd(){
   const L=['# Mit liv',''];
   for(const c of await lifeData()){
     const[e,l]=KINDS[kindOf(c.t)];
-    L.push(`## ${e} ${c.t.name}`,`*${l} · ${fmtRange(c.t,c.x)}${c.t.place&&c.t.place.name?' · '+c.t.place.name:''}*`,'');
+    L.push(`${c.sub?'###':'##'} ${e} ${c.t.name}`,`*${l} · ${fmtRange(c.t,c.x)}${c.t.place&&c.t.place.name?' · '+c.t.place.name:''}${c.sub&&c.par?' · del af '+c.par.name:''}*`,'');
     if(c.t.note)L.push(c.t.note,'');
     if(c.t.people&&c.t.people.length)L.push('Med: '+c.t.people.join(', '),'');
     if(c.t.story)L.push(c.t.story,'');
@@ -49322,7 +49334,7 @@ async function aiLife(){await loadPersons();
   const me=await getMe(),parts=[];if(me.name||me.born||me.home||me.bio)parts.push(`### Om personen\n${[me.name&&'Navn: '+me.name,me.born&&'Født: '+me.born,me.home&&'Hjemby: '+me.home,me.bio&&'Selv: '+me.bio].filter(Boolean).join('\n')}`);
   for(const c of await lifeData()){
     const[,l]=KINDS[kindOf(c.t)];
-    let s=`### ${c.t.name}\nType: ${l}\nPeriode: ${fmtRange(c.t,c.x)}${c.t.place&&c.t.place.name?`\nSted: ${c.t.place.name}`:''}${c.x&&c.x.countries.size?`\nLande: ${[...c.x.countries].join(', ')}`:''}`;
+    let s=`${c.sub?'####':'###'} ${c.t.name}\nType: ${l}${c.sub&&c.par?`\nDel af: ${c.par.name}`:''}\nPeriode: ${fmtRange(c.t,c.x)}${c.t.place&&c.t.place.name?`\nSted: ${c.t.place.name}`:''}${c.x&&c.x.countries.size?`\nLande: ${[...c.x.countries].join(', ')}`:''}`;
     if(c.t.note)s+=`\nOm kapitlet: ${c.t.note}`;
     if(c.t.people&&c.t.people.length)s+=`\nPersoner: ${pplDesc(c.t.people)}`;
     if(c.t.story)s+=`\nPersonens egen fortælling: ${c.t.story.slice(0,3000)}`;
@@ -49476,6 +49488,7 @@ const IVQ={
 function ivContext(t){
   const[,label]=KINDS[kindOf(t)],x=S.info&&S.info.get(t.id);
   const L=[`Kapitel: ${t.name}`,`Type: ${label}`,`Periode: ${fmtRange(t,x)}`];
+  {const par=parentOf(t),ks=kidsOf(t);if(par)L.push('Del af: '+par.name);if(ks.length)L.push('Underkapitler: '+ks.map(k=>`${k.name} (${fmtRange(k,S.info&&S.info.get(k.id))})`).join(', '))}
   if(t.place&&t.place.name)L.push('Sted: '+t.place.name);
   if(x&&x.countries&&x.countries.size)L.push('Lande: '+[...x.countries].join(', '));
   if(pplOf(t).length)L.push('Personer: '+pplDesc(pplOf(t)));
@@ -49582,7 +49595,7 @@ async function buildLifeBook(withPhotos,withDays){
   const total=withPhotos?data.reduce((a,c)=>a+pick(c).length,0):0;let done=0;prog(true,0,total+1,'Laver livsbog…');
   const H=[],toc=[];let i=0;
   for(const c of data){i++;
-    const[e,l]=KINDS[kindOf(c.t)],id='k'+i;toc.push(`<li><a href="#${id}">${e} ${esc(c.t.name)}</a> <span>${esc(fmtRange(c.t,c.x))}</span></li>`);
+    const[e,l]=KINDS[kindOf(c.t)],id='k'+i;toc.push(`<li${c.sub?' class="sub" style="margin-left:1.4em"':''}><a href="#${id}">${e} ${esc(c.t.name)}</a> <span>${esc(fmtRange(c.t,c.x))}</span></li>`);
     let figs='';
     if(withPhotos)for(const p of pick(c)){let src='';try{const b=await getBlob(p,'full')||await getBlob(p,'thumb');const sb=b&&await shrinkBlob(b,1200,.78);if(sb)src=await b64(sb)}catch(err){}
       done++;prog(true,done,total+1,'Laver livsbog…');if(src)figs+=`<figure><img src="${src}" alt="">${p.note?`<figcaption>${esc(p.note)}</figcaption>`:''}</figure>`}
@@ -49592,10 +49605,11 @@ async function buildLifeBook(withPhotos,withDays){
     if(c.t.story)body+=c.t.story.split(/\n{2,}/).map(par=>`<p>${esc(par).replace(/\n/g,'<br>')}</p>`).join('');
     else if(mem.length)body+=mem.map(m=>`<p><b>${esc(m.q)}</b><br>${esc(m.a).replace(/\n/g,'<br>')}</p>`).join('');
     if(withDays&&c.days.length)body+=`<div class="days">${c.days.map(d=>`<h4>${esc(fmtDay(d.day))}</h4>${d.note.trim().split(/\n{2,}/).map(par=>`<p>${esc(par).replace(/\n/g,'<br>')}</p>`).join('')}`).join('')}</div>`;
-    H.push(`<section class="ch" id="${id}"><div class="kind">${e} ${esc(l)}</div><h2>${esc(c.t.name)}</h2>
+    const nk=data.filter(k=>k.sub&&k.par&&k.par.id===c.t.id).length;
+    H.push(`<section class="ch${c.sub?' sub':''}" id="${id}"><div class="kind">${e} ${esc(l)}${c.sub&&c.par?` · del af ${esc(c.par.name)}`:''}</div><h2>${esc(c.t.name)}</h2>
       <div class="meta">${esc(fmtRange(c.t,c.x))}${c.t.place&&c.t.place.name?' · '+esc(c.t.place.name):''}${c.x&&c.x.countries&&c.x.countries.size?' · '+[...c.x.countries].filter(n=>!(c.t.place&&c.t.place.name===n)).map(esc).join(', '):''}</div>
       ${pp.length?`<div class="meta">Med: ${pp.map(esc).join(', ')}</div>`:''}
-      ${figs?`<div class="figs n${Math.min(4,(figs.match(/<figure>/g)||[]).length)}">${figs}</div>`:''}${body||'<p class="empty">Endnu ingen tekst til dette kapitel.</p>'}</section>`);
+      ${figs?`<div class="figs n${Math.min(4,(figs.match(/<figure>/g)||[]).length)}">${figs}</div>`:''}${body||(nk?`<p class="empty">${nk} ${nk===1?'underkapitel følger':'underkapitler følger'}.</p>`:'<p class="empty">Endnu ingen tekst til dette kapitel.</p>')}</section>`);
   }
   prog(false);
   const yrs=data.map(c=>c.r.s).filter(Boolean).map(k=>k.slice(0,4)).sort();
