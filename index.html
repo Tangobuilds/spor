@@ -475,6 +475,8 @@ kbd{display:inline-block;min-width:26px;text-align:center;font:600 12.5px/1 Figt
 .rv img{width:100%;height:100%;object-fit:cover;display:block}.rv.on{opacity:1;box-shadow:inset 0 0 0 3px var(--accent)}
 .rv.on::after{content:'✓';position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
 .rv span{position:absolute;left:0;right:0;top:0;background:#000a;color:#fff;font-size:11px;font-weight:600;padding:3px 0;text-align:center}
+.volw{background:#fde8e4!important;border-color:#f3b8ad!important;color:#5a1d14}.volw b{color:#5a1d14}
+html[data-theme=dark] .volw{background:#3a1d18!important;border-color:#6b3227!important;color:#f6d5cd}html[data-theme=dark] .volw b{color:#ffe3dc}
 .bknudge{background:var(--sun2)!important;border-color:transparent!important}
 .memc.slim{padding:4px 6px!important}.slimrow{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;color:var(--ink);font:inherit;text-align:left;padding:10px 8px;cursor:pointer;border-radius:10px}
 .setlink{margin-top:12px;border:1px solid var(--line)!important;border-radius:14px!important;background:var(--card)!important}
@@ -48463,11 +48465,17 @@ async function setCloud(on){
   }else{CLOUD.state='off';toast('Gemmer kun på denne enhed')}
   updateCloudUI();renderSheet();
 }
+// Inside Claude the page's own browser storage is not guaranteed to last (the iPhone app can clear it on reload), so warn until Sky is on
+function volatileHtml(){
+  if(window.SPOR_PWA||CLOUD.on||sessionStorage.getItem('spor-vol-hide'))return'';
+  return `<div class="warn volw"><b>Dagbogen kan forsvinde i Claude-versionen</b>Her gemmes alt kun midlertidigt i Claude-appen og kan blive ryddet, når siden opdateres eller lukkes. Brug offline-appen på <span style="font-weight:700">tangobuilds.github.io/spor</span>${CLOUD.avail?', eller slå skyen til, så alt gemmes på din Claude-konto':''}.
+    <div class="row" style="flex-wrap:wrap">${CLOUD.avail?'<button class="btn small accent" id="volSky">Slå skyen til</button>':''}<button class="btn small ${CLOUD.avail?'':'accent'}" id="volBk">Tag backup nu</button><button class="btn small ghost" id="volHide">Skjul</button></div></div>`}
+function bindVolatile(){const a=$('#volSky');if(a)a.onclick=()=>setCloud(true);const b=$('#volBk');if(b)b.onclick=exportLifeZip;const c=$('#volHide');if(c)c.onclick=()=>{try{sessionStorage.setItem('spor-vol-hide','1')}catch(e){}renderSheet()}}
 function cloudCardHtml(){
-  if(!CLOUD.avail||cloudPref())return'';
+  if(!CLOUD.avail||cloudPref())return volatileHtml();
   return `<div class="ccard"><b>Gem dagbogen i skyen?</b>Så mister du intet, hvis telefonen ryger, og du kan åbne den på andre enheder. Alt gemmes privat på din Claude-konto – kun du kan se det. Uden net venter ændringer og sendes, når der er forbindelse.<div class="row"><button class="btn small accent" id="cOn">Slå til</button><button class="btn small ghost" id="cOff">Kun på denne enhed</button></div></div>`;
 }
-function bindCloudCard(){const a=$('#cOn'),b=$('#cOff');if(a)a.onclick=()=>setCloud(true);if(b)b.onclick=()=>setCloud(false)}
+function bindCloudCard(){bindVolatile();const a=$('#cOn'),b=$('#cOff');if(a)a.onclick=()=>setCloud(true);if(b)b.onclick=()=>setCloud(false)}
 function cloudText(){
   if(!CLOUD.avail)return['',window.SPOR_PWA?'Sky-synkronisering findes kun i Claude-versionen. Her ligger alt på telefonen – tag en backup af hele livet en gang imellem.':'Skyen er ikke tilgængelig i denne visning. Åbn siden på claude.ai eller i Claude-appen, logget ind.'];
   if(!CLOUD.on)return['','Fra – dagbogen gemmes kun på denne enhed.'];
@@ -49189,7 +49197,7 @@ function chapterRow(t,sub){
 function renderLife(){
   const body=$('#body');const ch=realTrips();
   if(S.tab==='stats')return renderLifeStats();
-  const head=capBannerHtml()+onboardingHtml()+backupNudgeHtml()+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="lNew">+ Nyt kapitel</button><button class="btn small" id="lStory"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl mit liv</button><button class="btn small icon" id="lMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>`;
+  const head=volatileHtml()+capBannerHtml()+onboardingHtml()+backupNudgeHtml()+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="lNew">+ Nyt kapitel</button><button class="btn small" id="lStory"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl mit liv</button><button class="btn small icon" id="lMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>`;
   if(!ch.length){body.innerHTML=head+`<div class="empty"><h2>Dit liv på ét kort</h2><p>Et liv består af kapitler: rejser, steder du har boet, skoler, job, tjeneste og store begivenheder. Opret et kapitel, sæt det på kortet, og fyld det med billeder og dagbog.</p></div>`;bindLife();return}
   const rows=nestRows(ch).map(({t,d})=>({t,d,r:chRange(t,S.info&&S.info.get(t.id))}));
   let h='',year=null;
@@ -49202,7 +49210,7 @@ function renderLife(){
 function bindLife(){
   const n=$('#lNew');if(n)n.onclick=()=>editChapter(null);
   const ls=$('#lStory');if(ls)ls.onclick=startLifeStory;
-  bindNudge();bindCaps();
+  bindNudge();bindCaps();bindVolatile();
   bindOnboarding();
   const lm=$('#lMore');if(lm)lm.onclick=()=>menu([
     {i:'image',t:'Tilføj mange billeder',s:'Sorteres automatisk i kapitler',f:()=>$('#bulkFile').click()},
