@@ -19,6 +19,7 @@
 <script src="lib/exifr.umd.js"></script>
 <script src="lib/jszip.min.js"></script>
 <style>
+[hidden]{display:none!important}
 :root{
   /* "søkort": cool chart paper, deep fjord ink, a teal for actions and amber for the journey itself */
   --ink:#10252e; --ink2:#4a5f69; --ink3:#84959c; --paper:#f5f7f4; --line:#dde4e1;
@@ -47101,7 +47102,8 @@ const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0');
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const dayKey=t=>{const d=new Date(t);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const dayKey=t=>{const d=new Date(t);if(isNaN(d))return dayKey(Date.now());return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const isDayK=k=>typeof k==='string'&&/^\d{4}-\d\d-\d\d$/.test(k);
 const fmtDay=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('da-DK',{weekday:'long',day:'numeric',month:'long',year:'numeric'})};
 const fmtShort=t=>new Date(t).toLocaleDateString('da-DK',{day:'numeric',month:'short',year:'numeric'});
 const fmtDT=t=>{const d=new Date(t);return d.toLocaleDateString('da-DK',{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'})};
@@ -47519,12 +47521,17 @@ async function reorderDay(k){
 }
 function dayGroups(){
   const g=new Map();for(const p of sorted()){const k=dayKey(p.time);if(!g.has(k))g.set(k,[]);g.get(k).push(p)}
-  for(const k of S.keep)if(!g.has(k))g.set(k,[]);
-  for(const[k,v] of Object.entries(S.days))if(v&&v.trim()&&!g.has(k))g.set(k,[]);
+  for(const k of S.keep)if(isDayK(k)&&!g.has(k))g.set(k,[]);
+  for(const[k,v] of Object.entries(S.days))if(isDayK(k)&&v&&v.trim()&&!g.has(k))g.set(k,[]);
   return[...g.entries()].sort((a,b)=>a[0]<b[0]?-1:1);
 }
 function tripStart(){const g=dayGroups();const k=(S.trip&&S.trip.start)||(g[0]&&g[0][0]);if(!k)return null;const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)}
-function dayNum(k){const f=tripStart();if(!f)return 1;const[y,m,d]=k.split('-').map(Number);return Math.round((new Date(y,m-1,d)-f)/864e5)+1}
+async function repairDay(d){
+  try{const note=(d.note||'').trim();if(note){const k=dayKey(Date.now()),key=d.tripId+'|'+k,ex=await DB.get('days',key);
+    await save('days',{...(ex||{key,tripId:d.tripId,day:k,keep:true}),note:ex&&(ex.note||'').trim()?ex.note.trim()+'\n\n'+note:note,keep:true})}
+    await softDel('days',d)}catch(e){}
+}
+function dayNum(k){const f=tripStart();if(!f||!isDayK(k))return 1;const[y,m,d]=k.split('-').map(Number);return Math.round((new Date(y,m-1,d)-f)/864e5)+1}
 const isEmptyTrip=()=>!S.photos.length&&!dayGroups().length;
 /* ---------- time capsules: letters to your future self ---------- */
 S.caps=[];
@@ -47617,6 +47624,7 @@ async function writeToday(){
   if(isLife()||!S.trip||t.id!==S.trip.id)await loadTrip(t.id);if(S.sel)endSelect();openDay(dayKey(Date.now()));
 }
 async function openDay(k,focus=true,nav=false){
+  if(!isDayK(k))return;
   if(!S.keep.has(k)&&!(nav&&dayGroups().some(g=>g[0]===k))){S.keep.add(k);await save('days',dayRec(k))}
   S.tab='diary';document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab==='diary'));
   renderSheet();if(innerWidth<900&&sheetIx!==1)setSheet(1);
@@ -47756,7 +47764,7 @@ function renderDiary(){
 function autoGrow(t){t.style.height='auto';t.style.height=Math.max(34,t.scrollHeight+2)+'px'}
 const dayTimers={};
 const dayRec=k=>({key:S.trip.id+'|'+k,tripId:S.trip.id,day:k,note:S.days[k]||'',keep:S.keep.has(k),...(S.meta[k]||{})});
-function saveDay(k,v){S.days[k]=v;if((v||'').trim())WROTE.add(k);clearTimeout(dayTimers[k]);dayTimers[k]=setTimeout(async()=>{delete dayTimers[k];await save('days',dayRec(k));flashSaved(document.querySelector(`.svd[data-svd="${k}"]`))},400)}
+function saveDay(k,v){if(!isDayK(k))return;S.days[k]=v;if((v||'').trim())WROTE.add(k);clearTimeout(dayTimers[k]);dayTimers[k]=setTimeout(async()=>{delete dayTimers[k];await save('days',dayRec(k));flashSaved(document.querySelector(`.svd[data-svd="${k}"]`))},400)}
 function flashSaved(el){if(!el)return;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1400)}
 function flushAll(){for(const k of Object.keys(dayTimers)){clearTimeout(dayTimers[k]);delete dayTimers[k];if(S.trip&&S.trip.id!=='__life')save('days',dayRec(k))}try{flushNote()}catch(e){}}
 // never lose a half-written note when the app is closed or put in the background
@@ -48084,7 +48092,8 @@ async function loadTrip(id,quiet=false){
   S.trip=S.trips.find(t=>t.id===id)||S.trips[0];store.set('spor-trip',S.trip.id);
   for(const p of S.photos)forget(p);
   S.photos=(await DB.photos(S.trip.id)).filter(p=>!p.deleted);S.days={};S.meta={};S.keep=new Set();
-  for(const d of await DB.all('days'))if(d.tripId===S.trip.id&&!d.deleted){S.days[d.day]=d.note||'';if(d.keep)S.keep.add(d.day);if(d.w||d.mood||d.temp!=null||d.cover||(d.people&&d.people.length))S.meta[d.day]={people:d.people||[],w:d.w||null,temp:d.temp??null,mood:d.mood||null,...(d.cover?{cover:d.cover}:{})}}
+  for(const d of await DB.all('days'))if(d.tripId===S.trip.id&&!d.deleted&&!isDayK(d.day)){await repairDay(d)}
+  for(const d of await DB.all('days'))if(d.tripId===S.trip.id&&!d.deleted&&isDayK(d.day)){S.days[d.day]=d.note||'';if(d.keep)S.keep.add(d.day);if(d.w||d.mood||d.temp!=null||d.cover||(d.people&&d.people.length))S.meta[d.day]={people:d.people||[],w:d.w||null,temp:d.temp??null,mood:d.mood||null,...(d.cover?{cover:d.cover}:{})}}
   $('#tripName').textContent=S.trip.name;$('#tripIco').innerHTML=svgI(KICO[kindOf(S.trip)],17,2);$('#tripIco').style.color=KINDS[kindOf(S.trip)][2];range.value=1000;S.highlight=null;updateCloudUI();
   if(kidsOf(S.trip).length&&!S.info)try{S.info=await chapterInfo()}catch(e){}
   refresh();if(!quiet){const ks=kidsOf(S.trip),kp=ks.flatMap(k=>{const x=S.info&&S.info.get(k.id);return x&&x.pts&&x.pts.length?x.pts:k.place?[k.place]:[]});
@@ -48639,7 +48648,7 @@ async function runAI(k,title,prompt,mode,use){
   if(use){const u=document.createElement('button');u.className='btn accent';u.textContent=use.label;u.onclick=async()=>{await use.fn(result);closeModal()};$('#aiUse').after(u)}
   else if(!k){const sv=document.createElement('button');sv.className='btn accent';sv.textContent='Gem som tekst';sv.onclick=()=>saveFile(slug(title)+'.md',result,'Gemt');$('#aiUse').after(sv)}
   $('#aiCopy').onclick=()=>{navigator.clipboard.writeText(result).then(()=>toast('Kopieret'),()=>toast('Kunne ikke kopiere'))};
-  $('#aiUse').onclick=async()=>{
+  $('#aiUse').onclick=async()=>{if(!isDayK(k))return;
     if(mode==='replace'){S.days[k]=result}else{const cur=(S.days[k]||'').trim();S.days[k]=cur?cur+'\n\n'+result:result}
     if(!S.keep.has(k))S.keep.add(k);
     await save('days',dayRec(k));closeModal();openDay(k,false);toast(mode==='replace'?'Teksten er erstattet':'Indsat i dagens note');
@@ -48794,10 +48803,10 @@ async function fillMemories(){
   if(!list.length||!$('#mem'))return;
   $('#mem').innerHTML=`<div class="memc"><div class="kick">På denne dag</div>${list.map((m,i)=>{
     const ph=[...m.photos].sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)||a.time-b.time).slice(0,3);
-    return `<button class="memi" data-mem="${i}"><div class="ml"><b>${esc(m.label)}</b><span>${esc(fmtDay(m.k))}${m.trip&&m.trip.id!==S.trip.id?' · '+esc(m.trip.name):''}</span>
+    return `<button class="memi" data-otd="${i}"><div class="ml"><b>${esc(m.label)}</b><span>${esc(fmtDay(m.k))}${m.trip&&m.trip.id!==S.trip.id?' · '+esc(m.trip.name):''}</span>
       ${m.note?`<p>${esc(m.note.slice(0,140))}${m.note.length>140?'…':''}</p>`:''}</div>
       ${ph.length?`<div class="mthumbs">${ph.map(p=>`<img src="${thumbUrl(p)}" alt="">`).join('')}</div>`:''}</button>`}).join('')}</div>`;
-  document.querySelectorAll('[data-mem]').forEach(b=>b.onclick=async()=>{const m=list[+b.dataset.mem];if(m.tid!==S.trip.id)await loadTrip(m.tid);openDay(m.k,false)});
+  document.querySelectorAll('[data-otd]').forEach(b=>b.onclick=async()=>{const m=list[+b.dataset.otd];if(!m)return;if(!S.trip||m.tid!==S.trip.id)await loadTrip(m.tid);openDay(m.k,false)});
 }
 
 /* ---------- been here before ---------- */
@@ -49175,7 +49184,7 @@ function chapterRow(t,sub){
   if(nk)bits.unshift(`${nk} ${nk===1?'underkapitel':'underkapitler'}`);
   const cv=coverOf(t)||(nk?kidsOf(t).map(coverOf).find(Boolean):null);
   return `<button class="chap${sub?' sub':''}${nk?' par':''}" data-chap="${t.id}" style="--kc:${col}">${cv?`<span class="ce cv"><img src="${thumbUrl(cv)}" alt="" loading="lazy"><i>${svgI(KICO[kindOf(t)])}</i></span>`:`<span class="ce" style="background:none;width:auto;height:auto">${kBadge(kindOf(t),44)}</span>`}<span class="cm"><b>${esc(t.name)}</b>
-    <span>${esc(fmtRange(t,x))}${t.place&&t.place.name?' · '+esc(t.place.name):''}</span>${bits.length?`<span class="cb">${bits.join(' · ')}</span>`:''}</span></button>`;
+    <span>${esc(fmtRange(t,x))}${t.place&&t.place.name?' · '+esc(t.place.name):''}${!sub&&parentOf(t)?' · del af '+esc(parentOf(t).name):''}</span>${bits.length?`<span class="cb">${bits.join(' · ')}</span>`:''}</span></button>`;
 }
 function renderLife(){
   const body=$('#body');const ch=realTrips();
@@ -49448,7 +49457,7 @@ function chapterCardHtml(){
 function bindChapterCard(){
   const g=$('#ivGo');if(g)g.onclick=()=>interview(S.trip);
   const pl=$('#chPpl');if(pl)pl.onclick=async()=>{const r=await pickPeople(pplOf(S.trip),'Hvem var med i '+S.trip.name+'?');if(!r)return;S.trip.people=r;await save('trips',S.trip);renderSheet()};
-  document.querySelectorAll('[data-mem]').forEach(b=>b.onclick=()=>editMemory(S.trip,+b.dataset.mem));
+  document.querySelectorAll('.memc [data-mem]').forEach(b=>b.onclick=()=>editMemory(S.trip,+b.dataset.mem));
   const all=$('#memAll');if(all)all.onclick=()=>allMemories(S.trip);
   const ms=$('#memStory');if(ms)ms.onclick=()=>memoriesToStory(S.trip);
   const sm=$('#stMore');if(sm)sm.onclick=()=>{S.storyOpen=!S.storyOpen;renderSheet()};
@@ -49467,7 +49476,7 @@ function allMemories(t){
   document.querySelectorAll('#mbox [data-mem]').forEach(b=>b.onclick=()=>{closeModal();setTimeout(()=>editMemory(t,+b.dataset.mem),30)});
 }
 function editMemory(t,i){
-  const m=t.memories[i];if(!m)return;
+  const m=t&&(t.memories||[])[i];if(!m)return;
   modal(`<h3>Erindring</h3><p class="ivn">${esc(m.q)}</p><textarea id="emA" class="dnote" style="border-color:var(--line);min-height:120px;margin:0 0 12px">${esc(m.a)}</textarea>
     <button class="linkbtn" id="emMore" style="display:block;margin:-4px 0 12px">🎙️ Spørg mere ind til det her</button>
     <div class="row"><button class="btn ghost danger-t" id="emDel" style="color:#c4362b">Slet</button><button class="btn ghost" id="emNo">Annullér</button><button class="btn accent" id="emOk">Gem</button></div>`);
@@ -51009,7 +51018,7 @@ function bindLF(){document.querySelectorAll('#lf [data-lf]').forEach(b=>b.onclic
   menu(opts.map(o=>({t:o.t,s:o.s,f:()=>{f[k]=o.v;lfRefresh()}})),k==='year'?'Vælg år':k==='person'?'Vælg person':'Vælg land')})}
 function lfPhoto(p){const f=S.lf;if(f.fav&&!p.fav)return false;if(f.year&&new Date(p.time).getFullYear()!==f.year)return false;
   if(f.country&&(!hasPos(p)||countryOf(p)!==f.country))return false;
-  if(f.person){const t=S.trips.find(x=>x.id===p.tripId);if(!pplOf(p).includes(f.person)&&!(PDAYPPL.get(p.tripId+'|'+dayKey(p.time))||[]).includes(f.person)&&!pplOf(t).includes(f.person))return false}
+  if(f.person){const t=S.trips.find(x=>x.id===p.tripId),pt=parentOf(t);if(!pplOf(p).includes(f.person)&&!(PDAYPPL.get(p.tripId+'|'+dayKey(p.time))||[]).includes(f.person)&&!pplOf(t).includes(f.person)&&!(pt&&pplOf(pt).includes(f.person)))return false}
   return true}
 let PDAYPPL=new Map();
 async function lifeSearchHtml(q){
