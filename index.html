@@ -49069,17 +49069,20 @@ function familyHtml(){
 function bindFamily(){document.querySelectorAll('[data-fam]').forEach(b=>b.onclick=()=>loadTrip(b.dataset.fam));
   document.querySelectorAll('.kids [data-chap]').forEach(b=>b.onclick=()=>loadTrip(b.dataset.chap));
   const a=$('#kidAdd');if(a)a.onclick=()=>editChapter(null,{parent:S.trip.id,kind:kindOf(S.trip)})}
-const parentOf=t=>t&&t.parent?S.trips.find(x=>x.id===t.parent&&!x.deleted&&!x.demo)||null:null;
-const kidsOf=t=>t?realTrips().filter(x=>x.parent===t.id):[];
+// a parent link only counts if the parent exists and is itself top-level – this guards against cycles and deeper nesting from old backups or sync
+const liveTrip=id=>S.trips&&S.trips.find(x=>x.id===id&&!x.deleted&&!x.demo);
+function parentOf(t){if(!t||!t.parent||t.parent===t.id)return null;const p=liveTrip(t.parent);if(!p)return null;if(p.parent&&p.parent!==p.id&&liveTrip(p.parent))return null;return p}
+const kidsOf=t=>t?realTrips().filter(x=>x.parent===t.id&&parentOf(x)===t):[];
+const derivedRange=t=>!t.start&&!parentOf(t)&&kidsOf(t).length>0;
 function nestRows(list){
-  const ids=new Set(list.map(t=>t.id)),R=t=>chRange(t,S.info&&S.info.get(t.id)).sort;
-  const top=list.filter(t=>!t.parent||!ids.has(t.parent)).sort((a,b)=>R(b)-R(a)),out=[];
-  for(const t of top){out.push({t,d:0});for(const k of list.filter(x=>x.parent===t.id).sort((a,b)=>R(b)-R(a)))out.push({t:k,d:1})}
+  const ids=new Set(list.map(t=>t.id)),R=t=>chRange(t,S.info&&S.info.get(t.id)).sort,P=t=>{const p=parentOf(t);return p&&ids.has(p.id)?p:null};
+  const top=list.filter(t=>!P(t)).sort((a,b)=>R(b)-R(a)),out=[];
+  for(const t of top){out.push({t,d:0});for(const k of list.filter(x=>P(x)===t).sort((a,b)=>R(b)-R(a)))out.push({t:k,d:1})}
   return out;
 }
-function chRange(t,x){
+function chRange(t,x,flat){
   let s=t.start||(x&&x.min!=null?dayKey(x.min):null),e=t.end||(x&&x.max!=null?dayKey(x.max):null);
-  if(!t.start&&!t.parent&&S.trips){const ks=S.trips.filter(k=>k.parent===t.id&&!k.deleted);if(ks.length){const rs=ks.map(k=>chRange(k,S.info&&S.info.get(k.id))).filter(r=>r.s);
+  if(!flat&&!t.start&&S.trips&&!parentOf(t)){const ks=S.trips.filter(k=>k.parent===t.id&&k.id!==t.id&&!k.deleted&&!k.demo&&parentOf(k)===t);if(ks.length){const rs=ks.map(k=>chRange(k,S.info&&S.info.get(k.id),true)).filter(r=>r.s);
     if(rs.length){s=rs.map(r=>r.s).sort()[0];const es=rs.map(r=>r.e||r.s).sort();e=t.end||es[es.length-1]}}}
   return{s,e,sort:s?k2t(s):(x&&x.min)||0};
 }
@@ -49252,13 +49255,13 @@ async function editChapter(t,pre){
     <p class="mlabel">Sted på kortet</p><div class="row" style="justify-content:flex-start;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
       <span style="font-size:14px" id="cPlaceTxt">${d.place?'📍 '+esc(d.place.name||fmtCoord(d.place.lat,d.place.lng)):'<span style="color:var(--ink3)">Intet sted valgt</span>'}</span>
       <button class="btn small ghost" id="cPick">${d.place?'Flyt':'Vælg på kortet'}</button>${d.place?'<button class="btn small ghost" id="cNoPlace">Fjern</button>':''}</div>
-    ${(()=>{const hasKids=!isNew&&kidsOf(t).length,opts=realTrips().filter(x=>x.id!==d.id&&!x.parent).sort((a,b)=>a.name.localeCompare(b.name,'da'));
+    ${(()=>{const hasKids=!isNew&&kidsOf(t).length,opts=realTrips().filter(x=>x.id!==d.id&&!parentOf(x)).sort((a,b)=>a.name.localeCompare(b.name,'da'));
       if(hasKids)return `<p class="mlabel">Underkapitler</p><p style="font-size:13.5px;margin:0 0 12px;color:var(--ink2)">${kidsOf(t).map(k=>esc(k.name)).join(', ')}</p>`;
       if(!opts.length)return'';
       return `<p class="mlabel">Del af et større kapitel</p><select id="cParent" class="din" style="width:100%;margin-bottom:4px"><option value="">Nej – det er et kapitel for sig</option>${opts.map(x=>`<option value="${x.id}" ${d.parent===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select><p style="font-size:12px;color:var(--ink3);margin:0 0 12px">Fx Grønland og Bornholm som underkapitler af Militær.</p>`})()}
     <p class="mlabel">Hvem var med</p><input type="text" id="cPeople" value="${esc((d.people||[]).join(', '))}" placeholder="Navne adskilt af komma, fx Anna, Mads">
     <p class="mlabel">Om kapitlet</p><textarea id="cNote" class="dnote" style="margin:0 0 12px;border-color:var(--line);min-height:70px" placeholder="Hvad handlede denne periode om?">${esc(d.note||'')}</textarea>
-    ${isNew?'':`<div class="row" style="justify-content:flex-start;margin-bottom:10px;gap:8px;flex-wrap:wrap">${!d.parent?'<button class="btn small ghost" id="cSub">+ Tilføj underkapitel</button>':''}<button class="btn small ghost" id="cMerge">Slå sammen med et andet kapitel…</button><button class="btn small ghost" id="cDel" style="color:#c4362b">🗑️ Slet kapitel</button></div>`}
+    ${isNew?'':`<div class="row" style="justify-content:flex-start;margin-bottom:10px;gap:8px;flex-wrap:wrap">${!parentOf(d)?'<button class="btn small ghost" id="cSub">+ Tilføj underkapitel</button>':''}<button class="btn small ghost" id="cMerge">Slå sammen med et andet kapitel…</button><button class="btn small ghost" id="cDel" style="color:#c4362b">🗑️ Slet kapitel</button></div>`}
     <div class="row"><button class="btn ghost" id="cNo">Annullér</button><button class="btn accent" id="cOk">${isNew?'Opret':'Gem'}</button></div>`);
   let kind=kindOf(d),place=d.place||null;
   document.querySelectorAll('#cKind button').forEach(b=>b.onclick=()=>{kind=b.dataset.k;document.querySelectorAll('#cKind button').forEach(x=>x.classList.toggle('on',x===b))});
@@ -49512,7 +49515,7 @@ async function interview(t,focus){await loadPersons();
 /* ---------- life band: every chapter on one time axis ---------- */
 function lifeBandHtml(){
   const info=S.info||new Map(),now=Date.now(),items=[];
-  for(const t of realTrips()){const r=chRange(t,info.get(t.id));if(!r.s)continue;const k=kindOf(t),s=k2t(r.s);let e=r.e?k2t(r.e)+864e5:null,open=false;
+  for(const t of realTrips()){if(derivedRange(t))continue;const r=chRange(t,info.get(t.id));if(!r.s)continue;const k=kindOf(t),s=k2t(r.s);let e=r.e?k2t(r.e)+864e5:null,open=false;
     if(!t.end&&['bosted','uddannelse','arbejde'].includes(k)){e=now;open=true}if(!e||e<s)e=s+864e5;items.push({t,k,s,e,open})}
   if(!items.length)return'';
   const y0=new Date(Math.min(...items.map(i=>i.s))).getFullYear(),y1=new Date(now).getFullYear()+1,span=y1-y0;
@@ -49972,7 +49975,7 @@ const fmtP=x=>String(x).replace('.',',')+' %';
 async function gatherStats(){
   const info=S.info&&S.info.size?S.info:await chapterInfo(),ch=realTrips(),today=Date.now(),real=new Set(ch.map(t=>t.id));
   const photos=(await DB.all('photos')).filter(p=>!p.deleted&&real.has(p.tripId)),days=(await DB.all('days')).filter(d=>!d.deleted&&real.has(d.tripId)&&(d.note||'').trim());
-  const born=store.get('spor-born');const R=t=>{const x=chRange(t,info.get(t.id));if(!x.s)return null;const k=kindOf(t);let e=x.e?k2t(x.e)+864e5:null;if(!t.end&&['bosted','uddannelse','arbejde'].includes(k))e=today;if(!e)e=k2t(x.s)+864e5;return[k2t(x.s),e]};
+  const born=store.get('spor-born');const R=t=>{if(derivedRange(t))return null;const x=chRange(t,info.get(t.id));if(!x.s)return null;const k=kindOf(t);let e=x.e?k2t(x.e)+864e5:null;if(!t.end&&['bosted','uddannelse','arbejde'].includes(k))e=today;if(!e)e=k2t(x.s)+864e5;return[k2t(x.s),e]};
   const isTrip=t=>['rejse','militaer','begivenhed'].includes(kindOf(t));
   const st={info,ch,photos,days,born,R,isTrip,today};
   return st;
@@ -50139,7 +50142,7 @@ async function deleteChapter(t){
   const has=ps.length||ds.some(d=>(d.note||'').trim())||(t.memories||[]).length;
   const go=async keepTo=>{
     const kids=S.trips.filter(k=>k.parent===t.id);
-    if(keepTo){for(const k of kids){if(k.id===keepTo.id||keepTo.parent)delete k.parent;else k.parent=keepTo.id;await save('trips',k)}await mergeInto(t,keepTo);toast(`“${t.name}” er slettet – indholdet ligger nu i “${keepTo.name}”`,4500);return isLife()?loadLife(true):loadTrip(keepTo.id)}
+    if(keepTo){await mergeInto(t,keepTo);toast(`“${t.name}” er slettet – indholdet ligger nu i “${keepTo.name}”`,4500);return isLife()?loadLife(true):loadTrip(keepTo.id)}
     const idx=S.trips.indexOf(t);S.trips=S.trips.filter(x=>x!==t);
     const after=async()=>{if(S.trip&&S.trip.id===t.id){if(realTrips().length)await loadLife();else{const n=await newTrip('Min rejse');await loadTrip(n.id)}}else if(isLife())await loadLife(true);else refresh()};
     await after();
@@ -50916,8 +50919,8 @@ async function storageHtml(){
 /* ---------- move photos, multi-select, merge ---------- */
 function chooseChapter(title,excludeId){
   return new Promise(res=>{
-    const list=realTrips().filter(t=>t.id!==excludeId).sort((a,b)=>chRange(b,S.info&&S.info.get(b.id)).sort-chRange(a,S.info&&S.info.get(a.id)).sort);
-    modal(`<h3>${esc(title)}</h3>${list.map(t=>`<button class="trip" data-cc="${t.id}">${kBadge(kindOf(t),32)}<span class="n">${esc(t.name)}<br><span class="c" style="font-weight:400">${esc(fmtRange(t,S.info&&S.info.get(t.id)))}</span></span></button>`).join('')||'<p>Der er ingen andre kapitler.</p>'}
+    const list=nestRows(realTrips().filter(t=>t.id!==excludeId));
+    modal(`<h3>${esc(title)}</h3>${list.map(({t,d})=>`<button class="trip${d?' sub':''}" data-cc="${t.id}">${kBadge(kindOf(t),32)}<span class="n">${esc(t.name)}<br><span class="c" style="font-weight:400">${esc(fmtRange(t,S.info&&S.info.get(t.id)))}</span></span></button>`).join('')||'<p>Der er ingen andre kapitler.</p>'}
       <div class="row"><button class="btn ghost" id="ccNo">Annullér</button></div>`);
     modalResolve=res;$('#ccNo').onclick=()=>closeModal(null);
     document.querySelectorAll('[data-cc]').forEach(b=>b.onclick=()=>closeModal(S.trips.find(t=>t.id===b.dataset.cc)));
@@ -50954,6 +50957,9 @@ async function mergeChapter(src){
   await mergeInto(src,target);await loadTrip(target.id);
 }
 async function mergeInto(src,target){
+  // sub-chapters of the merged chapter follow it (or become top-level if that would nest too deep)
+  for(const k of S.trips.filter(x=>x.parent===src.id)){if(k.id===target.id||parentOf(target))delete k.parent;else k.parent=target.id;await save('trips',k)}
+  if(target.parent===src.id){delete target.parent;await save('trips',target)}
   const ps=(await DB.all('photos')).filter(p=>p.tripId===src.id&&!p.deleted);
   for(const p of ps){p.tripId=target.id;await save('photos',p)}
   for(const d of (await DB.all('days')).filter(d=>d.tripId===src.id&&!d.deleted)){
