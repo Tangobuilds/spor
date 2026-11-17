@@ -50474,7 +50474,7 @@ function guessCat(s){s=(s||'').toLowerCase();
   if(/restaurant|spise|spist|mad|café|cafe|bar|food|eat|pizza|burger|sushi|bager|brunch/.test(s))return'restaurant';
   if(/hotel|hostel|overnat|sov|airbnb|camp|bnb|motel|indkvart|stay/.test(s))return'hotel';
   if(/by(er)?\b|cit(y|ies)|town|landsby|steder jeg har været|byer/.test(s))return'by';
-  if(/sevær|attrak|museum|sight|attraction|park|natur|udsigt|strand|beach|monument|kirke|slot|castle/.test(s))return'sevaerdighed';
+  if(/sevær|attrak|muse(um|er)|kultur|histor|sight|attraction|park|natur|udsigt|strand|beach|monument|kirke|slot|castle|ruin/.test(s))return'sevaerdighed';
   return null}
 function guessSt(s){s=(s||'').toLowerCase();
   if(/miss|nåede ikke|ikke nået|lukket|skipped/.test(s))return'misset';
