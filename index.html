@@ -48371,9 +48371,10 @@ async function countPending(){
   CLOUD.pending=n;return n;
 }
 async function syncNow(withPull){
-  if(!CLOUD.on||CLOUD.busy)return;
+  if(!CLOUD.on)return;
+  if(CLOUD.busy){if(Date.now()-(CLOUD.beat||0)<180000)return;CLOUD.busy=false}
   if(!navigator.onLine){CLOUD.state='offline';await countPending();updateCloudUI();return}
-  CLOUD.busy=true;CLOUD.state='busy';CLOUD.err=null;updateCloudUI();
+  CLOUD.busy=true;CLOUD.beat=Date.now();CLOUD.state='busy';CLOUD.err=null;updateCloudUI();
   try{
     if(withPull)await pull();
     await push();
@@ -48384,27 +48385,38 @@ async function syncNow(withPull){
 async function push(){
   const trips=await DB.all('trips'),demo=new Set(trips.filter(t=>t.demo).map(t=>t.id));
   const days=await DB.all('days'),photos=await DB.all('photos');
+  // small records first (they make the diary usable on the other device right away), photos with their image files last
   const q=[...trips.filter(x=>x.dirty&&!x.demo).map(x=>['trips',x]),
            ...days.filter(x=>x.dirty&&!demo.has(x.tripId)).map(x=>['days',x]),
-           ...photos.filter(x=>x.dirty&&!demo.has(x.tripId)).map(x=>['photos',x]),
            ...(await DB.all('places')).filter(x=>x.dirty).map(x=>['places',x]),
            ...(await DB.all('people')).filter(x=>x.dirty).map(x=>['people',x]),
-           ...(await DB.all('capsules')).filter(x=>x.dirty).map(x=>['capsules',x])];
-  CLOUD.pending=q.length;CLOUD.fails=[];updateCloudUI();
-  // one bad item must not stop the rest: each is sent on its own, a busy/rate-limited server gets a short pause and a second try
-  const errs=[];
-  for(const[st,x] of q){
-    if(!navigator.onLine){CLOUD.state='offline';return}
-    try{await pushOne(st,x)}
-    catch(e){const c=String((e&&(e.code||e.message))||'fejl');if(/quota/i.test(c))throw e;
-      let ok=false;for(const w of (errs.length>=3?[]:[1500,5000])){await new Promise(r=>setTimeout(r,w));try{await pushOne(st,x);ok=true;break}catch(e2){}}
-      if(!ok){errs.push(c);if(errs.length>=25&&errs.every(z=>z===c)){CLOUD.pending=0;break}CLOUD.fails.push((st==='trips'?'kapitlet ':st==='photos'?'billedet ':st==='days'?'dagen ':'')+(x.name||x.title||x.day||x.id||'')+': '+c)}}
-    CLOUD.pending=Math.max(0,CLOUD.pending-1);updateCloudUI();
+           ...(await DB.all('capsules')).filter(x=>x.dirty).map(x=>['capsules',x]),
+           ...photos.filter(x=>x.dirty&&!demo.has(x.tripId)).sort((a,b)=>(b.time||0)-(a.time||0)).map(x=>['photos',x])];
+  CLOUD.pending=q.length;CLOUD.total=q.length;CLOUD.fails=[];updateCloudUI();
+  if(q.length>15)wakeOn();
+  // several items travel at once; one bad item must not stop the rest, a busy server gets a pause and a second try
+  const errs=[];let i=0,stop=false;
+  async function worker(){
+    while(!stop&&i<q.length){
+      if(!navigator.onLine){CLOUD.state='offline';stop=true;return}
+      const[st,x]=q[i++];
+      try{await pushOne(st,x)}
+      catch(e){const c=String((e&&(e.code||e.message))||'fejl');if(/quota/i.test(c)){stop=true;throw e}
+        let ok=false;for(const w of (errs.length>=3?[]:[1500,5000])){await new Promise(r=>setTimeout(r,w));try{await pushOne(st,x);ok=true;break}catch(e2){}}
+        if(!ok){errs.push(c);if(errs.length>=25&&errs.every(z=>z===c))stop=true;CLOUD.fails.push((st==='trips'?'kapitlet ':st==='photos'?'billedet ':st==='days'?'dagen ':'')+(x.name||x.title||x.day||x.id||'')+': '+c)}}
+      CLOUD.pending=Math.max(0,CLOUD.pending-1);CLOUD.beat=Date.now();updateCloudUI();
+    }
   }
+  try{await Promise.all([worker(),worker(),worker(),worker()])}finally{wakeOff()}
+  if(stop&&!navigator.onLine)return;
   if(errs.length){const e=new Error('x');e.code=errs.length+' af '+q.length+' kunne ikke sendes – '+errs[0];throw e}
 }
+// every network call gets a deadline, so a request the phone dropped (screen locked, app in the background) can't freeze syncing
+function TO(p,ms,what){let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(Object.assign(new Error('timeout'),{code:'timeout ('+what+')'})),ms)})]).finally(()=>clearTimeout(t))}
+let WAKE=null;async function wakeOn(){try{if(!WAKE&&navigator.wakeLock)WAKE=await navigator.wakeLock.request('screen')}catch(e){}}
+function wakeOff(){try{WAKE&&WAKE.release()}catch(e){}WAKE=null}
 // JSZip and some iOS paths give Blobs without a type; the asset store wants to know it is an image
-async function upAsset(b){if(b&&!(b instanceof Blob)&&b.__ab)b=new Blob([b.__ab],{type:b.type||'image/jpeg'});if(b&&!b.type)b=new Blob([b],{type:'image/jpeg'});return CLOUD.assets.upload(b)}
+async function upAsset(b){if(b&&!(b instanceof Blob)&&b.__ab)b=new Blob([b.__ab],{type:b.type||'image/jpeg'});if(b&&!b.type)b=new Blob([b],{type:'image/jpeg'});return TO(CLOUD.assets.upload(b),120000,'billedfil')}
 async function pushOne(st,x){
     if(st==='photos'&&!x.deleted){
       if(!x.thumbAsset&&x.thumb)x.thumbAsset=(await upAsset(x.thumb)).id;
@@ -48418,7 +48430,7 @@ async function pushOne(st,x){
     else if(st==='capsules'){id='c_'+x.id;body={kind:'capsule',id:x.id,title:x.title||'',text:x.text||'',written:x.written||0,open:x.open||'',opened:x.opened||0,tripId:x.tripId||null,where:x.where||'',deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='people'){id='pe_'+x.id;body={kind:'person',id:x.id,name:x.name,group:x.group||null,rel:x.rel||'',photo:x.photo||null,self:x.self||0,born:x.born||'',home:x.home||'',bio:x.bio||'',deleted:!!x.deleted,upd:x.upd||0}}
     else{id='p_'+x.id;body={kind:'photo',id:x.id,tripId:x.tripId,lat:x.lat??null,lng:x.lng??null,time:x.time,note:x.note||'',fav:!!x.fav,people:x.people||[],ord:x.ord??null,approx:x.approx?1:0,name:x.name||'',w:x.w||0,h:x.h||0,thumbAsset:x.thumbAsset||null,fullAsset:x.fullAsset||null,deleted:!!x.deleted,upd:x.upd||0}}
-    await ucol().doc(id).set(JSON.parse(JSON.stringify(body)));
+    await TO(ucol().doc(id).set(JSON.parse(JSON.stringify(body))),30000,'gem');
     if(st==='photos'&&x.deleted){for(const a of [x.thumbAsset,x.fullAsset])if(a)try{await CLOUD.assets.delete(a)}catch(e){}}
     const key=x.id??x.key,cur=await DB.get(st,key);
     if(cur&&cur.upd===x.upd){if(cur.deleted)await DB.del(st,key);else{cur.dirty=0;if(st==='photos'){cur.thumbAsset=x.thumbAsset;cur.fullAsset=x.fullAsset}await DB.put(st,cur)}
@@ -48426,7 +48438,7 @@ async function pushOne(st,x){
     else if(cur&&st==='photos'){cur.thumbAsset=x.thumbAsset;cur.fullAsset=x.fullAsset;await DB.put(st,cur)}
 }
 async function pull(){
-  const snap=await ucol().get();let changed=false;
+  const snap=await TO(ucol().get(),60000,'hent');let changed=false;
   for(const d of snap.docs){
     const r=d.data();if(!r||!r.kind)continue;
     if(r.kind==='trip'){
@@ -48453,7 +48465,7 @@ async function pull(){
       const l=await DB.get('photos',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('photos',r.id);changed=true}continue}
       let thumb=l&&l.thumbAsset===r.thumbAsset?l.thumb:null;
-      if(!thumb&&r.thumbAsset)try{const res=await fetch(assetUrl(r.thumbAsset));if(res.ok)thumb=await res.blob()}catch(e){}
+      if(!thumb&&r.thumbAsset)try{const res=await TO(fetch(assetUrl(r.thumbAsset)),20000,'miniature');if(res.ok)thumb=await res.blob()}catch(e){}
       await DB.put('photos',{id:r.id,tripId:r.tripId,lat:r.lat,lng:r.lng,time:r.time,note:r.note||'',fav:!!r.fav,people:r.people||[],...(r.ord!=null?{ord:r.ord}:{}),approx:r.approx||undefined,name:r.name||'',w:r.w,h:r.h,
         thumb:thumb||null,full:l&&l.fullAsset===r.fullAsset?l.full:null,thumbAsset:r.thumbAsset,fullAsset:r.fullAsset,upd:r.upd,dirty:0,created:(l&&l.created)||r.upd});changed=true;
     }
@@ -48501,7 +48513,7 @@ function cloudText(){
   if(!CLOUD.on)return['','Fra – dagbogen gemmes kun på denne enhed.'];
   const tm=CLOUD.last?' · '+new Date(CLOUD.last).toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'}):'';
   switch(CLOUD.state){
-    case 'busy':return['busy',`Synkroniserer…${CLOUD.pending?` ${CLOUD.pending} tilbage`:''}`];
+    case 'busy':return['busy',`Synkroniserer…${CLOUD.pending?` ${Math.max(0,(CLOUD.total||CLOUD.pending)-CLOUD.pending)} af ${CLOUD.total||CLOUD.pending} sendt${(CLOUD.total||0)>15?' – hold Spor åben på skærmen, iPhone sætter den på pause i baggrunden':''}`:''}`];
     case 'offline':return['wait',`Ingen forbindelse – ${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}`];
     case 'wait':return['wait',`${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}${tm}`];
     case 'err':return['err',CLOUD.fails&&CLOUD.fails.length?`${CLOUD.fails.length} ${CLOUD.fails.length===1?'ting':'ting'} kunne ikke sendes – resten er gemt i skyen. Fx ${CLOUD.fails[0]}. Prøver igen om lidt.`:`Synkronisering fejlede (${CLOUD.err}). Prøver igen om lidt.`];
