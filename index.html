@@ -725,6 +725,77 @@ html[data-theme=dark] .kb{background:color-mix(in srgb,var(--kc) 26%,transparent
 .slimw{display:flex;align-items:center;gap:10px;margin:8px 0;padding:9px 8px 9px 12px;border-radius:14px;background:color-mix(in srgb,var(--danger) 11%,var(--card));color:var(--ink);font-size:13px;line-height:1.35}
 .slimw>span{display:flex;gap:8px;align-items:flex-start;flex:1;min-width:0}.slimw svg{flex:none;margin-top:1px;color:var(--danger)}
 .slimx{flex:none;width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--ink3);font-size:20px;line-height:1}
+
+/* ===== v2 design layer: "expedition atlas" ======================================
+   quiet chart-paper chrome that floats over the map, one shared scale for radii,
+   shadows and controls, and the life timeline drawn as a route with stops. */
+:root{--r1:10px;--r2:16px;--r3:24px;
+  --glass:color-mix(in srgb,var(--paper) 86%,transparent);--hair:color-mix(in srgb,var(--ink) 9%,transparent);
+  --sh1:0 1px 2px rgba(16,37,46,.05),0 1px 1px rgba(16,37,46,.03);
+  --sh2:0 10px 30px rgba(16,37,46,.14),0 2px 6px rgba(16,37,46,.06)}
+html[data-theme=dark]{--glass:color-mix(in srgb,var(--paper) 82%,transparent);--hair:color-mix(in srgb,#fff 9%,transparent);--sh2:0 10px 30px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
+/* floating chrome */
+.brand,.pill,.zoomctl button,.timeline,.sheet{background:var(--glass);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4)}
+.brand,.pill{height:44px;border-radius:var(--r2);box-shadow:var(--sh2);border:1px solid var(--hair)}
+.brand{display:flex;align-items:center;white-space:nowrap;padding:0 13px}
+.pill{padding:0 14px;font-size:15px}
+.top .btn{height:44px;border-radius:var(--r2);padding:0 16px;box-shadow:var(--sh2)}
+.zoomctl{gap:8px}
+.zoomctl button{width:44px;height:44px;border-radius:var(--r2);box-shadow:var(--sh2);border:1px solid var(--hair);color:var(--ink)}
+.zoomctl .ztoday,.zoomctl .btn.accent{background:var(--accent);color:#fff;border-color:transparent}
+.timeline{border-radius:var(--r2);box-shadow:var(--sh2);border:1px solid var(--hair);padding:8px 12px 8px 8px}
+.play{width:36px;height:36px}
+.sheet{border:1px solid var(--hair);box-shadow:0 -8px 30px rgba(16,37,46,.12);border-radius:var(--r3) var(--r3) 0 0}
+@media (min-width:900px){.sheet{border-radius:var(--r3);box-shadow:var(--sh2);width:404px}.timeline{left:428px}}
+.handle i{width:36px;height:5px;background:color-mix(in srgb,var(--ink) 18%,transparent)}
+/* controls */
+.btn{min-height:40px;border-radius:12px;padding:0 16px;font-weight:600;letter-spacing:.005em;transition:transform .12s var(--ease),filter .15s,background-color .15s}
+.btn:active{transform:scale(.97)}
+.btn.small{min-height:34px;padding:0 12px;border-radius:var(--r1);font-size:13.5px}
+.btn.ghost{background:var(--card);border:1px solid var(--hair);box-shadow:var(--sh1)}
+.btn.accent:hover{filter:brightness(1.06)}
+:where(button,a,input,textarea,select,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:inherit}
+.search,.mbox input[type=text],.din,textarea.dnote:focus{border-radius:12px}
+.search{min-height:42px;border-color:var(--hair);box-shadow:var(--sh1)}
+.mchip{border-color:var(--hair);min-height:30px;display:inline-flex;align-items:center;gap:4px;padding:0 11px}
+.chip{border-radius:20px}
+/* cards */
+.card{border-radius:var(--r2);border-color:var(--hair);box-shadow:var(--sh1)}
+.card .v{font-size:30px;font-variant-numeric:tabular-nums}
+.trip,.chap{border-color:var(--hair)}
+/* tabs as a quiet segmented control */
+.tabs{margin:2px 14px 12px}
+.tab{min-height:34px;font-size:14px}
+/* life timeline drawn as a route: every chapter is a stop on one dotted line */
+.tl{position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:7px;top:10px;bottom:10px;border-left:2px dotted color-mix(in srgb,var(--ink) 22%,transparent)}
+.tl>.chap,.tl>.grp{position:relative}
+.tl>.chap::after,.tl>.grp::after{content:"";position:absolute;left:-21px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:3px solid var(--kc,var(--accent));box-sizing:border-box}
+.tl>.grp{--kc:var(--sun)}
+.tl>.yr{position:relative;margin-left:-22px;padding-left:0}
+.chap{border:1px solid var(--hair);border-left:1px solid var(--hair);border-radius:var(--r2);padding:12px;gap:12px;box-shadow:var(--sh1);transition:transform .12s var(--ease),box-shadow .15s}
+.chap:hover{box-shadow:var(--sh2)}
+.chap:active{transform:scale(.99)}
+.chap b{font-family:Newsreader,Georgia,serif;font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.chap .ce.cv{width:54px;height:54px;border-radius:12px}
+.chap .ce .kb,.chap .ce>span{width:54px!important;height:54px!important;border-radius:12px!important}
+.chap.sub{box-shadow:none}
+.grp{background:none;box-shadow:none}
+.grpk{border-left:0;margin-left:6px;padding-left:4px}
+.grp>.chap{box-shadow:var(--sh1)}
+.yr{font-size:28px;font-weight:600;margin:22px 0 8px;font-variant-numeric:tabular-nums}
+.yrb span{opacity:.7}
+/* sheets and dialogs */
+.mbox{border-radius:var(--r3) var(--r3) 0 0;padding:20px 18px calc(var(--sb) + 18px)}
+@media (min-width:900px){.modal{align-items:center}.mbox{border-radius:var(--r3);box-shadow:var(--sh2)}}
+.menu button{border-radius:12px;min-height:48px}
+.toast{border-radius:var(--r2);box-shadow:var(--sh2)}
+/* diary */
+.dd{border-color:var(--hair);box-shadow:var(--sh1)}
+.th{border-radius:12px}
+@media (prefers-reduced-motion:reduce){.btn,.chap{transition:none}.btn:active,.chap:active{transform:none}}
+.msec{font-size:12px;font-weight:700;color:var(--ink3);margin:12px 10px 2px}.msec:first-child{margin-top:0}
+@media (min-width:900px){.mbox:has(.msec){max-width:620px}.menu:has(.msec){display:grid;grid-template-columns:1fr 1fr;column-gap:6px}.menu .msec{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -48200,7 +48271,8 @@ async function loadTrip(id,quiet=false){
 function tripExtent(kp=[]){
   const P=[...placed(),...kp];if(S.trip.track&&S.trip.track.length>1)P.push(...trackPts(S.trip));if(P.length)return P;
   const x=chRange(S.trip,S.info&&S.info.get(S.trip.id)),out=[];
-  if(x.s){const e=x.e||x.s;for(const p of S.places)if(!p.deleted&&(p.visits||[]).some(d=>d>=x.s&&d<=e))out.push(p);
+  if(x.s){const e=x.e||x.s;for(const p of S.places)if(!p.deleted&&((p.visits||[]).some(d=>d>=x.s&&d<=e)||(p.stays||[]).some(st=>st.in<=e&&st.out>=x.s)))out.push(p);
+    if(out.length>=2)return S.trip.place?[...out,S.trip.place]:out;
     // only airports where you actually stayed, not the ones you changed planes in
     const h=homeAirport(),F=tripFlights().filter(f=>!f.canceled);F.forEach((f,i)=>{const nx=F[i+1],pv=F[i-1];
       for(const[c,ok] of[[f.to,!nx||nx.date!==f.date],[f.from,!!pv&&pv.date!==f.date]]){if(!ok)continue;const a=apt(c);if(a&&(!h||hav(a,h)>350))out.push(a)}})}
@@ -48290,7 +48362,7 @@ function ask({title,text='',input,placeholder='',ok='OK',danger=false}){
 }
 function menu(items,title){
   const L=items.filter(Boolean);
-  modal((title?`<h3>${esc(title)}</h3>`:'')+'<div class="menu">'+L.map((x,i)=>x==='-'?'<hr>':`<button data-mi="${i}" class="${x.danger?'danger':''}"><span class="mi">${ICO[x.i]?svgI(x.i,20):(x.i||'')}</span><span>${esc(x.t)}${x.s?`<small>${esc(x.s)}</small>`:''}</span></button>`).join('')+'</div><div class="row"><button class="btn ghost" id="mClose">Luk</button></div>');
+  modal((title?`<h3>${esc(title)}</h3>`:'')+'<div class="menu">'+L.map((x,i)=>x==='-'?'<hr>':typeof x==='string'&&x[0]==='#'?`<div class="msec">${esc(x.slice(1))}</div>`:`<button data-mi="${i}" class="${x.danger?'danger':''}"><span class="mi">${ICO[x.i]?svgI(x.i,20):(x.i||'')}</span><span>${esc(x.t)}${x.s?`<small>${esc(x.s)}</small>`:''}</span></button>`).join('')+'</div><div class="row"><button class="btn ghost" id="mClose">Luk</button></div>');
   $('#mClose').onclick=()=>closeModal();
   document.querySelectorAll('#mbox [data-mi]').forEach(b=>b.onclick=()=>{const x=L[+b.dataset.mi];closeModal();setTimeout(()=>x.f(),30)});
 }
@@ -49409,22 +49481,25 @@ function bindLife(){
   bindNudge();bindCaps();bindVolatile();
   bindOnboarding();
   const lm=$('#lMore');if(lm)lm.onclick=()=>menu([
-    {i:'image',t:'Tilføj mange billeder',s:'Sorteres automatisk i kapitler',f:()=>$('#bulkFile').click()},
-    {i:'map',t:'Importér Google-kort',s:'KML/KMZ fra My Maps',f:()=>$('#kmlFile').click()},
-    {i:'compass',t:'Importér Google-tidslinje',s:'Find bosteder og rejser automatisk',f:howToTimeline},
-    {i:'jet',t:'Importér fly',s:'CSV fra Flighty',f:()=>$('#flFile').click()},
-    {i:'home',t:'Importér Booking.com',s:'report.json fra "Anmod om dine data"',f:()=>$('#bkFile').click()},
-    {i:'compass',t:'Importér Polarsteps',s:'Zip-filen fra "Download my data"',f:()=>$('#psFile').click()},
-    '-',
-    {i:'mail',t:'Tidskapsel',s:'Skriv et brev til dig selv i fremtiden',f:composeCap},
+    '#Tilføj',
+    {i:'image',t:'Mange billeder',s:'Sorteres automatisk i kapitler',f:()=>$('#bulkFile').click()},
+    {i:'mail',t:'Tidskapsel',s:'Et brev til dig selv i fremtiden',f:composeCap},
+    '#Importér',
+    {i:'map',t:'Google My Maps',s:'KML/KMZ',f:()=>$('#kmlFile').click()},
+    {i:'compass',t:'Google-tidslinje',s:'Find bosteder og rejser',f:howToTimeline},
+    {i:'jet',t:'Flighty',s:'Dine fly (CSV)',f:()=>$('#flFile').click()},
+    {i:'compass',t:'Polarsteps',s:'Zip fra "Download my data"',f:()=>$('#psFile').click()},
+    {i:'home',t:'Booking.com',s:'report.json',f:()=>$('#bkFile').click()},
+    '#Fortæl',
     {i:'mic',t:'Livsinterview',s:'Vælg et kapitel og fortæl',f:async()=>{const t=await chooseChapter('Hvilket kapitel vil du fortælle om?');if(t)interview(t)}},
     S.ai&&{i:'sparkle',t:'Skriv mit livs historie',f:aiLife},
-    {i:'book',t:'Livsbog',s:'Hele dit liv som en smuk bog med billeder',f:exportLifeBook},
+    {i:'book',t:'Livsbog',s:'Dit liv som en bog med billeder',f:exportLifeBook},
     {i:'text',t:'Mit liv som tekst',s:'Til din selvbiografi',f:exportLifeMd},
+    '#Overblik og vedligehold',
+    {i:'chart',t:'Statistik',f:openStats},
+    {i:'map',t:'Regioner',s:'Stater og provinser',f:openRegions},
+    {i:'tidy',t:'Ryd op',s:'Dubletter og tomme kapitler',f:openTidy},
     {i:'save',t:'Backup af hele livet',f:exportLifeZip},
-    {i:'chart',t:'Statistik',s:'Masser af sjove tal om dit liv',f:openStats},
-    {i:'map',t:'Regioner',s:'Stater, provinser og regioner du har besøgt',f:openRegions},
-    {i:'tidy',t:'Ryd op',s:'Find dubletter og tomme kapitler',f:openTidy},
     {i:'gear',t:'Indstillinger',f:openTrips}],'Mit liv');
   document.querySelectorAll('[data-chap]').forEach(b=>b.onclick=()=>loadTrip(b.dataset.chap));
 }
@@ -50919,15 +50994,18 @@ function drawPlaces(v,obst){
     const k=Math.floor(x/cell)+':'+Math.floor(y/cell);let c=m.get(k);if(!c)m.set(k,c={items:[],x:0,y:0});c.items.push(p);c.x+=x;c.y+=y;
   }
   const labels=[],R=placeR();
+  // inside a chapter, the places from that time stand out; the rest of your map fades back
+  let rel=null;if(!isLife()&&S.trip&&!derivedRange(S.trip)){const x=chRange(S.trip,S.info&&S.info.get(S.trip.id));if(x.s){const e=x.e||x.s;rel=p=>(p.visits||[]).some(d=>d>=x.s&&d<=e)||(p.stays||[]).some(st=>st.in<=e&&st.out>=x.s)||p.date>=x.s&&p.date<=e}}
   for(const c of m.values()){
     c.x/=c.items.length;c.y/=c.items.length;lastPlaces.push(c);
     // the group shows its most common category; a wish beats a visit so wishes stay visible
     const cnt={};for(const q of c.items)cnt[catOf(q)]=(cnt[catOf(q)]||0)+1;const top=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];
     const p=c.items.length===1?c.items[0]:(c.items.find(q=>catOf(q)===top&&stOf(q)==='onske')||c.items.find(q=>catOf(q)===top)),cat=catOf(p);
     const st=c.items.every(q=>stOf(q)==='onske')?'onske':c.items.every(q=>stOf(q)==='misset')?'misset':c.items.length>1?'besogt':stOf(p);
-    mark(ctx,c.x,c.y,{r:R,fill:CAT[cat][2],icon:CICO[cat],st,count:R>=7?c.items.length:0});
+    const on=!rel||c.items.some(rel);
+    mark(ctx,c.x,c.y,{r:on?R:Math.min(R,6),fill:CAT[cat][2],icon:CICO[cat],st,count:on&&R>=7?c.items.length:0,alpha:on?1:.32});
     if(R<7&&c.items.length>1){ctx.save();ctx.beginPath();ctx.arc(c.x,c.y,R+2.5,0,7);ctx.lineWidth=1.2;ctx.strokeStyle=CAT[cat][2];ctx.globalAlpha=.55;ctx.stroke();ctx.restore()}
-    if(c.items.length===1&&T.k>=120)labels.push([c,p]);
+    if(c.items.length===1&&T.k>=120&&on)labels.push([c,p]);
   }
   // names when zoomed far in
   const boxes=obst.slice();for(const[c,p] of labels)mapLabel(ctx,p.name,c.x+R+5,c.y,boxes);
