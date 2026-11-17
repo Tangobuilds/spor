@@ -47709,7 +47709,7 @@ function renderDiary(){
       <div class="dayh" data-fit="${k}"><div class="dd${isToday?' today':''}"><b>${new Date(k2t(k)).getDate()}</b><span>${esc(MSH[new Date(k2t(k)).getMonth()])}</span></div>
         <div class="dt"><h3>Dag ${n}<span class="wd">${isToday?'<em>I dag</em>':esc(WDL[new Date(k2t(k)).getDay()])}</span></h3>
         <div class="dr">${[route.length?route.map(esc).join(' → '):'',items.length?items.length+' bill.':'',km>.5?fmtKm(km)+' km':''].filter(Boolean).join(' · ')}</div></div></div>
-      <div class="dmeta"><button class="mchip ${metaText(S.meta[k])?'set':''}" data-meta="${k}">${metaText(S.meta[k])||'+ Vejr og humør'}</button><button class="mchip ${pplOf(S.meta[k]).length?'set':''}" data-ppl="${k}">${pplOf(S.meta[k]).length?'👥 '+esc(pplOf(S.meta[k]).join(', ')):'+ Hvem var med'}</button>${isToday?`<button class="mchip" data-stamp="${k}">🕒 Tidsstempel</button>`:''}${items.length>1?`<button class="mchip" data-sort="${k}">⇅ Rækkefølge</button>`:''}${S.ai?`<button class="mchip ai" data-aiday="${k}">✨ Skrivehjælp</button>`:''}</div>
+      <div class="dmeta"><button class="mchip ${metaText(S.meta[k])?'set':''}" data-meta="${k}">${metaText(S.meta[k])||'+ Vejr og humør'}</button><button class="mchip ${pplOf(S.meta[k]).length?'set':''}" data-ppl="${k}">${pplOf(S.meta[k]).length?'👥 '+esc(pplOf(S.meta[k]).join(', ')):'+ Hvem var med'}</button>${flyOk(k)?`<button class="mchip ${flyOf(S.meta[k]).length?'set':''}" data-fly="${k}">${flyOf(S.meta[k]).length?'✈️ '+esc(flyOf(S.meta[k]).join(' · ')):'+ Fly'}</button>`:''}${isToday?`<button class="mchip" data-stamp="${k}">🕒 Tidsstempel</button>`:''}${items.length>1?`<button class="mchip" data-sort="${k}">⇅ Rækkefølge</button>`:''}${S.ai?`<button class="mchip ai" data-aiday="${k}">✨ Skrivehjælp</button>`:''}</div>
       ${ql&&hasText(k)&&S.days[k].toLowerCase().includes(ql)?`<div class="qinfo">${markHits(S.days[k].slice(Math.max(0,S.days[k].toLowerCase().indexOf(ql)-60),S.days[k].toLowerCase().indexOf(ql)+120))}</div>`:''}
       <textarea class="dnote" rows="1" data-note="${k}" placeholder="Skriv om dagen…">${esc(S.days[k]||'')}</textarea><span class="svd" data-svd="${k}">Gemt ✓</span>
       ${items.length?'':`<button class="linkbtn" data-rmday="${k}">Fjern dag</button>`}
@@ -47749,6 +47749,7 @@ function renderDiary(){
   bindCloudCard();bindNudge();bindCaps();bindFamily();fillMemories();
   body.querySelectorAll('[data-meta]').forEach(b=>b.onclick=()=>editMeta(b.dataset.meta));
   body.querySelectorAll('[data-ppl]').forEach(b=>b.onclick=async()=>{const k=b.dataset.ppl;const r=await pickPeople(pplOf(S.meta[k]),'Hvem var med '+fmtDay(k).toLowerCase()+'?');if(!r)return;S.meta[k]={...(S.meta[k]||{}),people:r};S.keep.add(k);await save('days',dayRec(k));renderSheet()});
+  body.querySelectorAll('[data-fly]').forEach(b=>b.onclick=()=>editFly(b.dataset.fly));
   bindChapterCard();bindDaily();
   const md=$('#moreDays');if(md)md.onclick=()=>{const y=$('#body').scrollHeight;S.dayLimit=(S.dayLimit||45)+90;renderSheet();const b=$('#body');b.scrollTop+=b.scrollHeight-y};
   body.querySelectorAll('.th').forEach(b=>{let lt=null,lp=false;
@@ -47777,6 +47778,23 @@ addEventListener('unhandledrejection',e=>{console.error(e.reason);if(Date.now()-
 const WEATHER=[['☀️','Sol'],['⛅','Sol og skyer'],['☁️','Overskyet'],['🌧️','Regn'],['⛈️','Torden'],['❄️','Sne'],['🌨️','Snestorm'],['🌫️','Tåge'],['💨','Blæst'],['🌌','Nordlys']];
 const MOODS=[['🤩','Fantastisk'],['😄','Glad'],['🙂','God'],['😐','Okay'],['😴','Træt'],['🥶','Kold'],['😣','Hård']];
 function metaText(m){if(!m)return'';const a=[];if(m.w)a.push(m.w);if(m.temp!=null&&m.temp!=='')a.push(String(m.temp).replace('-','−')+'°');if(m.mood)a.push(m.mood);return a.join(' ')}
+// flight numbers per day: "SK1234 CPH–SFJ" style lines, shown as a chip and linked to a flight tracker
+const flyOf=m=>(m&&Array.isArray(m.fly)?m.fly:[]).filter(Boolean);
+const flyOk=k=>!!S.trip&&(['rejse','militaer'].includes(S.trip.kind||'rejse')||flyOf(S.meta[k]).length>0);
+function flyCode(t){const m=String(t).toUpperCase().replace(/\s+/g,' ').match(/\b([A-Z]{2}|[A-Z]\d|\d[A-Z]|[A-Z]{3})\s?(\d{1,4}[A-Z]?)\b/);return m?m[1]+m[2]:''}
+function editFly(k){
+  const L=flyOf(S.meta[k]);
+  const row=v=>`<div class="row flyrow" style="gap:8px;margin:6px 0;flex-wrap:nowrap"><input type="text" class="flyin" value="${esc(v)}" placeholder="Fx SK1234 CPH–SFJ" autocapitalize="characters" style="flex:1">${flyCode(v)?`<a class="btn small ghost" target="_blank" rel="noopener" href="https://www.flightradar24.com/data/flights/${flyCode(v).toLowerCase()}">Se fly</a>`:''}</div>`;
+  modal(`<h3>✈️ Fly · ${esc(fmtDay(k))}</h3><p style="font-size:13px;color:var(--ink2);margin:0 0 6px">Ét fly pr. linje – flynummer og gerne fra/til, fx <b>SK1234 CPH–SFJ</b> eller <b>GL781 Nuuk–Kangerlussuaq</b>.</p>
+    <div id="flyL">${(L.length?L:['']).map(row).join('')}</div>
+    <button class="btn small ghost" id="flyAdd">+ Endnu et fly</button>
+    <div class="row"><button class="btn ghost" id="mx">Annullér</button><button class="btn accent" id="mok">Gem</button></div>`);
+  $('#flyAdd').onclick=()=>{$('#flyL').insertAdjacentHTML('beforeend',row(''));const a=document.querySelectorAll('.flyin');a[a.length-1].focus()};
+  $('#mx').onclick=()=>closeModal();
+  $('#mok').onclick=async()=>{const v=[...document.querySelectorAll('.flyin')].map(i=>i.value.trim().replace(/\s+/g,' ')).filter(Boolean).slice(0,8).map(x=>{const c=flyCode(x);return(c?x.replace(/^\s*[a-z0-9]{2,3}\s?\d{1,4}[a-z]?\b/i,c):x).slice(0,60)});
+    S.meta[k]={...(S.meta[k]||{}),fly:v};if(v.length)S.keep.add(k);await save('days',dayRec(k));closeModal();renderSheet()};
+  setTimeout(()=>{const i=document.querySelector('.flyin');if(i&&!i.value)i.focus()},50);
+}
 async function editMeta(k){
   const m={...(S.meta[k]||{})};
   modal(`<h3>${esc(fmtDay(k))}</h3>
@@ -48095,7 +48113,7 @@ async function loadTrip(id,quiet=false){
   for(const p of S.photos)forget(p);
   S.photos=(await DB.photos(S.trip.id)).filter(p=>!p.deleted);S.days={};S.meta={};S.keep=new Set();
   for(const d of await DB.all('days'))if(d.tripId===S.trip.id&&!d.deleted&&!isDayK(d.day)){await repairDay(d)}
-  for(const d of await DB.all('days'))if(d.tripId===S.trip.id&&!d.deleted&&isDayK(d.day)){S.days[d.day]=d.note||'';if(d.keep)S.keep.add(d.day);if(d.w||d.mood||d.temp!=null||d.cover||(d.people&&d.people.length))S.meta[d.day]={people:d.people||[],w:d.w||null,temp:d.temp??null,mood:d.mood||null,...(d.cover?{cover:d.cover}:{})}}
+  for(const d of await DB.all('days'))if(d.tripId===S.trip.id&&!d.deleted&&isDayK(d.day)){S.days[d.day]=d.note||'';if(d.keep)S.keep.add(d.day);if(d.w||d.mood||d.temp!=null||d.cover||(d.people&&d.people.length)||(d.fly&&d.fly.length))S.meta[d.day]={people:d.people||[],w:d.w||null,temp:d.temp??null,mood:d.mood||null,fly:Array.isArray(d.fly)?d.fly:[],...(d.cover?{cover:d.cover}:{})}}
   $('#tripName').textContent=S.trip.name;$('#tripIco').innerHTML=svgI(KICO[kindOf(S.trip)],17,2);$('#tripIco').style.color=KINDS[kindOf(S.trip)][2];range.value=1000;S.highlight=null;updateCloudUI();
   if(kidsOf(S.trip).length&&!S.info)try{S.info=await chapterInfo()}catch(e){}
   refresh();if(!quiet){const ks=kidsOf(S.trip),kp=ks.flatMap(k=>{const x=S.info&&S.info.get(k.id);return x&&x.pts&&x.pts.length?x.pts:k.place?[k.place]:[]});
@@ -48416,21 +48434,35 @@ function TO(p,ms,what){let t;return Promise.race([p,new Promise((_,rej)=>{t=setT
 let WAKE=null;async function wakeOn(){try{if(!WAKE&&navigator.wakeLock)WAKE=await navigator.wakeLock.request('screen')}catch(e){}}
 function wakeOff(){try{WAKE&&WAKE.release()}catch(e){}WAKE=null}
 // JSZip and some iOS paths give Blobs without a type; the asset store wants to know it is an image
-async function upAsset(b){if(b&&!(b instanceof Blob)&&b.__ab)b=new Blob([b.__ab],{type:b.type||'image/jpeg'});if(b&&!b.type)b=new Blob([b],{type:'image/jpeg'});return TO(CLOUD.assets.upload(b),120000,'billedfil')}
+async function upAsset(b,nm){
+  if(b&&!(b instanceof Blob)&&b.__ab)b=new Blob([b.__ab],{type:b.type||'image/jpeg'});
+  if(!b)throw Object.assign(new Error('mangler'),{code:'billedfilen mangler'});
+  // Blobs read back from IndexedDB or a zip (iOS) can't always be handed on to the upload: copy the bytes into a fresh file first
+  let buf;try{buf=await b.arrayBuffer()}catch(e){throw Object.assign(new Error('read'),{code:'billedfilen kan ikke læses på enheden'})}
+  if(!buf.byteLength)throw Object.assign(new Error('tom'),{code:'billedfilen er tom'});
+  const f=new File([buf],(nm||'foto')+'.jpg',{type:'image/jpeg'});
+  try{return await TO(CLOUD.assets.upload(f),120000,'billedfil')}
+  catch(e){const c=String(e&&(e.code||e.message)||'');if(/timeout|quota|rate|network/i.test(c))throw e;
+    // last resort: draw it again as a plain JPEG, the same kind of file new imports produce
+    const img=await decode(new Blob([buf],{type:'image/jpeg'}));const cv=document.createElement('canvas');cv.width=img.naturalWidth||img.width;cv.height=img.naturalHeight||img.height;
+    cv.getContext('2d').drawImage(img,0,0);const nb=await toBlob(cv,.88);if(!nb)throw e;
+    return await TO(CLOUD.assets.upload(nb),120000,'billedfil')}
+}
 async function pushOne(st,x){
+    const lab=(w,e)=>{const c=String((e&&(e.code||e.message))||'fejl');return Object.assign(new Error(c),{code:w+' '+c})};
     if(st==='photos'&&!x.deleted){
-      if(!x.thumbAsset&&x.thumb)x.thumbAsset=(await upAsset(x.thumb)).id;
-      if(!x.fullAsset&&x.full)x.fullAsset=(await upAsset(x.full)).id;
+      if(!x.thumbAsset&&x.thumb)x.thumbAsset=(await upAsset(x.thumb,'t_'+x.id).catch(e=>{throw lab('miniature:',e)})).id;
+      if(!x.fullAsset&&x.full)x.fullAsset=(await upAsset(x.full,x.id).catch(e=>{throw lab('billedfil:',e)})).id;
       const mem=S.photos.find(p=>p.id===x.id);if(mem){mem.thumbAsset=x.thumbAsset;mem.fullAsset=x.fullAsset}
     }
     let id,body;
     if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,parent:x.parent||null,deleted:!!x.deleted,upd:x.upd||0}}
-    else if(st==='days'){id='d_'+x.tripId+'_'+x.day;body={kind:'day',tripId:x.tripId,day:x.day,note:x.note||'',keep:!!x.keep,w:x.w||null,temp:x.temp??null,mood:x.mood||null,people:x.people||[],cover:x.cover||null,deleted:!!x.deleted,upd:x.upd||0}}
+    else if(st==='days'){id='d_'+x.tripId+'_'+x.day;body={kind:'day',tripId:x.tripId,day:x.day,note:x.note||'',keep:!!x.keep,w:x.w||null,temp:x.temp??null,mood:x.mood||null,people:x.people||[],fly:Array.isArray(x.fly)?x.fly:[],cover:x.cover||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='places'){id='pl_'+x.id;body={kind:'place',id:x.id,name:x.name,desc:(x.desc||'').slice(0,4000),lat:x.lat,lng:x.lng,cat:x.cat||'andet',st:x.st||'besogt',layer:x.layer||'',note:x.note||'',date:x.date||null,visits:x.visits||[],created:x.created||0,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='capsules'){id='c_'+x.id;body={kind:'capsule',id:x.id,title:x.title||'',text:x.text||'',written:x.written||0,open:x.open||'',opened:x.opened||0,tripId:x.tripId||null,where:x.where||'',deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='people'){id='pe_'+x.id;body={kind:'person',id:x.id,name:x.name,group:x.group||null,rel:x.rel||'',photo:x.photo||null,self:x.self||0,born:x.born||'',home:x.home||'',bio:x.bio||'',deleted:!!x.deleted,upd:x.upd||0}}
     else{id='p_'+x.id;body={kind:'photo',id:x.id,tripId:x.tripId,lat:x.lat??null,lng:x.lng??null,time:x.time,note:x.note||'',fav:!!x.fav,people:x.people||[],ord:x.ord??null,approx:x.approx?1:0,name:x.name||'',w:x.w||0,h:x.h||0,thumbAsset:x.thumbAsset||null,fullAsset:x.fullAsset||null,deleted:!!x.deleted,upd:x.upd||0}}
-    await TO(ucol().doc(id).set(JSON.parse(JSON.stringify(body))),30000,'gem');
+    await TO(ucol().doc(id).set(JSON.parse(JSON.stringify(body))),30000,'gem').catch(e=>{throw lab('data:',e)});
     if(st==='photos'&&x.deleted){for(const a of [x.thumbAsset,x.fullAsset])if(a)try{await CLOUD.assets.delete(a)}catch(e){}}
     const key=x.id??x.key,cur=await DB.get(st,key);
     if(cur&&cur.upd===x.upd){if(cur.deleted)await DB.del(st,key);else{cur.dirty=0;if(st==='photos'){cur.thumbAsset=x.thumbAsset;cur.fullAsset=x.fullAsset}await DB.put(st,cur)}
@@ -48448,7 +48480,7 @@ async function pull(){
     }else if(r.kind==='day'){
       const key=r.tripId+'|'+r.day,l=await DB.get('days',key);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('days',key);changed=true}continue}
-      await DB.put('days',{key,tripId:r.tripId,day:r.day,note:r.note||'',keep:!!r.keep,w:r.w||null,temp:r.temp??null,mood:r.mood||null,people:r.people||[],...(r.cover?{cover:r.cover}:{}),upd:r.upd,dirty:0});changed=true;
+      await DB.put('days',{key,tripId:r.tripId,day:r.day,note:r.note||'',keep:!!r.keep,w:r.w||null,temp:r.temp??null,mood:r.mood||null,people:r.people||[],fly:Array.isArray(r.fly)?r.fly:[],...(r.cover?{cover:r.cover}:{}),upd:r.upd,dirty:0});changed=true;
     }else if(r.kind==='place'){
       const l=await DB.get('places',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('places',r.id);changed=true;S.placesChanged=1}continue}
@@ -48516,7 +48548,7 @@ function cloudText(){
     case 'busy':return['busy',`Synkroniserer…${CLOUD.pending?` ${Math.max(0,(CLOUD.total||CLOUD.pending)-CLOUD.pending)} af ${CLOUD.total||CLOUD.pending} sendt${(CLOUD.total||0)>15?' – hold Spor åben på skærmen, iPhone sætter den på pause i baggrunden':''}`:''}`];
     case 'offline':return['wait',`Ingen forbindelse – ${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}`];
     case 'wait':return['wait',`${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}${tm}`];
-    case 'err':return['err',CLOUD.fails&&CLOUD.fails.length?`${CLOUD.fails.length} ${CLOUD.fails.length===1?'ting':'ting'} kunne ikke sendes – resten er gemt i skyen. Fx ${CLOUD.fails[0]}. Prøver igen om lidt.`:`Synkronisering fejlede (${CLOUD.err}). Prøver igen om lidt.`];
+    case 'err':return['err',CLOUD.fails&&CLOUD.fails.length?`${CLOUD.fails.length} ting kunne ikke sendes${CLOUD.fails.length<(CLOUD.total||0)?' – resten er gemt i skyen':''}. Fx ${CLOUD.fails[0]}. Prøver igen om lidt.`:`Synkronisering fejlede (${CLOUD.err}). Prøver igen om lidt.`];
     case 'full':return['err','Skyen er fuld. Slet nogle billeder eller lav en backup-fil.'];
     default:return['ok',`Alt er gemt i skyen${tm}`];
   }
@@ -48561,7 +48593,7 @@ function buildMarkdown(){
   for(const[k,items] of g){
     L.push(`## Dag ${dayNum(k)} – ${fmtDay(k)}`);
     const names=[];for(const x of items.filter(hasPos)){const nm=shortPlace(x);if(nm&&names[names.length-1]!==nm)names.push(nm)}
-    const info=[];if(names.length)info.push(names.join(' → '));const mt=metaText(S.meta[k]);if(mt)info.push(mt);
+    const info=[];if(names.length)info.push(names.join(' → '));const mt=metaText(S.meta[k]);if(mt)info.push(mt);if(flyOf(S.meta[k]).length)info.push('✈️ '+flyOf(S.meta[k]).join(', '));
     if(info.length)L.push(`*${info.join(' · ')}*`);
     L.push('');if((S.days[k]||'').trim())L.push(S.days[k].trim(),'');
     const noted=items.filter(p=>(p.note||'').trim());
@@ -48586,7 +48618,7 @@ try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTh
 const fold=x=>String(x||'').toLowerCase().replace(/æ/g,'ae').replace(/ø/g,'o').replace(/å/g,'aa').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/aa/g,'a');
 const MSH=['jan.','feb.','mar.','apr.','maj','jun.','jul.','aug.','sep.','okt.','nov.','dec.'],WDL=['søndag','mandag','tirsdag','onsdag','torsdag','fredag','lørdag'];
 function dayHay(k,items){
-  const parts=[S.days[k]||'',fmtDay(k),metaText(S.meta[k])];
+  const parts=[S.days[k]||'',fmtDay(k),metaText(S.meta[k]),flyOf(S.meta[k]).join(' ')];
   for(const p of items){parts.push(p.note||'');const pl=placeOf(p);if(pl)parts.push(pl);const c=countryOf(p);if(c)parts.push(c)}
   return parts.join(' \n ').toLowerCase();
 }
@@ -51027,7 +51059,7 @@ async function mergeInto(src,target){
   for(const p of ps){p.tripId=target.id;await save('photos',p)}
   for(const d of (await DB.all('days')).filter(d=>d.tripId===src.id&&!d.deleted)){
     const key=target.id+'|'+d.day,ex=await DB.get('days',key);
-    const rec=ex&&!ex.deleted?{...ex,note:[ex.note,d.note].filter(x=>x&&x.trim()).join('\n\n'),w:ex.w||d.w,temp:ex.temp??d.temp,mood:ex.mood||d.mood,keep:ex.keep||d.keep}:{...d,key,tripId:target.id};
+    const rec=ex&&!ex.deleted?{...ex,note:[ex.note,d.note].filter(x=>x&&x.trim()).join('\n\n'),w:ex.w||d.w,temp:ex.temp??d.temp,mood:ex.mood||d.mood,keep:ex.keep||d.keep,fly:[...new Set([...(ex.fly||[]),...(d.fly||[])])]}:{...d,key,tripId:target.id};
     await save('days',rec);await softDel('days',d);
   }
   if(src.note&&src.note.trim()){target.note=[target.note,src.note].filter(Boolean).join('\n\n')}
