@@ -716,6 +716,12 @@ html[data-theme=dark] .kb{background:color-mix(in srgb,var(--kc) 26%,transparent
 .bkrow .bkd{color:var(--ink2);font-variant-numeric:tabular-nums}.bkrow em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3)}
 .bkrow .bkn{min-width:0}.bkrow .bkn b{font-weight:600}.bkrow.done{opacity:.5}
 .bkstays{margin:0 0 12px;font-size:13.5px}.bkstays div{padding:5px 0;border-top:1px solid var(--line)}.bkstays div:first-child{border-top:0}.bkstays em{font-style:normal;font-size:11.5px;color:var(--ink3);margin-left:4px}
+.grp{margin:4px 0 10px;border-radius:18px;background:color-mix(in srgb,var(--card) 70%,transparent);box-shadow:inset 0 0 0 1px var(--line)}
+.grp>.chap{margin-bottom:0}
+.foldb{display:flex;align-items:center;gap:6px;width:100%;padding:8px 14px 10px;border:0;background:none;color:var(--accent);font-weight:600;font-size:13px;text-align:left}
+.foldb svg{transition:transform .18s}.grp.open .foldb svg{transform:rotate(90deg)}
+.grpk{padding:0 8px 8px 14px;border-left:2px solid var(--line);margin-left:22px}
+@media (prefers-reduced-motion:reduce){.foldb svg{transition:none}}
 </style>
 </head>
 <body>
@@ -47325,7 +47331,7 @@ function draw(){
   const zc=document.querySelector('.zoomctl').getBoundingClientRect(),cr=canvas.getBoundingClientRect(),ui=zc.width?[[zc.left-cr.left-6,zc.top-cr.top-6,zc.right-cr.left+6,zc.bottom-cr.top+6]]:[];
   const obs=[...lastClusters.map(c=>[c.x-27,c.y-27,c.x+27,c.y+27]),...lastPins.map(p=>[p.x-22,p.y-22,p.x+26,p.y+(isLife()&&p.list.length===1?34:20)])];
   if(!flyMode)drawPlaces(v,obs);else lastPlaces=[];
-  drawLabels(ctx,proj,v,T.k,1,62,[...ui,...obs,...lastPlaces.map(c=>{const r=T.k>=40?13:c.items.length>1?9:7;return[c.x-r,c.y-r,c.x+r,c.y+r,1]})]);
+  drawLabels(ctx,proj,v,T.k,1,62,[...ui,...obs,...lastPlaces.map(c=>{const r=placeR()+3;return[c.x-r,c.y-r,c.x+r,c.y+r,1]})]);
   drawTracks();
   drawFlights();
   drawRoutes(pts);
@@ -47343,13 +47349,7 @@ function draw(){
     const im=bmp(rep);
     if(im){const s=Math.min(im.width,im.height);ctx.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,c.x-r,c.y-r,2*r,2*r)}else{ctx.fillStyle='#ddd';ctx.fill()}
     ctx.restore();
-    if(c.items.length>1){
-      const tx=String(c.items.length);ctx.font='700 11px Figtree,system-ui,sans-serif';const w=Math.max(20,ctx.measureText(tx).width+10);
-      const bx=c.x+r-6,by=c.y-r-2;
-      ctx.beginPath();ctx.roundRect?ctx.roundRect(bx-w/2,by-10,w,20,10):ctx.rect(bx-w/2,by-10,w,20);ctx.fillStyle=getCss('--accent');ctx.fill();
-      ctx.lineWidth=2;ctx.strokeStyle='#fff';ctx.stroke();
-      ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(tx,bx,by+.5);
-    }
+    if(c.items.length>1)badge(ctx,c.x+r*.72,c.y-r*.72,c.items.length);
   }
 }
 const grat=d3.geoGraticule10();
@@ -48529,7 +48529,7 @@ async function pushOne(st,x){
       const mem=S.photos.find(p=>p.id===x.id);if(mem){mem.thumbAsset=x.thumbAsset;mem.fullAsset=x.fullAsset}
     }
     let id,body;
-    if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,psid:x.psid||null,parent:x.parent||null,deleted:!!x.deleted,upd:x.upd||0}}
+    if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,psid:x.psid||null,auto:x.auto||null,grouped:x.grouped?1:0,parent:x.parent||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='days'){id='d_'+x.tripId+'_'+x.day;body={kind:'day',tripId:x.tripId,day:x.day,note:x.note||'',keep:!!x.keep,w:x.w||null,temp:x.temp??null,mood:x.mood||null,people:x.people||[],fly:Array.isArray(x.fly)?x.fly:[],cover:x.cover||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='places'){id='pl_'+x.id;body={kind:'place',id:x.id,name:x.name,desc:(x.desc||'').slice(0,4000),lat:x.lat,lng:x.lng,cat:x.cat||'andet',st:x.st||'besogt',layer:x.layer||'',note:x.note||'',date:x.date||null,visits:x.visits||[],created:x.created||0,deleted:!!x.deleted,upd:x.upd||0,stays:x.stays||[],addr:x.addr||'',approx:x.approx?1:0}}
     else if(st==='capsules'){id='c_'+x.id;body={kind:'capsule',id:x.id,title:x.title||'',text:x.text||'',written:x.written||0,open:x.open||'',opened:x.opened||0,tripId:x.tripId||null,where:x.where||'',deleted:!!x.deleted,upd:x.upd||0}}
@@ -48559,7 +48559,7 @@ async function pull(){
     if(r.kind==='trip'){
       const l=await DB.get('trips',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('trips',r.id);changed=true}continue}
-      await DB.put('trips',{...(l||{}),id:r.id,name:r.name,created:r.created,start:r.start||null,end:r.end||null,kind:r.ckind||'rejse',place:r.place||null,note:r.note||'',people:r.people||[],memories:r.memories||[],story:r.story||null,cover:r.cover||null,track:r.track||null,src:r.src||undefined,psid:r.psid||undefined,parent:r.parent||undefined,upd:r.upd,dirty:0});changed=true;
+      await DB.put('trips',{...(l||{}),id:r.id,name:r.name,created:r.created,start:r.start||null,end:r.end||null,kind:r.ckind||'rejse',place:r.place||null,note:r.note||'',people:r.people||[],memories:r.memories||[],story:r.story||null,cover:r.cover||null,track:r.track||null,src:r.src||undefined,psid:r.psid||undefined,auto:r.auto||undefined,grouped:r.grouped||undefined,parent:r.parent||undefined,upd:r.upd,dirty:0});changed=true;
     }else if(r.kind==='day'){
       const key=r.tripId+'|'+r.day,l=await DB.get('days',key);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('days',key);changed=true}continue}
@@ -49281,12 +49281,23 @@ function fmtRange(t,x){
   if(days<120)return `${fmtShort(k2t(s))} – ${fmtShort(k2t(e))}`;
   return s.slice(0,4)===e.slice(0,4)?`${my(s)} – ${my(e)}`:`${days>730?s.slice(0,4):my(s)} – ${days>730?e.slice(0,4):my(e)}`;
 }
+// every trip lives under one big "Rejser" chapter. New trips join it by themselves; a trip you move out yourself stays out.
+async function groupTrips(){
+  const T=realTrips();let g=T.find(t=>t.auto==='rejse');
+  const loose=T.filter(t=>kindOf(t)==='rejse'&&t!==g&&!t.grouped&&!t.auto&&!t.parent&&!kidsOf(t).length);
+  if(!loose.length)return false;
+  if(!g){if(T.filter(t=>kindOf(t)==='rejse'&&!t.auto).length<2)return false;
+    g={id:uid(),name:'Rejser',kind:'rejse',auto:'rejse',created:Date.now()};await save('trips',g);S.trips.push(g)}
+  for(const t of loose){t.parent=g.id;t.grouped=1;await save('trips',t)}
+  return true;
+}
 async function loadLife(quiet=false){
   flushAll();swapAnim();stopPlay();if(ST)endStory();if(S.sel)endSelect();S.mode='life';S.trip=LIFE;store.set('spor-trip','__life');
   for(const p of S.photos)forget(p);
   const real=new Set(realTrips().map(t=>t.id));
   const all=await DB.all('photos');S.photos=all.filter(p=>!p.deleted&&real.has(p.tripId));
   S.days={};S.meta={};S.keep=new Set();S.q='';
+  if(await groupTrips())S.info=null;
   S.info=await chapterInfo(all);await computeVisited();
   $('#tripName').textContent='Hele livet';$('#tripIco').innerHTML=svgI('compass',17,2);$('#tripIco').style.color='var(--accent)';range.value=1000;S.highlight=null;setTabLabels();updateCloudUI();
   refresh();if(!quiet)fitLife(false);
@@ -49311,15 +49322,11 @@ function chapterPins(){
 }
 function drawPins(pins){
   for(const{t,x,y,list} of pins){
-    const[e,,col]=KINDS[kindOf(t)];
-    if(list.length>1)for(let i=Math.min(list.length,3)-1;i>0;i--){ctx.beginPath();ctx.arc(x+i*4,y-i*4,16,0,7);ctx.fillStyle=KINDS[kindOf(list[i])][2];ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#fff';ctx.stroke()}
-    ctx.save();ctx.shadowColor='#0005';ctx.shadowBlur=8;ctx.shadowOffsetY=2;
-    ctx.beginPath();ctx.arc(x,y,16,0,7);ctx.fillStyle=col;ctx.fill();ctx.restore();
-    ctx.beginPath();ctx.arc(x,y,16,0,7);ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();
-    drawIco(ctx,KICO[kindOf(t)],x,y,17);ctx.textAlign='center';ctx.textBaseline='middle';
-    if(list.length>1){const bx=x+14,by=y-16;ctx.beginPath();ctx.arc(bx,by,10,0,7);ctx.fillStyle=getCss('--btn');ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#fff';ctx.stroke();
-      ctx.fillStyle=getCss('--btnfg');ctx.font='700 11px Figtree,system-ui,sans-serif';ctx.fillText(String(list.length),bx,by+.5);continue}
-    if(isLife()&&T.k>2.5){ctx.font='600 11px Figtree,system-ui,sans-serif';ctx.lineWidth=3;ctx.strokeStyle=getCss('--halo');ctx.strokeText(t.name,x,y+27);ctx.fillStyle=getCss('--ink');ctx.fillText(t.name,x,y+27)}
+    const col=KINDS[kindOf(t)][2];
+    if(list.length>1)for(let i=Math.min(list.length,3)-1;i>0;i--)mark(ctx,x+i*4,y-i*4,{r:16,fill:KINDS[kindOf(list[i])][2],shadow:false});
+    mark(ctx,x,y,{r:16,fill:col,icon:KICO[kindOf(t)]});
+    if(list.length>1){badge(ctx,x+13,y-13,list.length);continue}
+    if(isLife()&&T.k>2.5){ctx.save();ctx.font='600 11px Figtree,system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle=getCss('--halo');ctx.strokeText(t.name,x,y+27);ctx.fillStyle=getCss('--ink');ctx.fillText(t.name,x,y+27);ctx.restore()}
   }
 }
 function drawRoutes(pts){
@@ -49359,12 +49366,24 @@ function renderLife(){
   if(S.tab==='stats')return renderLifeStats();
   const head=volatileHtml()+capBannerHtml()+onboardingHtml()+backupNudgeHtml()+`<div class="actions abar" style="margin-top:8px"><button class="btn accent small grow" id="lNew">+ Nyt kapitel</button><button class="btn small" id="lStory"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Fortæl mit liv</button><button class="btn small icon" id="lMore" aria-label="Flere valg"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>`;
   if(!ch.length){body.innerHTML=head+`<div class="empty"><h2>Dit liv på ét kort</h2><p>Et liv består af kapitler: rejser, steder du har boet, skoler, job, tjeneste og store begivenheder. Opret et kapitel, sæt det på kortet, og fyld det med billeder og dagbog.</p></div>`;bindLife();return}
-  const rows=nestRows(ch).map(({t,d})=>({t,d,r:chRange(t,S.info&&S.info.get(t.id))}));
+  let rows=nestRows(ch).map(({t,d})=>({t,d,r:chRange(t,S.info&&S.info.get(t.id))}));
+  // big chapters that hold others (Rejser, Militær …) sit together at the top, before the years
+  {const isG=t=>kidsOf(t).length>0,gs=[],rest=[];let cur=null;for(const x of rows){if(!x.d)cur=isG(x.t)?gs:rest;cur.push(x)}rows=[...gs,...rest]}
   let h='',year=null;
-  for(const{t,d,r} of rows){if(d){h+=chapterRow(t,true);continue}const y=r.s?r.s.slice(0,4):'Uden dato';if(y!==year){year=y;h+=/^\d{4}$/.test(y)?`<button class="yr yrb" data-yj="${y}" aria-label="Gå til en dato i ${y}">${y}<span>${svgI('calendar',16)}</span></button>`:`<div class="yr">${y}</div>`}h+=chapterRow(t)}
+  const fold=new Set(JSON.parse(store.get('spor-open')||'[]'));let grp=null;const close=()=>{if(grp){h+='</div></div>';grp=null}};
+  for(const{t,d,r} of rows){if(d){h+=chapterRow(t,true);continue}close();
+    const y=r.s?r.s.slice(0,4):'Uden dato';
+    if(kidsOf(t).length){// a big chapter with its own chapters folds open and shut; it sits in the year it ends
+      const n=kidsOf(t).length,open=fold.has(t.id);
+      h+=`<div class="grp${open?' open':''}" data-grp="${t.id}">${chapterRow(t)}<button class="foldb" data-fold="${t.id}" aria-expanded="${open}">${svgI('chevron',16)}<span>${open?'Skjul':'Vis'} ${n} ${t.auto==='rejse'?(n===1?'rejse':'rejser'):(n===1?'underkapitel':'underkapitler')}</span></button><div class="grpk"${open?'':' hidden'}>`;grp=t;continue}
+    if(y!==year){year=y;h+=/^\d{4}$/.test(y)?`<button class="yr yrb" data-yj="${y}" aria-label="Gå til en dato i ${y}">${y}<span>${svgI('calendar',16)}</span></button>`:`<div class="yr">${y}</div>`}h+=chapterRow(t)}
+  close();
   body.innerHTML=head+`<div class="qrow"><input class="search" id="lq" type="search" placeholder="Søg i hele dit liv…" value="${esc(S.lq)}" autocomplete="off"></div><div class="fchips" id="lf">${lfChipsHtml()}</div><div id="lres"></div>`+`<div id="ltl"${lqOn()?' style="display:none"':''}><div id="mem"></div><div class="tl">${h}</div></div>`;
   bindLife();fillMemories();bindLifeSearch();
   document.querySelectorAll('[data-yj]').forEach(b=>b.onclick=()=>yearJump(+b.dataset.yj));
+  document.querySelectorAll('[data-fold]').forEach(b=>b.onclick=()=>{const id=b.dataset.fold,g=b.closest('.grp'),k=g.querySelector('.grpk'),open=k.hidden;k.hidden=!open;g.classList.toggle('open',open);b.setAttribute('aria-expanded',open);
+    const n=kidsOf(liveTrip(id)).length,t=liveTrip(id);b.querySelector('span').textContent=`${open?'Skjul':'Vis'} ${n} ${t&&t.auto==='rejse'?(n===1?'rejse':'rejser'):(n===1?'underkapitel':'underkapitler')}`;
+    const f=new Set(JSON.parse(store.get('spor-open')||'[]'));open?f.add(id):f.delete(id);store.set('spor-open',JSON.stringify([...f]))});
   bindLF();if(lqOn())lifeSearchHtml(S.lq).then(r=>{const el=$('#lres');if(el){el.innerHTML=r;bindLifeResults()}});
 }
 function bindLife(){
@@ -49458,7 +49477,7 @@ async function editChapter(t,pre){
     if(a&&b&&b<a){toast('Slutdatoen er før startdatoen');return null}
     let obj=t;if(isNew){obj={id:uid(),created:Date.now()};S.trips.push(obj)}
     Object.assign(obj,{name,kind,start:a,end:b,note:$('#cNote').value.trim(),place,people:[...new Set($('#cPeople').value.split(',').map(normName).filter(Boolean))]});
-    {const ps=$('#cParent');if(ps){if(ps.value)obj.parent=ps.value;else delete obj.parent}}
+    {const ps=$('#cParent');if(ps){if(ps.value)obj.parent=ps.value;else delete obj.parent;obj.grouped=1}}
     await save('trips',obj);if(S.info&&!S.info.has(obj.id))S.info.set(obj.id,{n:0,days:0,km:0,pts:[],countries:new Set(),min:null,max:null});
     return obj;
   };
@@ -50082,7 +50101,7 @@ function flightTrips(){
     if(!best){const a=apt(g.fl[0].to)||apt(g.fl[0].from);if(!a||home(a.code))return null;best=a}
     const ccs=[...new Set(g.fl.flatMap(f=>[f.from,f.to]).filter(c=>!home(c)).map(c=>(apt(c)||{}).cc).filter(Boolean))];
     const nm=(best.cc===h.cc?best.city:ccName(best.cc))+' '+s.slice(0,4);
-    const ovl=ex.find(t=>{if(kindOf(t)==='bosted')return false;const x=chRange(t,info.get(t.id));if(!x.s)return false;return x.s<=e&&(x.e||x.s)>=s});
+    const ovl=ex.find(t=>{if(kindOf(t)==='bosted'||derivedRange(t))return false;const x=chRange(t,info.get(t.id));if(!x.s)return false;return x.s<=e&&(x.e||x.s)>=s});
     return{name:nm,start:s,end:g.closed?e:null,place:{lat:best.lat,lng:best.lng,name:best.city},cc:best.cc,ccs,fl:g.fl,dup:ovl||null,on:!ovl};
   }).filter(Boolean);
 }
@@ -50125,9 +50144,11 @@ function drawFlights(){
   // airports
   const ap=new Map();for(const e of seen.values())for(const a of[e.a,e.b])ap.set(a.code,{a,hi:(ap.get(a.code)||{}).hi||e.hi});
   ctx.font='700 10px Figtree,system-ui,sans-serif';ctx.textBaseline='middle';
+  const ar=focus?(T.k>2?8:5):(T.k>6?8:3.5),lb=[];
   for(const{a,hi:h} of ap.values()){const xy=proj([a.lng,a.lat]);if(!xy)continue;
-    ctx.beginPath();ctx.arc(xy[0],xy[1],h?5:focus?3.6:2.8,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=h?2.4:1.6;ctx.strokeStyle=h?getCss('--sun'):acc;ctx.stroke();
-    if(h||(focus&&T.k>2.2)||T.k>6){ctx.textAlign='left';ctx.lineWidth=3;ctx.strokeStyle=getCss('--halo');ctx.strokeText(a.code,xy[0]+6,xy[1]);ctx.fillStyle=getCss('--label');ctx.fillText(a.code,xy[0]+6,xy[1])}}
+    mark(ctx,xy[0],xy[1],{r:h?10:ar,fill:h?getCss('--sun'):acc,icon:'jet'});
+    if(h||(focus&&T.k>2.2)||T.k>6)lb.push([a.code,xy[0]+(h?10:ar)+4,xy[1]])}
+  ctx.restore();ctx.save();for(const[t,x,y] of lb)mapLabel(ctx,t,x,y,null,700);
   ctx.restore();
 }
 function fitFlights(L){const P=[];for(const f of L)for(const c of[f.from,f.to]){const a=apt(c);if(a)P.push({lat:a.lat,lng:a.lng})}if(P.length)fitTo(P)}
@@ -50186,7 +50207,7 @@ async function renderFlights(){
 function openFlight(id){
   const f=FLIGHTS.find(x=>x.id===id);if(!f)return;
   const a=apt(f.from)||{code:f.from,city:'',name:''},b=apt(f.to)||{code:f.to,city:'',name:''},al=alInfo(f.al),km=flKm(f),m=flMin(f);
-  const ch=realTrips().find(t=>{const x=chRange(t,S.info&&S.info.get(t.id));return x.s&&kindOf(t)!=='bosted'&&x.s<=f.date&&(x.e||x.s)>=f.date});
+  const ch=realTrips().find(t=>{const x=chRange(t,S.info&&S.info.get(t.id));return x.s&&!derivedRange(t)&&kindOf(t)!=='bosted'&&x.s<=f.date&&(x.e||x.s)>=f.date});
   const cell=(k,v)=>v?`<div><span>${k}</span><b>${esc(v)}</b></div>`:'';
   const late=(s,a2)=>{if(!s||!a2)return'';const d=Math.round((new Date(a2)-new Date(s))/6e4);return d>=10?` <em class="late">+${d} min</em>`:d<=-5?` <em class="early">${d} min</em>`:''};
   S.flHi=f.id;requestDraw();if(apt(f.from)&&apt(f.to))fitFlights([f]);
@@ -50246,7 +50267,7 @@ async function importPolarsteps(file){
     r.done=haveIds.has(String(r.psid));
     // the same trip may already exist (made by hand, from flights or from the timeline): score name and overlap
     let best=null,bo=0;const rn=norm(r.name).replace(/\b\d{4}\b/g,'').trim(),ra=r.start?k2t(r.start):null,rb=r.end?k2t(r.end):ra;
-    for(const t of ex){const x=chRange(t,info.get(t.id));
+    for(const t of ex){if(derivedRange(t))continue;const x=chRange(t,info.get(t.id));
       if(t.psid&&String(t.psid)===String(r.psid)){best=t;bo=100;break}
       const nm=norm(t.name).replace(/\b\d{4}\b/g,'').trim(),yr=(t.name.match(/\b(19|20)\d\d\b/)||[])[0];
       const same=!!(nm&&rn&&(nm===rn||(rn.length>3&&nm.includes(rn))||(nm.length>3&&rn.includes(nm))||(nm.slice(0,5)===rn.slice(0,5)&&nm.length>4)))&&(!yr||!r.start||yr===r.start.slice(0,4))&&(!x.s||!r.start||Math.abs(k2t(x.s)-ra)<200*864e5);
@@ -50343,7 +50364,7 @@ async function whereOn(day){
   if(use.length){use.sort((a,b)=>b.time-a.time);return{lat:use[0].lat,lng:use[0].lng,how:exact.length?'billeder':'Polarsteps'}}
   const c=S.places.filter(p=>!p.deleted&&catOf(p)==='by'&&((p.visits||[]).includes(day)||p.date===day));if(c.length)return{lat:c[c.length-1].lat,lng:c[c.length-1].lng,how:'by'};
   const f=FLIGHTS.filter(x=>x.date===day&&!x.canceled).pop();if(f){const a=apt(f.to);if(a)return{lat:a.lat,lng:a.lng,how:'fly'}}
-  const t=realTrips().find(t=>{const x=chRange(t,S.info&&S.info.get(t.id));return t.place&&x.s&&kindOf(t)!=='bosted'&&x.s<=day&&(x.e||x.s)>=day});if(t)return{lat:t.place.lat,lng:t.place.lng,how:'kapitel'};
+  const t=realTrips().find(t=>{const x=chRange(t,S.info&&S.info.get(t.id));return t.place&&x.s&&!derivedRange(t)&&kindOf(t)!=='bosted'&&x.s<=day&&(x.e||x.s)>=day});if(t)return{lat:t.place.lat,lng:t.place.lng,how:'kapitel'};
   return null;
 }
 async function importBooking(file){
@@ -50842,9 +50863,36 @@ S.places=[];
 async function loadPlaces(){try{S.places=(await DB.all('places')).filter(p=>!p.deleted)}catch(e){S.places=[]}}
 const placeVisible=p=>S.layers[catOf(p)]&&S.layers[stOf(p)];
 let lastPlaces=[];
+
+/* one marker language for everything on the map: a round badge in the category's colour with a white ring and a white glyph.
+   visited = filled, wish = white with coloured ring and glyph, missed = grey and dashed. Groups get the same dark count pill. */
+function mark(g,x,y,o){
+  const r=o.r||9,col=o.fill||'#7a6a4f',st=o.st||'besogt';
+  g.save();
+  if(o.shadow!==false&&r>=7){g.shadowColor='rgba(0,0,0,.28)';g.shadowBlur=r>=12?8:5;g.shadowOffsetY=r>=12?2:1}
+  g.beginPath();g.arc(x,y,r,0,7);g.fillStyle=st==='onske'?'#fff':st==='misset'?'#a7b0b5':col;g.globalAlpha=o.alpha??1;g.fill();g.restore();
+  g.save();g.globalAlpha=o.alpha??1;g.beginPath();g.arc(x,y,r,0,7);
+  if(st==='onske'){g.lineWidth=r>=12?3:2;g.strokeStyle=col;g.stroke()}
+  else{if(st==='misset')g.setLineDash([3,2]);g.lineWidth=r>=12?3:r>=7?2:1.5;g.strokeStyle=o.ring||'#fff';g.stroke();g.setLineDash([])}
+  if(o.icon&&r>=7)drawIco(g,o.icon,x,y,Math.round(r*1.15),st==='onske'?col:'#fff',r>=12?2.2:2);
+  g.restore();
+  if(o.count>1)badge(g,x+r*.75,y-r*.75,o.count);
+}
+function badge(g,x,y,n){
+  const tx=n>99?'99+':String(n);g.save();g.font='700 10px Figtree,system-ui,sans-serif';const w=Math.max(16,g.measureText(tx).width+8);
+  g.beginPath();g.roundRect?g.roundRect(x-w/2,y-8,w,16,8):g.rect(x-w/2,y-8,w,16);g.fillStyle=getCss('--btn');g.fill();g.lineWidth=1.75;g.strokeStyle='#fff';g.stroke();
+  g.fillStyle=getCss('--btnfg');g.textAlign='center';g.textBaseline='middle';g.fillText(tx,x,y+.5);g.restore();
+}
+function mapLabel(g,txt,x,y,boxes,weight=600){
+  g.save();g.font=weight+' 11px Figtree,system-ui,sans-serif';g.textAlign='left';g.textBaseline='middle';g.lineJoin='round';
+  const w=g.measureText(txt).width,b=[x,y-8,x+w+4,y+8];
+  if(boxes&&boxes.some(o=>!(b[2]<o[0]||b[0]>o[2]||b[3]<o[1]||b[1]>o[3]))){g.restore();return false}
+  if(boxes)boxes.push(b);g.lineWidth=3;g.strokeStyle=getCss('--halo');g.strokeText(txt,x,y);g.fillStyle=getCss('--ink');g.fillText(txt,x,y);g.restore();return true;
+}
+const placeR=()=>T.k>=40?12:T.k>=6?9:5;
 function drawPlaces(v,obst){
   lastPlaces=[];if(!S.places.length)return;
-  const big=T.k>=40,cell=big?30:16,m=new Map();
+  const big=T.k>=40,cell=T.k>=40?32:T.k>=6?26:14,m=new Map();
   for(const p of S.places){
     if(!placeVisible(p))continue;
     if(!big&&T.k<6&&catOf(p)!=='by'&&stOf(p)==='besogt')continue;
@@ -50852,32 +50900,23 @@ function drawPlaces(v,obst){
     const xy=proj([p.lng,p.lat]);if(!xy)continue;const[x,y]=xy;if(x<-20||y<-20||x>W+20||y>H+20)continue;
     const k=Math.floor(x/cell)+':'+Math.floor(y/cell);let c=m.get(k);if(!c)m.set(k,c={items:[],x:0,y:0});c.items.push(p);c.x+=x;c.y+=y;
   }
-  const labels=[];
+  const labels=[],R=placeR();
   for(const c of m.values()){
     c.x/=c.items.length;c.y/=c.items.length;lastPlaces.push(c);
-    const p=c.items.find(q=>stOf(q)==='onske')||c.items[0],[e,,col]=CAT[catOf(p)],st=stOf(p),r=big?12:6;
-    ctx.save();
-    if(c.items.length>1&&!big){ctx.beginPath();ctx.arc(c.x,c.y,8,0,7);ctx.fillStyle=col;ctx.globalAlpha=.85;ctx.fill();ctx.globalAlpha=1;ctx.lineWidth=1.5;ctx.strokeStyle='#fff';ctx.stroke();
-      ctx.fillStyle='#fff';ctx.font='700 9px Figtree,system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.items.length>99?'99+':String(c.items.length),c.x,c.y+.5);ctx.restore();continue}
-    ctx.beginPath();ctx.arc(c.x,c.y,r,0,7);
-    if(st==='besogt'){ctx.fillStyle=col;ctx.fill();ctx.lineWidth=big?2.5:1.5;ctx.strokeStyle='#fff';ctx.stroke()}
-    else if(st==='onske'){ctx.fillStyle=getCss('--card');ctx.fill();ctx.lineWidth=big?3:2;ctx.strokeStyle=col;ctx.stroke()}
-    else{ctx.fillStyle='#9aa4aa';ctx.fill();ctx.setLineDash([3,2]);ctx.lineWidth=big?2.5:1.5;ctx.strokeStyle='#fff';ctx.stroke();ctx.setLineDash([])}
-    if(big){ctx.textAlign='center';ctx.textBaseline='middle';if(st==='misset')ctx.globalAlpha=.7;drawIco(ctx,CICO[catOf(p)],c.x,c.y,13,st==='onske'?col:'#fff');ctx.globalAlpha=1;
-      if(st==='onske'){ctx.font='700 10px Figtree,system-ui,sans-serif';ctx.fillStyle=col;ctx.fillText('★',c.x+10,c.y-10)}
-      if(c.items.length>1){ctx.font='700 9px Figtree,system-ui,sans-serif';const bx=c.x+11,by=c.y+10;ctx.beginPath();ctx.arc(bx,by,7,0,7);ctx.fillStyle=getCss('--btn');ctx.fill();ctx.fillStyle=getCss('--btnfg');ctx.fillText(String(c.items.length),bx,by+.5)}
-      else if(T.k>=120)labels.push([c,p]);}
-    ctx.restore();
+    // the group shows its most common category; a wish beats a visit so wishes stay visible
+    const cnt={};for(const q of c.items)cnt[catOf(q)]=(cnt[catOf(q)]||0)+1;const top=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];
+    const p=c.items.length===1?c.items[0]:(c.items.find(q=>catOf(q)===top&&stOf(q)==='onske')||c.items.find(q=>catOf(q)===top)),cat=catOf(p);
+    const st=c.items.every(q=>stOf(q)==='onske')?'onske':c.items.every(q=>stOf(q)==='misset')?'misset':c.items.length>1?'besogt':stOf(p);
+    mark(ctx,c.x,c.y,{r:R,fill:CAT[cat][2],icon:CICO[cat],st,count:R>=7?c.items.length:0});
+    if(R<7&&c.items.length>1){ctx.save();ctx.beginPath();ctx.arc(c.x,c.y,R+2.5,0,7);ctx.lineWidth=1.2;ctx.strokeStyle=CAT[cat][2];ctx.globalAlpha=.55;ctx.stroke();ctx.restore()}
+    if(c.items.length===1&&T.k>=120)labels.push([c,p]);
   }
   // names when zoomed far in
-  const boxes=obst.slice();ctx.font='600 11px Figtree,system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineJoin='round';
-  for(const[c,p] of labels){const w=ctx.measureText(p.name).width,b=[c.x+14,c.y-8,c.x+18+w,c.y+8];
-    if(boxes.some(o=>!(b[2]<o[0]||b[0]>o[2]||b[3]<o[1]||b[1]>o[3])))continue;boxes.push(b);
-    ctx.lineWidth=3;ctx.strokeStyle=getCss('--halo');ctx.strokeText(p.name,c.x+16,c.y);ctx.fillStyle=getCss('--ink');ctx.fillText(p.name,c.x+16,c.y)}
+  const boxes=obst.slice();for(const[c,p] of labels)mapLabel(ctx,p.name,c.x+R+5,c.y,boxes);
 }
 function hitPlace(x,y){
   let best=null,bd=1e9;for(const c of lastPlaces){const d=Math.hypot(c.x-x,c.y-y);if(d<bd){bd=d;best=c}}
-  if(!best||bd>(T.k>=40?16:12))return false;
+  if(!best||bd>placeR()+(T.k>=6?6:8))return false;
   if(best.items.length===1)openPlace(best.items[0]);
   else{const la=best.items.map(p=>p.lat),ln=best.items.map(p=>p.lng);const sp=Math.max(...la)-Math.min(...la)+Math.max(...ln)-Math.min(...ln);
     if(sp<.0005||T.k>3000)pickPlace(best.items);else sel.transition().duration(450).call(zoom.scaleBy,4,[x,y])}
