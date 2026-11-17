@@ -48390,12 +48390,25 @@ async function push(){
            ...(await DB.all('places')).filter(x=>x.dirty).map(x=>['places',x]),
            ...(await DB.all('people')).filter(x=>x.dirty).map(x=>['people',x]),
            ...(await DB.all('capsules')).filter(x=>x.dirty).map(x=>['capsules',x])];
-  CLOUD.pending=q.length;updateCloudUI();
+  CLOUD.pending=q.length;CLOUD.fails=[];updateCloudUI();
+  // one bad item must not stop the rest: each is sent on its own, a busy/rate-limited server gets a short pause and a second try
+  const errs=[];
   for(const[st,x] of q){
     if(!navigator.onLine){CLOUD.state='offline';return}
+    try{await pushOne(st,x)}
+    catch(e){const c=String((e&&(e.code||e.message))||'fejl');if(/quota/i.test(c))throw e;
+      let ok=false;for(const w of (errs.length>=3?[]:[1500,5000])){await new Promise(r=>setTimeout(r,w));try{await pushOne(st,x);ok=true;break}catch(e2){}}
+      if(!ok){errs.push(c);if(errs.length>=25&&errs.every(z=>z===c)){CLOUD.pending=0;break}CLOUD.fails.push((st==='trips'?'kapitlet ':st==='photos'?'billedet ':st==='days'?'dagen ':'')+(x.name||x.title||x.day||x.id||'')+': '+c)}}
+    CLOUD.pending=Math.max(0,CLOUD.pending-1);updateCloudUI();
+  }
+  if(errs.length){const e=new Error('x');e.code=errs.length+' af '+q.length+' kunne ikke sendes – '+errs[0];throw e}
+}
+// JSZip and some iOS paths give Blobs without a type; the asset store wants to know it is an image
+async function upAsset(b){if(b&&!(b instanceof Blob)&&b.__ab)b=new Blob([b.__ab],{type:b.type||'image/jpeg'});if(b&&!b.type)b=new Blob([b],{type:'image/jpeg'});return CLOUD.assets.upload(b)}
+async function pushOne(st,x){
     if(st==='photos'&&!x.deleted){
-      if(!x.thumbAsset&&x.thumb)x.thumbAsset=(await CLOUD.assets.upload(x.thumb)).id;
-      if(!x.fullAsset&&x.full)x.fullAsset=(await CLOUD.assets.upload(x.full)).id;
+      if(!x.thumbAsset&&x.thumb)x.thumbAsset=(await upAsset(x.thumb)).id;
+      if(!x.fullAsset&&x.full)x.fullAsset=(await upAsset(x.full)).id;
       const mem=S.photos.find(p=>p.id===x.id);if(mem){mem.thumbAsset=x.thumbAsset;mem.fullAsset=x.fullAsset}
     }
     let id,body;
@@ -48405,14 +48418,12 @@ async function push(){
     else if(st==='capsules'){id='c_'+x.id;body={kind:'capsule',id:x.id,title:x.title||'',text:x.text||'',written:x.written||0,open:x.open||'',opened:x.opened||0,tripId:x.tripId||null,where:x.where||'',deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='people'){id='pe_'+x.id;body={kind:'person',id:x.id,name:x.name,group:x.group||null,rel:x.rel||'',photo:x.photo||null,self:x.self||0,born:x.born||'',home:x.home||'',bio:x.bio||'',deleted:!!x.deleted,upd:x.upd||0}}
     else{id='p_'+x.id;body={kind:'photo',id:x.id,tripId:x.tripId,lat:x.lat??null,lng:x.lng??null,time:x.time,note:x.note||'',fav:!!x.fav,people:x.people||[],ord:x.ord??null,approx:x.approx?1:0,name:x.name||'',w:x.w||0,h:x.h||0,thumbAsset:x.thumbAsset||null,fullAsset:x.fullAsset||null,deleted:!!x.deleted,upd:x.upd||0}}
-    await ucol().doc(id).set(body);
+    await ucol().doc(id).set(JSON.parse(JSON.stringify(body)));
     if(st==='photos'&&x.deleted){for(const a of [x.thumbAsset,x.fullAsset])if(a)try{await CLOUD.assets.delete(a)}catch(e){}}
     const key=x.id??x.key,cur=await DB.get(st,key);
     if(cur&&cur.upd===x.upd){if(cur.deleted)await DB.del(st,key);else{cur.dirty=0;if(st==='photos'){cur.thumbAsset=x.thumbAsset;cur.fullAsset=x.fullAsset}await DB.put(st,cur)}
       const mem=st==='photos'?S.photos.find(p=>p.id===key):st==='trips'?S.trips.find(t=>t.id===key):null;if(mem&&mem.upd===x.upd)mem.dirty=0}
     else if(cur&&st==='photos'){cur.thumbAsset=x.thumbAsset;cur.fullAsset=x.fullAsset;await DB.put(st,cur)}
-    CLOUD.pending=Math.max(0,CLOUD.pending-1);updateCloudUI();
-  }
 }
 async function pull(){
   const snap=await ucol().get();let changed=false;
@@ -48493,7 +48504,7 @@ function cloudText(){
     case 'busy':return['busy',`Synkroniserer…${CLOUD.pending?` ${CLOUD.pending} tilbage`:''}`];
     case 'offline':return['wait',`Ingen forbindelse – ${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}`];
     case 'wait':return['wait',`${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}${tm}`];
-    case 'err':return['err',`Synkronisering fejlede (${CLOUD.err}). Prøver igen senere.`];
+    case 'err':return['err',CLOUD.fails&&CLOUD.fails.length?`${CLOUD.fails.length} ${CLOUD.fails.length===1?'ting':'ting'} kunne ikke sendes – resten er gemt i skyen. Fx ${CLOUD.fails[0]}. Prøver igen om lidt.`:`Synkronisering fejlede (${CLOUD.err}). Prøver igen om lidt.`];
     case 'full':return['err','Skyen er fuld. Slet nogle billeder eller lav en backup-fil.'];
     default:return['ok',`Alt er gemt i skyen${tm}`];
   }
