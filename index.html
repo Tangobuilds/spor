@@ -48352,10 +48352,19 @@ async function cloudInit(){
     Object.assign(CLOUD,{db,uid:id,assets,avail:!!assets});
   }catch(e){return}
   if(!CLOUD.avail)return;
-  if(cloudPref()==='on'){CLOUD.on=true;syncNow(true)}
+  // Claude can clear this page's local storage (incl. the Sky setting) – if the account already has a diary in the cloud and Sky wasn't switched off on purpose, turn it back on and fetch everything
+  const pref=cloudPref();let auto=false;
+  if(pref!=='on'&&pref!=='off'){try{const sn=await ucol().get();auto=sn.docs.some(d=>{const r=d.data();return r&&r.kind&&!r.deleted})}catch(e){}}
+  if(pref==='on'||auto){CLOUD.on=true;if(auto)store.set('spor-cloud','on');
+    syncNow(true).then(()=>{if(auto&&CLOUD.state!=='err')toast('Din dagbog er hentet fra skyen',3500)})}
   updateCloudUI();renderSheet();
 }
-function scheduleSync(){if(!CLOUD.on)return;countPending().then(updateCloudUI);clearTimeout(CLOUD.timer);CLOUD.timer=setTimeout(()=>syncNow(false),2500)}
+// send waiting changes the moment the app is hidden or closed, and look for news from your other devices while it's open
+function cloudFlush(){if(!CLOUD.on)return;clearTimeout(CLOUD.timer);setTimeout(()=>{if(!CLOUD.busy)syncNow(false);else CLOUD.timer=setTimeout(()=>syncNow(false),800)},80)}
+addEventListener('pagehide',cloudFlush);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')cloudFlush()});
+setInterval(()=>{if(CLOUD.on&&!CLOUD.busy&&document.visibilityState==='visible'&&navigator.onLine)syncNow(true)},120000);
+function scheduleSync(){if(!CLOUD.on)return;countPending().then(updateCloudUI);clearTimeout(CLOUD.timer);CLOUD.timer=setTimeout(()=>syncNow(false),1200)}
 async function countPending(){
   const demo=new Set((await DB.all('trips')).filter(t=>t.demo).map(t=>t.id));
   let n=0;for(const st of ['trips','days','photos','places','people','capsules'])for(const x of await DB.all(st))if(x.dirty&&!x.demo&&!demo.has(x.tripId))n++;
@@ -48468,7 +48477,7 @@ async function setCloud(on){
 // Inside Claude the page's own browser storage is not guaranteed to last (the iPhone app can clear it on reload), so warn until Sky is on
 function volatileHtml(){
   if(window.SPOR_PWA||CLOUD.on||sessionStorage.getItem('spor-vol-hide'))return'';
-  return `<div class="warn volw"><b>Dagbogen kan forsvinde i Claude-versionen</b>Her gemmes alt kun midlertidigt i Claude-appen og kan blive ryddet, når siden opdateres eller lukkes. Brug offline-appen på <span style="font-weight:700">tangobuilds.github.io/spor</span>${CLOUD.avail?', eller slå skyen til, så alt gemmes på din Claude-konto':''}.
+  return `<div class="warn volw"><b>Slå skyen til – ellers kan dagbogen forsvinde</b>${CLOUD.avail?'Uden skyen gemmes alt kun midlertidigt i Claude og kan blive ryddet, når siden opdateres eller lukkes. Med skyen gemmes alt privat på din Claude-konto, og du kan åbne dagbogen på både pc og telefon.':'Her gemmes alt kun midlertidigt og kan blive ryddet, når siden opdateres eller lukkes. Åbn Spor i Claude-appen eller på claude.ai, logget ind, og slå skyen til.'}
     <div class="row" style="flex-wrap:wrap">${CLOUD.avail?'<button class="btn small accent" id="volSky">Slå skyen til</button>':''}<button class="btn small ${CLOUD.avail?'':'accent'}" id="volBk">Tag backup nu</button><button class="btn small ghost" id="volHide">Skjul</button></div></div>`}
 function bindVolatile(){const a=$('#volSky');if(a)a.onclick=()=>setCloud(true);const b=$('#volBk');if(b)b.onclick=exportLifeZip;const c=$('#volHide');if(c)c.onclick=()=>{try{sessionStorage.setItem('spor-vol-hide','1')}catch(e){}renderSheet()}}
 function cloudCardHtml(){
