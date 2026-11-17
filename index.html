@@ -656,6 +656,66 @@ html[data-theme=dark] .kb{background:color-mix(in srgb,var(--kc) 26%,transparent
 @keyframes shim{from{background-position:200% 0}to{background-position:0 0}}
 /* respect people who prefer less motion */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* flight log */
+.flhero{position:relative;overflow:hidden;margin:8px 0 12px;padding:16px 16px 14px;border-radius:20px;color:#e8f3f4;background:radial-gradient(120% 90% at 100% 0%,#1d5c67 0%,transparent 55%),linear-gradient(165deg,#0d2830,#0f3540 60%,#11303a);box-shadow:0 10px 30px rgba(10,30,36,.25)}
+.flhero::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;border:1.5px dashed #ffffff1c;pointer-events:none}
+.flh1{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12.5px}
+.flh1 .flk{font-weight:700;opacity:.75}.flh1 .flsrc{opacity:.55;font-variant-numeric:tabular-nums}
+.flbig{display:grid;grid-template-columns:auto auto auto;justify-content:space-between;gap:14px;margin:10px 0 12px}
+.flbig b{display:block;font-size:clamp(22px,6.6vw,28px);font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.flbig span{font-size:12px;opacity:.7}
+.flglobe span{display:block;font-size:12.5px;opacity:.8;margin-top:6px}
+.fltrack{height:6px;border-radius:4px;background:#ffffff1f;overflow:hidden}.fltrack i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#4fb3c4,var(--sun))}
+.flmini{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid #ffffff1a}
+.flmini b{display:block;font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}.flmini span{font-size:11.5px;opacity:.65}
+.flyears{display:flex;align-items:flex-end;gap:3px;height:74px;margin:0 2px 12px}
+.flyears button{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;border:0;background:none;padding:0;color:var(--ink3)}
+.flyears i{display:block;width:100%;max-width:18px;border-radius:4px 4px 2px 2px;background:var(--accent);opacity:.8;transition:opacity .15s}
+.flyears button:hover i,.flyears button:focus-visible i{opacity:1}
+.flyears span{font-size:9.5px;font-variant-numeric:tabular-nums}
+.flrec{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.flrec button,.fltops>div{background:var(--card);border:0;border-radius:16px;padding:11px 13px;text-align:left;box-shadow:var(--sh);color:var(--ink)}
+.flrec span{display:block;font-size:11.5px;color:var(--ink3)}.flrec b{display:block;font-size:17px;font-weight:800;letter-spacing:.01em;margin:2px 0}.flrec em{font-style:normal;font-size:12px;color:var(--ink2)}
+.fltops{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.fltops h4{margin:0 0 6px;font-size:12.5px;color:var(--ink3);font-weight:600}
+.fltops ol{list-style:none;margin:0;padding:0}.fltops li{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:3px 0;border-top:1px solid var(--line)}.fltops li:first-child{border-top:0}
+.fltops li span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fltops li b{font-variant-numeric:tabular-nums}
+.flact{display:flex;gap:8px;margin:2px 0 6px}
+.fllist h3{position:sticky;top:0;z-index:1;margin:0;padding:12px 2px 6px;background:var(--paper);font-family:Newsreader,Georgia,serif;font-size:22px;letter-spacing:-.02em}
+.fllist h3 span{font-family:Figtree,system-ui,sans-serif;font-size:12px;font-weight:500;color:var(--ink3);letter-spacing:0;margin-left:6px}
+.flrow{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;width:100%;margin:0 0 6px;padding:10px 12px;border:0;border-radius:16px;background:var(--card);box-shadow:var(--sh);text-align:left;color:var(--ink)}
+.flrow:active{transform:scale(.99)}
+.flrow .fd{display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--ink3);line-height:1.1}.flrow .fd b{font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums}
+.flrow .fm{min-width:0}.flrow .fr{display:flex;align-items:center;gap:8px}
+.flrow .fr b{font-size:18px;font-weight:800;letter-spacing:.02em}
+.fln{position:relative;flex:1;min-width:24px;max-width:90px;height:0;border-top:1.5px dashed var(--line)}
+.fln::after{content:"";position:absolute;left:50%;top:-6px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--card)}
+.flrow .fs{display:block;font-size:12px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.flrow .fx{text-align:right;font-size:12px;color:var(--ink3);white-space:nowrap}.flrow .fx b{display:block;font-size:13px;color:var(--accent)}
+.flrow.cx{opacity:.55}.flrow.cx .fr b{text-decoration:line-through}
+.flempty{text-align:center;padding:26px 14px}.flempty h2{font-family:Newsreader,Georgia,serif;font-size:25px;margin:12px 0 6px;letter-spacing:-.02em}.flempty p{color:var(--ink2);margin:0 0 14px}
+.flart{width:78px;height:78px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:var(--accent2);color:var(--accent)}
+.flhow{font-size:12.5px;color:var(--ink3)!important;margin-top:12px!important}
+.bpass{border-radius:20px;overflow:hidden;background:var(--card);box-shadow:var(--sh)}
+.bp1{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 16px;color:#fff;background:linear-gradient(135deg,var(--accent),#0d4b56)}
+.bp1 span{font-weight:600;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bp1 b{font-size:18px;font-weight:800;letter-spacing:.02em}
+.bp2{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:18px 16px 14px}
+.bpa b{display:block;font-size:36px;font-weight:800;letter-spacing:-.01em;line-height:1}.bpa span{display:block;font-size:13px;color:var(--ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bpa em{display:block;font-style:normal;font-size:16px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}.bpa.r{text-align:right}
+.bpm{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--accent)}.bpm span{font-size:11.5px;color:var(--ink3);white-space:nowrap}
+.bpcut{position:relative;height:0;margin:2px 16px 14px;border-top:2px dashed var(--line)}
+.bpcut::before,.bpcut::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--paper)}.bpcut::before{left:-27px}.bpcut::after{right:-27px}
+.bp3{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;padding:0 16px 16px}.bp3 span{display:block;font-size:11.5px;color:var(--ink3)}.bp3 b{font-size:14px;font-weight:600}
+.bpn{margin:0 16px 16px!important;font-size:13.5px}
+.bpa em .late,.bpa em .early,.late,.early{display:inline;font-style:normal;font-size:12px;font-weight:600;margin:0}.late{color:var(--danger)}.early{color:var(--ok)}
+.bpass.cx .bp2 b{text-decoration:line-through;opacity:.6}
+@media (prefers-reduced-motion:reduce){.flrow:active{transform:none}}
+.bklist{max-height:50vh;overflow:auto;margin:0 -4px;padding:0 4px}
+.bkrow{display:grid;grid-template-columns:78px 1fr;gap:10px;padding:8px 2px;border-top:1px solid var(--line);font-size:13px}.bkrow:first-child{border-top:0}
+.bkrow .bkd{color:var(--ink2);font-variant-numeric:tabular-nums}.bkrow em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3)}
+.bkrow .bkn{min-width:0}.bkrow .bkn b{font-weight:600}.bkrow.done{opacity:.5}
+.bkstays{margin:0 0 12px;font-size:13.5px}.bkstays div{padding:5px 0;border-top:1px solid var(--line)}.bkstays div:first-child{border-top:0}.bkstays em{font-style:normal;font-size:11.5px;color:var(--ink3);margin-left:4px}
 </style>
 </head>
 <body>
@@ -687,6 +747,9 @@ html[data-theme=dark] .kb{background:color-mix(in srgb,var(--kc) 26%,transparent
 <div class="now" id="now"><img id="nowImg" alt=""><div><b id="nowT"></b><span id="nowP"></span><p id="nowN"></p></div></div>
 <input type="file" id="bulkFile" accept="image/*" multiple hidden>
 <input type="file" id="tlFile" accept=".json,.zip,application/json,application/zip" hidden>
+<input type="file" id="bkFile" accept=".json,application/json" hidden>
+<input type="file" id="psFile" accept=".zip,application/zip" hidden>
+<input type="file" id="flFile" accept=".csv,text/csv" hidden>
 <input type="file" id="kmlFile" accept=".kml,.kmz,application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz" hidden>
 <input type="file" id="restoreFile" accept=".json,.zip,application/json,application/zip" multiple hidden>
 <div class="selbar" id="selbar"><b id="selN"></b><button id="selAll">Alle</button><button id="selFav" aria-label="Favorit">★</button><button id="selPpl">Personer</button><button id="selMove">Flyt</button><button id="selDel" style="color:#ffb4ab">Slet</button><button id="selCancel" aria-label="Afslut valg">✕</button></div>
@@ -703,6 +766,7 @@ html[data-theme=dark] .kb{background:color-mix(in srgb,var(--kc) 26%,transparent
     <button class="tab on" data-tab="diary">Dagbog</button>
     <button class="tab" data-tab="places">Steder</button>
     <button class="tab" data-tab="stats">Statistik</button>
+    <button class="tab" data-tab="fly" hidden>Fly</button>
   </div>
   <div class="body" id="body"></div>
 </div>
@@ -47117,12 +47181,12 @@ const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 
 /* ---------- storage (IndexedDB, memory fallback) ---------- */
 const DB=(()=>{
-  let dbp=null;const mem={trips:new Map(),photos:new Map(),days:new Map(),tiles:new Map(),places:new Map(),people:new Map(),capsules:new Map()};
+  let dbp=null;const mem={trips:new Map(),photos:new Map(),days:new Map(),tiles:new Map(),places:new Map(),people:new Map(),capsules:new Map(),flights:new Map()};
   function open(){
     if(dbp)return dbp;
     dbp=new Promise(res=>{
       try{
-        const r=indexedDB.open('spor-rejsedagbog',5);
+        const r=indexedDB.open('spor-rejsedagbog',6);
         r.onupgradeneeded=()=>{const d=r.result,has=n=>d.objectStoreNames.contains(n);
           if(!has('trips'))d.createObjectStore('trips',{keyPath:'id'});
           if(!has('photos'))d.createObjectStore('photos',{keyPath:'id'}).createIndex('trip','tripId');
@@ -47130,7 +47194,8 @@ const DB=(()=>{
           if(!has('tiles'))d.createObjectStore('tiles',{keyPath:'key'});
           if(!has('places'))d.createObjectStore('places',{keyPath:'id'});
           if(!has('people'))d.createObjectStore('people',{keyPath:'id'});
-          if(!has('capsules'))d.createObjectStore('capsules',{keyPath:'id'})};
+          if(!has('capsules'))d.createObjectStore('capsules',{keyPath:'id'});
+          if(!has('flights'))d.createObjectStore('flights',{keyPath:'id'})};
         // an older copy of Spor open in another tab can block the upgrade: wait for it instead of silently falling back to memory
         r.onsuccess=()=>{const d=r.result;d.onversionchange=()=>{d.close();try{toast('Spor er opdateret i en anden fane – genindlæs siden',6000)}catch(e){}};res(d)};r.onerror=()=>res(null);
         r.onblocked=()=>{setTimeout(()=>{try{toast('Luk Spor i andre faner eller vinduer, så opdateringen kan blive færdig',8000)}catch(e){}},500)};
@@ -47139,7 +47204,8 @@ const DB=(()=>{
     return dbp;
   }
   // Some WebKit modes (private browsing, older iOS) refuse Blobs in IndexedDB: fall back to ArrayBuffers and turn them back into Blobs on read
-  let BLOBOK=true;const BK=['full','thumb'];const CV={},CA={},CACHED=new Set(['photos','days','trips','places','people','capsules']);const bump=s=>{CV[s]=(CV[s]||0)+1;delete CA[s]};
+  // iOS WebKit (Claude app, Safari) can lose the files behind Blobs kept in IndexedDB – they read as broken after a restart. Store raw bytes there instead.
+  let BLOBOK=!/AppleWebKit/.test(navigator.userAgent)||/Chrome|Chromium|Edg\//.test(navigator.userAgent);const BK=['full','thumb'];const CV={},CA={},CACHED=new Set(['photos','days','trips','places','people','capsules','flights']);const bump=s=>{CV[s]=(CV[s]||0)+1;delete CA[s]};
   async function storable(o){const r={...o};for(const k of BK)if(r[k] instanceof Blob)r[k]={__ab:await r[k].arrayBuffer(),type:r[k].type||'image/jpeg'};return r}
   function revive(o){if(o)for(const k of BK){const v=o[k];if(v&&v.__ab)o[k]=new Blob([v.__ab],{type:v.type})}return o}
   function req(d,store,mode,fn){return new Promise((res,rej)=>{let out;let t;try{t=d.transaction(store,mode)}catch(e){rej(e);return}let r;try{r=fn(t.objectStore(store))}catch(e){rej(e);return}if(r)r.onsuccess=()=>{out=r.result};t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error||new Error('IndexedDB-fejl'));t.onabort=()=>rej(t.error)})}
@@ -47253,13 +47319,15 @@ function draw(){
   if(T.k<4){ctx.beginPath();gpath(grat);ctx.strokeStyle=getCss('--grat');ctx.lineWidth=.5;ctx.stroke()}
   drawHeat();
   // route
-  const pts=S.layers.photos?placed().filter(p=>p.time<=S.cut):[];
-  lastClusters=cluster(pts);lastPins=S.layers.chapters?chapterPins():[];
+  const flyMode=isLife()&&S.tab==='fly';
+  const pts=S.layers.photos&&!flyMode?placed().filter(p=>p.time<=S.cut):[];
+  lastClusters=cluster(pts);lastPins=S.layers.chapters&&!flyMode?chapterPins():[];
   const zc=document.querySelector('.zoomctl').getBoundingClientRect(),cr=canvas.getBoundingClientRect(),ui=zc.width?[[zc.left-cr.left-6,zc.top-cr.top-6,zc.right-cr.left+6,zc.bottom-cr.top+6]]:[];
   const obs=[...lastClusters.map(c=>[c.x-27,c.y-27,c.x+27,c.y+27]),...lastPins.map(p=>[p.x-22,p.y-22,p.x+26,p.y+(isLife()&&p.list.length===1?34:20)])];
-  drawPlaces(v,obs);
+  if(!flyMode)drawPlaces(v,obs);else lastPlaces=[];
   drawLabels(ctx,proj,v,T.k,1,62,[...ui,...obs,...lastPlaces.map(c=>{const r=T.k>=40?13:c.items.length>1?9:7;return[c.x-r,c.y-r,c.x+r,c.y+r,1]})]);
   drawTracks();
+  drawFlights();
   drawRoutes(pts);
   drawPins(lastPins);
   // markers
@@ -47471,10 +47539,10 @@ function setSheet(i){sheetIx=i;if(typeof viewDirty==='function')viewDirty();docu
     if(!moved){setSheet(sheetIx===0?1:sheetIx===1?2:0);return}
     const cur=$('#sheet').getBoundingClientRect().height;let best=0,bd=1e9;sheetSizes.forEach((v,i)=>{const d=Math.abs(px(v)-cur);if(d<bd){bd=d;best=i}});setSheet(best)};
   h.addEventListener('pointerup',end);h.addEventListener('pointercancel',end);})();
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;viewDirty();swapAnim();document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));renderSheet()});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;viewDirty();swapAnim();document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));renderSheet();requestDraw();if(S.tab==='fly'&&isLife())loadAir().then(()=>{if(liveFlights().length)fitFlights(liveFlights())}).catch(()=>{})});
 
 let swapT=0;function swapAnim(){const b=$('#body');if(!b)return;b.classList.remove('swap');void b.offsetWidth;b.classList.add('swap');b.scrollTop=0}
-function renderSheet(){if(S.tab==='places')return renderPlacesTab();if(isLife())return renderLife();S.tab==='stats'?renderStats():renderDiary()}
+function renderSheet(){if(S.tab==='places')return renderPlacesTab();if(S.tab==='fly'&&isLife())return renderFlights();if(isLife())return renderLife();S.tab==='stats'?renderStats():renderDiary()}
 function emptyHtml(){
   if(S.trip&&!S.trip.demo&&realTrips().length>1){const[e,l]=KINDS[kindOf(S.trip)];
     return cloudCardHtml()+tripProgressHtml()+dailyHtml()+chapterCardHtml()+`<div class="empty" style="padding-top:14px">${emptyArt()}<h2>${esc(S.trip.name)}</h2>
@@ -47709,7 +47777,7 @@ function renderDiary(){
       <div class="dayh" data-fit="${k}"><div class="dd${isToday?' today':''}"><b>${new Date(k2t(k)).getDate()}</b><span>${esc(MSH[new Date(k2t(k)).getMonth()])}</span></div>
         <div class="dt"><h3>Dag ${n}<span class="wd">${isToday?'<em>I dag</em>':esc(WDL[new Date(k2t(k)).getDay()])}</span></h3>
         <div class="dr">${[route.length?route.map(esc).join(' → '):'',items.length?items.length+' bill.':'',km>.5?fmtKm(km)+' km':''].filter(Boolean).join(' · ')}</div></div></div>
-      <div class="dmeta"><button class="mchip ${metaText(S.meta[k])?'set':''}" data-meta="${k}">${metaText(S.meta[k])||'+ Vejr og humør'}</button><button class="mchip ${pplOf(S.meta[k]).length?'set':''}" data-ppl="${k}">${pplOf(S.meta[k]).length?'👥 '+esc(pplOf(S.meta[k]).join(', ')):'+ Hvem var med'}</button>${flyOk(k)?`<button class="mchip ${flyOf(S.meta[k]).length?'set':''}" data-fly="${k}">${flyOf(S.meta[k]).length?'✈️ '+esc(flyOf(S.meta[k]).join(' · ')):'+ Fly'}</button>`:''}${isToday?`<button class="mchip" data-stamp="${k}">🕒 Tidsstempel</button>`:''}${items.length>1?`<button class="mchip" data-sort="${k}">⇅ Rækkefølge</button>`:''}${S.ai?`<button class="mchip ai" data-aiday="${k}">✨ Skrivehjælp</button>`:''}</div>
+      <div class="dmeta"><button class="mchip ${metaText(S.meta[k])?'set':''}" data-meta="${k}">${metaText(S.meta[k])||'+ Vejr og humør'}</button><button class="mchip ${pplOf(S.meta[k]).length?'set':''}" data-ppl="${k}">${pplOf(S.meta[k]).length?'👥 '+esc(pplOf(S.meta[k]).join(', ')):'+ Hvem var med'}</button>${dayFlights(k).map(f=>`<button class="mchip set" data-flt="${f.id}">✈️ ${esc(flCode(f))} ${esc(f.from)}→${esc(f.to)}${hhmm(flDep(f))?' · '+hhmm(flDep(f)):''}</button>`).join('')}${flyOk(k)?`<button class="mchip ${flyOf(S.meta[k]).length?'set':''}" data-fly="${k}">${flyOf(S.meta[k]).length?'✈️ '+esc(flyOf(S.meta[k]).join(' · ')):'+ Fly'}</button>`:''}${isToday?`<button class="mchip" data-stamp="${k}">🕒 Tidsstempel</button>`:''}${items.length>1?`<button class="mchip" data-sort="${k}">⇅ Rækkefølge</button>`:''}${S.ai?`<button class="mchip ai" data-aiday="${k}">✨ Skrivehjælp</button>`:''}</div>
       ${ql&&hasText(k)&&S.days[k].toLowerCase().includes(ql)?`<div class="qinfo">${markHits(S.days[k].slice(Math.max(0,S.days[k].toLowerCase().indexOf(ql)-60),S.days[k].toLowerCase().indexOf(ql)+120))}</div>`:''}
       <textarea class="dnote" rows="1" data-note="${k}" placeholder="Skriv om dagen…">${esc(S.days[k]||'')}</textarea><span class="svd" data-svd="${k}">Gemt ✓</span>
       ${items.length?'':`<button class="linkbtn" data-rmday="${k}">Fjern dag</button>`}
@@ -47750,6 +47818,7 @@ function renderDiary(){
   body.querySelectorAll('[data-meta]').forEach(b=>b.onclick=()=>editMeta(b.dataset.meta));
   body.querySelectorAll('[data-ppl]').forEach(b=>b.onclick=async()=>{const k=b.dataset.ppl;const r=await pickPeople(pplOf(S.meta[k]),'Hvem var med '+fmtDay(k).toLowerCase()+'?');if(!r)return;S.meta[k]={...(S.meta[k]||{}),people:r};S.keep.add(k);await save('days',dayRec(k));renderSheet()});
   body.querySelectorAll('[data-fly]').forEach(b=>b.onclick=()=>editFly(b.dataset.fly));
+  body.querySelectorAll('[data-flt]').forEach(b=>b.onclick=()=>openFlight(b.dataset.flt));
   bindChapterCard();bindDaily();
   const md=$('#moreDays');if(md)md.onclick=()=>{const y=$('#body').scrollHeight;S.dayLimit=(S.dayLimit||45)+90;renderSheet();const b=$('#body');b.scrollTop+=b.scrollHeight-y};
   body.querySelectorAll('.th').forEach(b=>{let lt=null,lp=false;
@@ -48188,8 +48257,8 @@ async function softDelPhoto(p){forget(p);p.full=null;p.thumb=null;await softDel(
 const isDemo=tid=>!!tid&&!!(S.trips.find(t=>t.id===tid)||{}).demo;
 /* ---------- modal / toast ---------- */
 let modalResolve=null;
-function modal(html){$('#mbox').innerHTML=html;$('#modal').classList.add('on')}
-function closeModal(v){$('#modal').classList.remove('on');if(modalResolve){const r=modalResolve;modalResolve=null;r(v)}}
+let MODALCB=null;function modal(html,o){if(MODALCB){const f=MODALCB;MODALCB=null;try{f()}catch(e){}}$('#mbox').innerHTML=html;$('#modal').classList.add('on');MODALCB=o&&o.onClose||null}
+function closeModal(v){$('#modal').classList.remove('on');if(MODALCB){const f=MODALCB;MODALCB=null;try{f()}catch(e){}}if(modalResolve){const r=modalResolve;modalResolve=null;r(v)}}
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal(null)});
 function ask({title,text='',input,placeholder='',ok='OK',danger=false}){
   return new Promise(res=>{
@@ -48409,8 +48478,9 @@ async function push(){
            ...(await DB.all('places')).filter(x=>x.dirty).map(x=>['places',x]),
            ...(await DB.all('people')).filter(x=>x.dirty).map(x=>['people',x]),
            ...(await DB.all('capsules')).filter(x=>x.dirty).map(x=>['capsules',x]),
-           ...photos.filter(x=>x.dirty&&!demo.has(x.tripId)).sort((a,b)=>(b.time||0)-(a.time||0)).map(x=>['photos',x])];
-  CLOUD.pending=q.length;CLOUD.total=q.length;CLOUD.fails=[];updateCloudUI();
+           ...(await DB.all('flights')).filter(x=>x.dirty).map(x=>['flights',x]),
+           ...photos.filter(x=>x.dirty&&!demo.has(x.tripId)&&!((+store.get('spor-phreset')||0)>=(x.created||x.upd||0))).sort((a,b)=>(b.time||0)-(a.time||0)).map(x=>['photos',x])];
+  CLOUD.pending=q.length;CLOUD.total=q.length;CLOUD.fails=[];CLOUD.lost=0;updateCloudUI();
   if(q.length>15)wakeOn();
   // several items travel at once; one bad item must not stop the rest, a busy server gets a pause and a second try
   const errs=[];let i=0,stop=false;
@@ -48420,7 +48490,10 @@ async function push(){
       const[st,x]=q[i++];
       try{await pushOne(st,x)}
       catch(e){const c=String((e&&(e.code||e.message))||'fejl');if(/quota/i.test(c)){stop=true;throw e}
-        let ok=false;for(const w of (errs.length>=3?[]:[1500,5000])){await new Promise(r=>setTimeout(r,w));try{await pushOne(st,x);ok=true;break}catch(e2){}}
+        if(/kan ikke læses|er tom|mangler/.test(c)){CLOUD.lost++;errs.push(c);CLOUD.pending=Math.max(0,CLOUD.pending-1);updateCloudUI();continue}
+        // a busy server (rate limit, too many writes at once) gets real pauses; other errors one quick retry
+        const busy=/resource_exhausted|unavailable|timeout|rate/i.test(c);let ok=false;
+        for(const w of busy?[2000,5000,12000,25000]:(errs.length>=3?[]:[1500])){await new Promise(r=>setTimeout(r,w+Math.random()*800));try{await pushOne(st,x);ok=true;break}catch(e2){if(!busy)break}}
         if(!ok){errs.push(c);if(errs.length>=25&&errs.every(z=>z===c))stop=true;CLOUD.fails.push((st==='trips'?'kapitlet ':st==='photos'?'billedet ':st==='days'?'dagen ':'')+(x.name||x.title||x.day||x.id||'')+': '+c)}}
       CLOUD.pending=Math.max(0,CLOUD.pending-1);CLOUD.beat=Date.now();updateCloudUI();
     }
@@ -48456,12 +48529,13 @@ async function pushOne(st,x){
       const mem=S.photos.find(p=>p.id===x.id);if(mem){mem.thumbAsset=x.thumbAsset;mem.fullAsset=x.fullAsset}
     }
     let id,body;
-    if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,parent:x.parent||null,deleted:!!x.deleted,upd:x.upd||0}}
+    if(st==='trips'){id='t_'+x.id;body={kind:'trip',id:x.id,name:x.name,created:x.created,start:x.start||null,end:x.end||null,ckind:x.kind||'rejse',place:x.place||null,note:x.note||'',people:x.people||[],memories:x.memories||[],story:x.story||null,cover:x.cover||null,track:x.track||null,src:x.src||null,psid:x.psid||null,parent:x.parent||null,deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='days'){id='d_'+x.tripId+'_'+x.day;body={kind:'day',tripId:x.tripId,day:x.day,note:x.note||'',keep:!!x.keep,w:x.w||null,temp:x.temp??null,mood:x.mood||null,people:x.people||[],fly:Array.isArray(x.fly)?x.fly:[],cover:x.cover||null,deleted:!!x.deleted,upd:x.upd||0}}
-    else if(st==='places'){id='pl_'+x.id;body={kind:'place',id:x.id,name:x.name,desc:(x.desc||'').slice(0,4000),lat:x.lat,lng:x.lng,cat:x.cat||'andet',st:x.st||'besogt',layer:x.layer||'',note:x.note||'',date:x.date||null,visits:x.visits||[],created:x.created||0,deleted:!!x.deleted,upd:x.upd||0}}
+    else if(st==='places'){id='pl_'+x.id;body={kind:'place',id:x.id,name:x.name,desc:(x.desc||'').slice(0,4000),lat:x.lat,lng:x.lng,cat:x.cat||'andet',st:x.st||'besogt',layer:x.layer||'',note:x.note||'',date:x.date||null,visits:x.visits||[],created:x.created||0,deleted:!!x.deleted,upd:x.upd||0,stays:x.stays||[],addr:x.addr||'',approx:x.approx?1:0}}
     else if(st==='capsules'){id='c_'+x.id;body={kind:'capsule',id:x.id,title:x.title||'',text:x.text||'',written:x.written||0,open:x.open||'',opened:x.opened||0,tripId:x.tripId||null,where:x.where||'',deleted:!!x.deleted,upd:x.upd||0}}
+    else if(st==='flights'){id='f_'+x.id;const{dirty,...r}=x;body={...r,kind:'flight',deleted:!!x.deleted,upd:x.upd||0}}
     else if(st==='people'){id='pe_'+x.id;body={kind:'person',id:x.id,name:x.name,group:x.group||null,rel:x.rel||'',photo:x.photo||null,self:x.self||0,born:x.born||'',home:x.home||'',bio:x.bio||'',deleted:!!x.deleted,upd:x.upd||0}}
-    else{id='p_'+x.id;body={kind:'photo',id:x.id,tripId:x.tripId,lat:x.lat??null,lng:x.lng??null,time:x.time,note:x.note||'',fav:!!x.fav,people:x.people||[],ord:x.ord??null,approx:x.approx?1:0,name:x.name||'',w:x.w||0,h:x.h||0,thumbAsset:x.thumbAsset||null,fullAsset:x.fullAsset||null,deleted:!!x.deleted,upd:x.upd||0}}
+    else{id='p_'+x.id;body={kind:'photo',id:x.id,tripId:x.tripId,lat:x.lat??null,lng:x.lng??null,time:x.time,note:x.note||'',fav:!!x.fav,people:x.people||[],ord:x.ord??null,approx:x.approx?1:0,name:x.name||'',w:x.w||0,h:x.h||0,thumbAsset:x.thumbAsset||null,fullAsset:x.fullAsset||null,created:x.created||0,deleted:!!x.deleted,upd:x.upd||0}}
     await TO(ucol().doc(id).set(JSON.parse(JSON.stringify(body))),30000,'gem').catch(e=>{throw lab('data:',e)});
     if(st==='photos'&&x.deleted){for(const a of [x.thumbAsset,x.fullAsset])if(a)try{await CLOUD.assets.delete(a)}catch(e){}}
     const key=x.id??x.key,cur=await DB.get(st,key);
@@ -48470,13 +48544,22 @@ async function pushOne(st,x){
     else if(cur&&st==='photos'){cur.thumbAsset=x.thumbAsset;cur.fullAsset=x.fullAsset;await DB.put(st,cur)}
 }
 async function pull(){
-  const snap=await TO(ucol().get(),60000,'hent');let changed=false;
+  // after the first full read, only fetch what changed since last time (with a margin for clocks that disagree); a full read every few hours catches anything missed
+  const pk='spor-pullmax-'+(CLOUD.uid||''),since=+store.get(pk)||0,full=!since||!CLOUD.fullAt||Date.now()-CLOUD.fullAt>6*3600e3;
+  let q=ucol();if(!full&&typeof q.where==='function')q=q.where('upd','>',since-15*60e3);
+  const snap=await TO(q.get(),60000,'hent');let changed=false,maxU=since;const phq=[];
+  // "start the photos over": a reset marker removes every photo made before it, on every device
+  const rs=snap.docs.map(d=>d.data()).find(r=>r&&r.kind==='reset');
+  if(rs&&rs.photos&&rs.photos>(+store.get('spor-phreset')||0)){const ts=rs.photos;
+    for(const p of await DB.all('photos'))if((p.created||p.upd||0)<=ts){await DB.del('photos',p.id);forget&&forget(p)}
+    S.photos=S.photos.filter(p=>(p.created||p.upd||0)>ts);store.set('spor-phreset',String(ts));changed=true}
+  const phReset=+store.get('spor-phreset')||0;
   for(const d of snap.docs){
-    const r=d.data();if(!r||!r.kind)continue;
+    const r=d.data();if(!r||!r.kind)continue;if(r.upd>maxU)maxU=r.upd;
     if(r.kind==='trip'){
       const l=await DB.get('trips',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('trips',r.id);changed=true}continue}
-      await DB.put('trips',{...(l||{}),id:r.id,name:r.name,created:r.created,start:r.start||null,end:r.end||null,kind:r.ckind||'rejse',place:r.place||null,note:r.note||'',people:r.people||[],memories:r.memories||[],story:r.story||null,cover:r.cover||null,track:r.track||null,src:r.src||undefined,parent:r.parent||undefined,upd:r.upd,dirty:0});changed=true;
+      await DB.put('trips',{...(l||{}),id:r.id,name:r.name,created:r.created,start:r.start||null,end:r.end||null,kind:r.ckind||'rejse',place:r.place||null,note:r.note||'',people:r.people||[],memories:r.memories||[],story:r.story||null,cover:r.cover||null,track:r.track||null,src:r.src||undefined,psid:r.psid||undefined,parent:r.parent||undefined,upd:r.upd,dirty:0});changed=true;
     }else if(r.kind==='day'){
       const key=r.tripId+'|'+r.day,l=await DB.get('days',key);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('days',key);changed=true}continue}
@@ -48489,27 +48572,38 @@ async function pull(){
       const l=await DB.get('capsules',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('capsules',r.id);changed=true;S.capsChanged=1}continue}
       const{kind,...rest}=r;await DB.put('capsules',{...rest,dirty:0});changed=true;S.capsChanged=1;
+    }else if(r.kind==='flight'){
+      const l=await DB.get('flights',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
+      if(r.deleted){if(l){await DB.del('flights',r.id);changed=true;S.flChanged=1}continue}
+      const{kind,...rest}=r;await DB.put('flights',{...rest,dirty:0});changed=true;S.flChanged=1;
     }else if(r.kind==='person'){
       const l=await DB.get('people',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('people',r.id);changed=true;S.persons=null}continue}
       const{kind,...rest}=r;await DB.put('people',{...rest,dirty:0});S.persons=null;PEOPLE=null;changed=true;
     }else if(r.kind==='photo'){
+      if(phReset&&(r.created||r.upd||0)<=phReset)continue;
       const l=await DB.get('photos',r.id);if(l&&(l.dirty||(l.upd||0)>=r.upd))continue;
       if(r.deleted){if(l){await DB.del('photos',r.id);changed=true}continue}
+      phq.push([r,l]);changed=true;
+    }
+  }
+  // thumbnails come down four at a time
+  let pi=0;const pw=async()=>{while(pi<phq.length){const[r,l]=phq[pi++];
       let thumb=l&&l.thumbAsset===r.thumbAsset?l.thumb:null;
       if(!thumb&&r.thumbAsset)try{const res=await TO(fetch(assetUrl(r.thumbAsset)),20000,'miniature');if(res.ok)thumb=await res.blob()}catch(e){}
       await DB.put('photos',{id:r.id,tripId:r.tripId,lat:r.lat,lng:r.lng,time:r.time,note:r.note||'',fav:!!r.fav,people:r.people||[],...(r.ord!=null?{ord:r.ord}:{}),approx:r.approx||undefined,name:r.name||'',w:r.w,h:r.h,
-        thumb:thumb||null,full:l&&l.fullAsset===r.fullAsset?l.full:null,thumbAsset:r.thumbAsset,fullAsset:r.fullAsset,upd:r.upd,dirty:0,created:(l&&l.created)||r.upd});changed=true;
-    }
-  }
+        thumb:thumb||null,full:l&&l.fullAsset===r.fullAsset?l.full:null,thumbAsset:r.thumbAsset,fullAsset:r.fullAsset,upd:r.upd,dirty:0,created:(l&&l.created)||r.created||r.upd})}};
+  await Promise.all([pw(),pw(),pw(),pw()]);
+  if(maxU>since)store.set(pk,String(maxU));if(full)CLOUD.fullAt=Date.now();
   // a brand-new device has an empty placeholder trip: drop it once real trips arrive
   const remoteTrips=new Set(snap.docs.map(d=>d.data()).filter(r=>r&&r.kind==='trip'&&!r.deleted).map(r=>r.id));
   const allP=await DB.all('photos'),allD=await DB.all('days');
   const used=id=>allP.some(p=>p.tripId===id&&!p.deleted)||allD.some(d=>d.tripId===id&&!d.deleted);
-  if(remoteTrips.size)for(const t of await DB.all('trips'))
+  if(full&&remoteTrips.size)for(const t of await DB.all('trips'))
     if(!remoteTrips.has(t.id)&&!t.demo&&!t.deleted&&!used(t.id)&&t.name==='Min rejse'){await DB.del('trips',t.id);changed=true}
   if(S.placesChanged){S.placesChanged=0;await loadPlaces();requestDraw()}
   if(S.capsChanged){S.capsChanged=0;await loadCaps()}
+  if(S.flChanged){S.flChanged=0;await loadFlights();if(FLIGHTS.length)try{await loadAir()}catch(e){}requestDraw();if(S.tab==='fly')renderSheet()}
   if(changed){DATAV++;
     S.trips=(await DB.all('trips')).filter(t=>!t.deleted).sort((a,b)=>a.created-b.created);
     if(isLife()){await loadLife(true);return}
@@ -48548,7 +48642,8 @@ function cloudText(){
     case 'busy':return['busy',`Synkroniserer…${CLOUD.pending?` ${Math.max(0,(CLOUD.total||CLOUD.pending)-CLOUD.pending)} af ${CLOUD.total||CLOUD.pending} sendt${(CLOUD.total||0)>15?' – hold Spor åben på skærmen, iPhone sætter den på pause i baggrunden':''}`:''}`];
     case 'offline':return['wait',`Ingen forbindelse – ${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}`];
     case 'wait':return['wait',`${CLOUD.pending} ${CLOUD.pending===1?'ændring venter':'ændringer venter'}${tm}`];
-    case 'err':return['err',CLOUD.fails&&CLOUD.fails.length?`${CLOUD.fails.length} ting kunne ikke sendes${CLOUD.fails.length<(CLOUD.total||0)?' – resten er gemt i skyen':''}. Fx ${CLOUD.fails[0]}. Prøver igen om lidt.`:`Synkronisering fejlede (${CLOUD.err}). Prøver igen om lidt.`];
+    case 'err':if(CLOUD.lost&&CLOUD.lost>=(CLOUD.fails||[]).length)return['err',`${CLOUD.lost} ${CLOUD.lost===1?'billede':'billeder'} har mistet billedfilen på denne enhed (iPhone sletter dem nogle gange) – resten er gemt i skyen. Tryk "Gendan fra backup" og vælg din backup-fil, så kommer de tilbage og bliver sendt op.`];
+      return['err',CLOUD.fails&&CLOUD.fails.length?`${CLOUD.fails.length} ting kunne ikke sendes${CLOUD.fails.length<(CLOUD.total||0)?' – resten er gemt i skyen':''}. Fx ${CLOUD.fails[0]}. Prøver igen om lidt.`:`Synkronisering fejlede (${CLOUD.err}). Prøver igen om lidt.`];
     case 'full':return['err','Skyen er fuld. Slet nogle billeder eller lav en backup-fil.'];
     default:return['ok',`Alt er gemt i skyen${tm}`];
   }
@@ -49136,7 +49231,8 @@ const isLife=()=>S.mode==='life';
 const realTrips=()=>S.trips.filter(t=>!t.demo&&!t.deleted&&!isPlaceholder(t));
 function isPlaceholder(t){if(t.name!=='Min rejse'||t.place||t.start||t.note||t.kind&&t.kind!=='rejse')return false;if(S.trip&&S.trip.id===t.id&&!isLife())return false;const x=S.info&&S.info.get(t.id);return !!x&&!x.n&&!x.days}
 const k2t=k=>{const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d,12).getTime()};
-function setTabLabels(){const[a,b]=isLife()?['Tidslinje','Overblik']:['Dagbog','Statistik'];const t=document.querySelectorAll('.tab');t[0].textContent=a;t[2].textContent=b}
+function setTabLabels(){const[a,b]=isLife()?['Tidslinje','Overblik']:['Dagbog','Statistik'];const t=document.querySelectorAll('.tab');t[0].textContent=a;t[2].textContent=b;t[3].hidden=!isLife();if(!isLife()&&S.tab==='fly'){S.tab='diary';syncTabs()}}
+function syncTabs(){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===S.tab))}
 async function chapterInfo(all){
   const m=new Map();for(const t of S.trips)m.set(t.id,{n:0,days:0,min:null,max:null,km:0,pts:[],countries:new Set()});
   const mm=(x,t)=>{if(x.min==null||t<x.min)x.min=t;if(x.max==null||t>x.max)x.max=t};
@@ -49280,6 +49376,9 @@ function bindLife(){
     {i:'image',t:'Tilføj mange billeder',s:'Sorteres automatisk i kapitler',f:()=>$('#bulkFile').click()},
     {i:'map',t:'Importér Google-kort',s:'KML/KMZ fra My Maps',f:()=>$('#kmlFile').click()},
     {i:'compass',t:'Importér Google-tidslinje',s:'Find bosteder og rejser automatisk',f:howToTimeline},
+    {i:'jet',t:'Importér fly',s:'CSV fra Flighty',f:()=>$('#flFile').click()},
+    {i:'home',t:'Importér Booking.com',s:'report.json fra "Anmod om dine data"',f:()=>$('#bkFile').click()},
+    {i:'compass',t:'Importér Polarsteps',s:'Zip-filen fra "Download my data"',f:()=>$('#psFile').click()},
     '-',
     {i:'mail',t:'Tidskapsel',s:'Skriv et brev til dig selv i fremtiden',f:composeCap},
     {i:'mic',t:'Livsinterview',s:'Vælg et kapitel og fortæl',f:async()=>{const t=await chooseChapter('Hvilket kapitel vil du fortælle om?');if(t)interview(t)}},
@@ -49891,6 +49990,399 @@ async function reviewTimeline(r){
   };
 }
 
+
+/* ---------- flights (Flighty import, flight log, arcs on the map) ---------- */
+let AIR=null,AIRP=null;
+async function loadAir(){
+  if(AIR)return AIR;if(AIRP)return AIRP;
+  AIRP=(async()=>{let txt=null;
+    try{const c=await DB.get('tiles','air_v1');if(c)txt=c.data}catch(e){}
+    if(!txt){const r=await fetch('data/air.json?v=1');if(!r.ok)throw new Error('net');txt=await r.text();try{await DB.put('tiles',{key:'air_v1',data:txt,saved:Date.now()})}catch(e){}}
+    AIR=JSON.parse(txt);return AIR})();
+  try{return await AIRP}catch(e){AIRP=null;throw e}
+}
+const apt=c=>{const a=AIR&&AIR.a[c];return a?{code:c,lat:a[0],lng:a[1],city:a[2]||a[4],cc:a[3],name:a[4]}:null};
+const alInfo=c=>{const a=AIR&&AIR.l[c];return a?{iata:a[0],name:a[1]}:{iata:'',name:c||''}};
+let CCNAME=null;try{CCNAME=new Intl.DisplayNames(['da'],{type:'region'})}catch(e){}
+const ccName=c=>{try{return(CCNAME&&c&&CCNAME.of(c))||c||''}catch(e){return c||''}};
+const flag=c=>c&&c.length===2?String.fromCodePoint(...[...c.toUpperCase()].map(x=>127397+x.charCodeAt(0))):'';
+const flCode=f=>(alInfo(f.al).iata||f.al||'')+(f.no||'');
+const flKm=f=>{const a=apt(f.from),b=apt(f.to);return a&&b?hav(a,b):0};
+// Flighty gives local times without zones, so flight time is estimated from distance (taxi + climb + cruise)
+const flMin=f=>{const k=flKm(f);return k?Math.round(k/800*60+30):0};
+const fmtDur=m=>m<60?m+' min':Math.floor(m/60)+' t'+(m%60?' '+(m%60)+' m':'');
+const hhmm=s=>s&&s.length>=16?s.slice(11,16):'';
+const flDep=f=>f.depA||f.depS||'',flArr=f=>f.arrA||f.arrS||'';
+const flT=f=>{const s=flDep(f)||f.date+'T12:00';const d=new Date(s);return isNaN(d)?k2t(f.date):d.getTime()};
+let FLIGHTS=[];
+// order by date, and within a day follow the chain of connections (times in exports can be off by a day)
+function chainSort(L){const by=new Map();for(const f of L){if(!by.has(f.date))by.set(f.date,[]);by.get(f.date).push(f)}
+  const out=[];for(const d of [...by.keys()].sort()){let day=by.get(d).sort((a,b)=>flT(a)-flT(b));
+    if(day.length>1){const res=[];const tos=new Set(day.map(f=>f.to));let cur=day.find(f=>!tos.has(f.from))||day[0];
+      while(cur){res.push(cur);day=day.filter(f=>f!==cur);cur=day.find(f=>f.from===res[res.length-1].to)||day[0]}day=res}
+    out.push(...day)}return out}
+async function loadFlights(){FLIGHTS=chainSort((await DB.all('flights')).filter(f=>!f.deleted));return FLIGHTS}
+const liveFlights=()=>FLIGHTS.filter(f=>!f.canceled);
+const dayFlights=k=>FLIGHTS.filter(f=>f.date===k);
+
+function parseCSV(t){
+  const rows=[];let row=[],f='',q=false;t=t.replace(/^﻿/,'');
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=''}else f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}
+  return rows.filter(r=>r.some(x=>x.trim()));
+}
+function readFlighty(text){
+  const R=parseCSV(text);if(R.length<2)throw new Error('Filen er tom');
+  const H=R[0].map(h=>h.trim()),ix=n=>H.indexOf(n);
+  if(ix('From')<0||ix('To')<0||ix('Date')<0)throw new Error('Det ligner ikke en Flighty-fil (mangler Date/From/To)');
+  const g=(r,n)=>{const i=ix(n);return i<0?'':(r[i]||'').trim()};
+  return R.slice(1).map(r=>{const fid=g(r,'Flight Flighty ID');
+    return{id:fid?'fy_'+fid:'fl_'+g(r,'Date')+g(r,'Airline')+g(r,'Flight')+g(r,'From'),src:'flighty',date:g(r,'Date').slice(0,10),al:g(r,'Airline'),no:g(r,'Flight'),from:g(r,'From').toUpperCase(),to:g(r,'To').toUpperCase(),
+      depS:g(r,'Gate Departure (Scheduled)')||g(r,'Take off (Scheduled)'),depA:g(r,'Gate Departure (Actual)')||g(r,'Take off (Actual)'),
+      arrS:g(r,'Gate Arrival (Scheduled)')||g(r,'Landing (Scheduled)'),arrA:g(r,'Gate Arrival (Actual)')||g(r,'Landing (Actual)'),
+      depTerm:g(r,'Dep Terminal'),depGate:g(r,'Dep Gate'),arrTerm:g(r,'Arr Terminal'),arrGate:g(r,'Arr Gate'),
+      ac:g(r,'Aircraft Type Name'),tail:g(r,'Tail Number'),pnr:g(r,'PNR'),seat:g(r,'Seat'),seatType:g(r,'Seat Type'),cabin:g(r,'Cabin Class'),reason:g(r,'Flight Reason'),note:g(r,'Notes'),
+      canceled:/^true$/i.test(g(r,'Canceled')),div:g(r,'Diverted To').toUpperCase()}}).filter(f=>/^\d{4}-\d\d-\d\d$/.test(f.date)&&f.from&&f.to);
+}
+async function importFlighty(file){
+  let L;try{await loadAir();L=readFlighty(await file.text())}catch(e){return toast(e.message==='net'?'Lufthavnsdata kunne ikke hentes – prøv igen med net':e.message||'Filen kunne ikke læses',4500)}
+  const have=new Map((await DB.all('flights')).map(f=>[f.id,f]));const key=f=>f.date+'|'+flCode(f)+'|'+f.from;const haveK=new Set([...have.values()].filter(f=>!f.deleted).map(key));
+  let n=0,up=0;
+  for(const f of L){const ex=have.get(f.id);
+    if(ex&&!ex.deleted){const ch=['depA','arrA','ac','tail','seat','cabin','pnr','canceled','note'].some(k=>(f[k]||'')!==(ex[k]||''));if(ch){await save('flights',{...ex,...f,created:ex.created});up++}continue}
+    if(haveK.has(key(f)))continue;
+    await save('flights',{...f,created:Date.now()});n++}
+  await loadFlights();requestDraw();
+  const miss=L.filter(f=>!apt(f.from)||!apt(f.to)).length;
+  toast(`${n} fly lagt ind${up?`, ${up} opdateret`:''}${miss?` · ${miss} med ukendt lufthavn`:''}`,4500);
+  const sug=flightTrips();if(sug.length)reviewFlightTrips(sug);else if(isLife()){S.tab='fly';syncTabs();renderSheet()}
+}
+// home = everything within 350 km of the airport you fly from most often
+function homeAirport(){const c={};for(const f of liveFlights()){c[f.from]=(c[f.from]||0)+1;c[f.to]=(c[f.to]||0)+.9}return Object.entries(c).sort((a,b)=>b[1]-a[1]).map(x=>apt(x[0])).find(Boolean)||null}
+function flightTrips(){
+  const h=homeAirport();if(!h)return[];const home=c=>{const a=apt(c);return!!a&&hav(a,h)<350};
+  const L=liveFlights(),out=[];let cur=null;
+  const close=()=>{if(cur&&cur.fl.length)out.push(cur);cur=null};
+  for(const f of L){
+    const last=cur&&cur.fl[cur.fl.length-1];
+    // leaving home, or a long pause, always starts a new trip
+    if(cur&&(home(f.from)||k2t(f.date)-k2t(last.date)>45*864e5))close();
+    if(!cur)cur={fl:[]};
+    cur.fl.push(f);if(home(f.to)){cur.closed=true;close()}
+  }
+  close();
+  const info=S.info||new Map(),ex=realTrips();
+  return out.map(g=>{
+    const s=g.fl[0].date,e=g.fl[g.fl.length-1].date;
+    // destination = where you stayed longest between landing and taking off again
+    let best=null,bd=-1;
+    g.fl.forEach((f,i)=>{if(home(f.to))return;const nx=g.fl[i+1],d=nx?k2t(nx.date)-k2t(f.date):(g.closed?0:1e12);const a=apt(f.to);if(a&&d>=bd){bd=d;best=a}});
+    if(!best){const a=apt(g.fl[0].to)||apt(g.fl[0].from);if(!a||home(a.code))return null;best=a}
+    const ccs=[...new Set(g.fl.flatMap(f=>[f.from,f.to]).filter(c=>!home(c)).map(c=>(apt(c)||{}).cc).filter(Boolean))];
+    const nm=(best.cc===h.cc?best.city:ccName(best.cc))+' '+s.slice(0,4);
+    const ovl=ex.find(t=>{if(kindOf(t)==='bosted')return false;const x=chRange(t,info.get(t.id));if(!x.s)return false;return x.s<=e&&(x.e||x.s)>=s});
+    return{name:nm,start:s,end:g.closed?e:null,place:{lat:best.lat,lng:best.lng,name:best.city},cc:best.cc,ccs,fl:g.fl,dup:ovl||null,on:!ovl};
+  }).filter(Boolean);
+}
+function reviewFlightTrips(sug){
+  const row=(c,i)=>`<label class="opt" style="align-items:flex-start"><input type="checkbox" data-ft="${i}" ${c.on?'checked':''} style="margin-top:9px"><span style="flex:1;min-width:0"><input type="text" data-ftn="${i}" value="${esc(c.name)}" style="width:100%;margin:0;padding:6px 8px;font-weight:600"><br><span style="font-size:12px;color:var(--ink2)">${flag(c.cc)} ${esc(fmtShort(k2t(c.start)))}${c.end&&c.end!==c.start?' – '+esc(fmtShort(k2t(c.end))):''} · ${c.fl.length} fly · ${c.fl.map(f=>f.from).concat(c.fl[c.fl.length-1].to).filter((x,j,a)=>x!==a[j-1]).join(' → ')}${c.dup?` · <b>findes som "${esc(c.dup.name)}"</b>`:''}</span></span></label>`;
+  const nw=sug.filter(c=>!c.dup).length;
+  modal(`<h3>✈️ Rejser fundet i dine fly</h3><p style="font-size:13px;color:var(--ink2);margin-top:-4px">${sug.length} ture ud og hjem. ${nw?`${nw} har ikke et kapitel endnu – vil du oprette dem?`:'Alle har allerede et kapitel.'} Flyene vises automatisk på de rigtige dage.</p>
+    <div style="max-height:54vh;overflow:auto;margin:0 -4px;padding:0 4px">${sug.map(row).join('')}</div>
+    <div class="row" style="margin-top:8px;flex-wrap:wrap"><button class="btn ghost" id="ftNo">Spring over</button><button class="btn accent" id="ftGo">Opret kapitler</button></div>`);
+  $('#ftNo').onclick=()=>{closeModal();if(isLife()){S.tab='fly';syncTabs();renderSheet()}};
+  $('#ftGo').onclick=async()=>{
+    document.querySelectorAll('#mbox [data-ftn]').forEach(x=>{const v=x.value.trim();if(v)sug[+x.dataset.ftn].name=v});
+    const pick=[...document.querySelectorAll('#mbox [data-ft]')].filter(b=>b.checked).map(b=>sug[+b.dataset.ft]);closeModal();let n=0;
+    for(const c of pick){const t={id:uid(),name:c.name,kind:'rejse',start:c.start,end:c.end||c.start,place:c.place,created:Date.now()+n,src:'flighty'};await save('trips',t);S.trips.push(t);n++}
+    toast(`${n} ${n===1?'kapitel':'kapitler'} oprettet fra dine fly`,4000);await loadLife();
+  };
+}
+
+/* map: great-circle arcs */
+function flightsForView(){
+  if(!S.layers.flights||!FLIGHTS.length||!AIR)return[];
+  if(isLife())return liveFlights().filter(f=>flT(f)<=S.cut);
+  if(!S.trip)return[];const x=chRange(S.trip,S.info&&S.info.get(S.trip.id));if(!x.s)return[];
+  return liveFlights().filter(f=>f.date>=x.s&&f.date<=(x.e||x.s));
+}
+const arcCache=new Map();
+function arcPts(a,b){const k=a.code+b.code;let p=arcCache.get(k);if(p)return p;const it=d3.geoInterpolate([a.lng,a.lat],[b.lng,b.lat]),n=Math.max(8,Math.min(96,Math.round(hav(a,b)/120)));p=[];for(let i=0;i<=n;i++)p.push(it(i/n));arcCache.set(k,p);return p}
+function drawFlights(){
+  const L=flightsForView();if(!L.length)return;
+  const focus=isLife()&&S.tab==='fly',hi=S.flHi;
+  const seen=new Map();for(const f of L){const a=apt(f.from),b=apt(f.to);if(!a||!b)continue;const k=[a.code,b.code].sort().join();const e=seen.get(k);if(e)e.n++;else seen.set(k,{a,b,n:1,hi:hi&&f.id===hi})};
+  if(hi){const f=L.find(x=>x.id===hi);if(f){const k=[f.from,f.to].sort().join();const e=seen.get(k);if(e)e.hi=true}}
+  ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+  const acc=getCss('--accent');
+  const line=(e)=>{ctx.beginPath();let lx=null,started=false;for(const p of arcPts(e.a,e.b)){const xy=proj(p);if(!xy){started=false;continue}if(lx!=null&&Math.abs(xy[0]-lx)>W*.5)started=false;if(started)ctx.lineTo(xy[0],xy[1]);else{ctx.moveTo(xy[0],xy[1]);started=true}lx=xy[0]}};
+  for(const e of seen.values()){if(e.hi)continue;line(e);ctx.strokeStyle=getCss('--casing');ctx.lineWidth=(focus?3.6:2.6)+Math.min(2,e.n*.25);ctx.globalAlpha=hi?.4:1;ctx.stroke();
+    ctx.strokeStyle=acc;ctx.globalAlpha=hi?.25:focus?.9:.6;ctx.lineWidth=(focus?1.8:1.2)+Math.min(2,e.n*.25);ctx.stroke()}
+  for(const e of seen.values()){if(!e.hi)continue;line(e);ctx.globalAlpha=1;ctx.strokeStyle='#fff';ctx.lineWidth=6;ctx.stroke();ctx.strokeStyle=getCss('--sun');ctx.lineWidth=3;ctx.stroke()}
+  ctx.globalAlpha=1;
+  // airports
+  const ap=new Map();for(const e of seen.values())for(const a of[e.a,e.b])ap.set(a.code,{a,hi:(ap.get(a.code)||{}).hi||e.hi});
+  ctx.font='700 10px Figtree,system-ui,sans-serif';ctx.textBaseline='middle';
+  for(const{a,hi:h} of ap.values()){const xy=proj([a.lng,a.lat]);if(!xy)continue;
+    ctx.beginPath();ctx.arc(xy[0],xy[1],h?5:focus?3.6:2.8,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=h?2.4:1.6;ctx.strokeStyle=h?getCss('--sun'):acc;ctx.stroke();
+    if(h||(focus&&T.k>2.2)||T.k>6){ctx.textAlign='left';ctx.lineWidth=3;ctx.strokeStyle=getCss('--halo');ctx.strokeText(a.code,xy[0]+6,xy[1]);ctx.fillStyle=getCss('--label');ctx.fillText(a.code,xy[0]+6,xy[1])}}
+  ctx.restore();
+}
+function fitFlights(L){const P=[];for(const f of L)for(const c of[f.from,f.to]){const a=apt(c);if(a)P.push({lat:a.lat,lng:a.lng})}if(P.length)fitTo(P)}
+
+/* flight log tab */
+function flStats(L){
+  const km=L.reduce((s,f)=>s+flKm(f),0),min=L.reduce((s,f)=>s+flMin(f),0);
+  const cnt=(fn)=>{const m=new Map();for(const f of L)for(const k of[].concat(fn(f)))if(k)m.set(k,(m.get(k)||0)+1);return[...m.entries()].sort((a,b)=>b[1]-a[1])};
+  const aps=cnt(f=>[f.from,f.to]),als=cnt(f=>f.al),acs=cnt(f=>f.ac),routes=cnt(f=>[f.from,f.to].sort().join('–'));
+  const ccs=new Set();for(const[c] of aps){const a=apt(c);if(a)ccs.add(a.cc)}
+  const byKm=[...L].filter(f=>flKm(f)).sort((a,b)=>flKm(b)-flKm(a));
+  const yrs=cnt(f=>f.date.slice(0,4)).sort((a,b)=>a[0]<b[0]?-1:1);
+  return{n:L.length,km,min,aps,als,acs,routes,ccs,longest:byKm[0],shortest:byKm[byKm.length-1],yrs};
+}
+function flRow(f){
+  const a=apt(f.from),b=apt(f.to),al=alInfo(f.al);
+  return `<button class="flrow${f.canceled?' cx':''}" data-fl="${f.id}">
+    <span class="fd"><b>${new Date(k2t(f.date)).getDate()}</b>${new Date(k2t(f.date)).toLocaleDateString('da-DK',{month:'short'}).replace('.','')}</span>
+    <span class="fm"><span class="fr"><b>${esc(f.from)}</b><i class="fln"></i><b>${esc(f.to)}</b></span><span class="fs">${esc([a&&a.city,b&&b.city].filter(Boolean).join(' → '))}</span></span>
+    <span class="fx"><b>${esc(flCode(f))}</b><span>${f.canceled?'Aflyst':esc(hhmm(flDep(f))||'')}${hhmm(flDep(f))&&!f.canceled?' · ':''}${f.canceled?'':flMin(f)?'ca. '+fmtDur(flMin(f)):''}</span></span></button>`;
+}
+async function renderFlights(){
+  const body=$('#body');
+  try{await loadAir()}catch(e){}
+  await loadFlights();
+  if(!FLIGHTS.length){body.innerHTML=`<div class="flempty"><div class="flart">${svgI('jet',40,1.5)}</div><h2>Din flylog</h2><p>Importér dine fly fra Flighty, så får du alle rejser på kortet som buer, dine lufthavne, flyselskaber og flytyper – og flyene dukker op på de rigtige dage i dine kapitler.</p>
+    <button class="btn accent" id="flImp">Importér fra Flighty</button><p class="flhow">I Flighty: tandhjulet → <b>Export Flights</b> → <b>Export as CSV</b>. Gem filen og vælg den her.</p></div>`;
+    $('#flImp').onclick=()=>$('#flFile').click();return}
+  const L=liveFlights(),st=flStats(L),earth=st.km/40075,moon=st.km/384400*100;
+  const yMax=Math.max(...st.yrs.map(y=>y[1]));
+  const top=(list,fmt,n=5)=>list.slice(0,n).map(([k,v])=>`<li><span>${fmt(k)}</span><b>${v}</b></li>`).join('');
+  const byYear=new Map();for(const f of [...FLIGHTS].reverse()){const y=f.date.slice(0,4);if(!byYear.has(y))byYear.set(y,[]);byYear.get(y).push(f)}
+  const lo=st.longest,sh=st.shortest;
+  body.innerHTML=`<div class="flhero">
+      <div class="flh1"><span class="flk">Flylog</span><span class="flsrc">${FLIGHTS.length>L.length?`${FLIGHTS.length-L.length} aflyst · `:''}${esc(st.yrs.length?st.yrs[0][0]+'–'+st.yrs[st.yrs.length-1][0]:'')}</span></div>
+      <div class="flbig"><div><b>${fmtN(st.n)}</b><span>fly</span></div><div><b>${fmtKm(st.km)}</b><span>km</span></div><div><b>${fmtN(Math.round(st.min/60))}</b><span>timer i luften</span></div></div>
+      <div class="flglobe"><div class="fltrack"><i style="width:${Math.min(100,earth/Math.ceil(Math.max(1,earth))*100).toFixed(1)}%"></i></div><span>${earth.toFixed(1).replace('.',',')} × rundt om Jorden · ${moon<100?Math.round(moon)+' % af vejen til Månen':'forbi Månen 🌙'}</span></div>
+      <div class="flmini"><div><b>${st.aps.length}</b><span>lufthavne</span></div><div><b>${st.ccs.size}</b><span>lande</span></div><div><b>${st.als.length}</b><span>selskaber</span></div><div><b>${st.acs.length}</b><span>flytyper</span></div></div>
+    </div>
+    <div class="flyears" aria-label="Fly pr. år">${st.yrs.map(([y,v])=>`<button data-fy="${y}" title="${y}: ${v} fly"><i style="height:${Math.max(8,v/yMax*100)}%"></i><span>${y.slice(2)}</span></button>`).join('')}</div>
+    ${lo?`<div class="flrec"><button data-fl="${lo.id}"><span>Længste</span><b>${esc(lo.from)} → ${esc(lo.to)}</b><em>${fmtKm(flKm(lo))} km · ca. ${fmtDur(flMin(lo))}</em></button>${sh&&sh!==lo?`<button data-fl="${sh.id}"><span>Korteste</span><b>${esc(sh.from)} → ${esc(sh.to)}</b><em>${fmtKm(flKm(sh))} km</em></button>`:''}</div>`:''}
+    <div class="fltops">
+      <div><h4>Lufthavne</h4><ol>${top(st.aps,c=>{const a=apt(c);return`<b>${esc(c)}</b> ${esc(a?a.city:'')}`})}</ol></div>
+      <div><h4>Selskaber</h4><ol>${top(st.als,c=>esc(alInfo(c).name||c))}</ol></div>
+      <div><h4>Flytyper</h4><ol>${top(st.acs,c=>esc(c))}</ol></div>
+      <div><h4>Ruter</h4><ol>${top(st.routes,c=>esc(c.replace('–',' ⇄ ')))}</ol></div>
+    </div>
+    <div class="flact"><button class="btn small ghost" id="flImp">${svgI('jet',15)} Importér igen</button><button class="btn small ghost" id="flTrips">Find rejser</button></div>
+    <div class="fllist">${[...byYear.entries()].map(([y,fs])=>`<h3 id="fy${y}">${y} <span>${fs.filter(f=>!f.canceled).length} fly · ${fmtKm(fs.filter(f=>!f.canceled).reduce((s,f)=>s+flKm(f),0))} km</span></h3>${fs.map(flRow).join('')}`).join('')}</div>`;
+  body.querySelectorAll('[data-fl]').forEach(b=>b.onclick=()=>openFlight(b.dataset.fl));
+  body.querySelectorAll('[data-fy]').forEach(b=>b.onclick=()=>{const h=$('#fy'+b.dataset.fy);if(h)h.scrollIntoView({behavior:'smooth',block:'start'});fitFlights(liveFlights().filter(f=>f.date.startsWith(b.dataset.fy)))});
+  $('#flImp').onclick=()=>$('#flFile').click();
+  $('#flTrips').onclick=()=>{const s=flightTrips();s.length?reviewFlightTrips(s):toast('Fandt ingen ture ud og hjem')};
+  requestDraw();
+}
+function openFlight(id){
+  const f=FLIGHTS.find(x=>x.id===id);if(!f)return;
+  const a=apt(f.from)||{code:f.from,city:'',name:''},b=apt(f.to)||{code:f.to,city:'',name:''},al=alInfo(f.al),km=flKm(f),m=flMin(f);
+  const ch=realTrips().find(t=>{const x=chRange(t,S.info&&S.info.get(t.id));return x.s&&kindOf(t)!=='bosted'&&x.s<=f.date&&(x.e||x.s)>=f.date});
+  const cell=(k,v)=>v?`<div><span>${k}</span><b>${esc(v)}</b></div>`:'';
+  const late=(s,a2)=>{if(!s||!a2)return'';const d=Math.round((new Date(a2)-new Date(s))/6e4);return d>=10?` <em class="late">+${d} min</em>`:d<=-5?` <em class="early">${d} min</em>`:''};
+  S.flHi=f.id;requestDraw();if(apt(f.from)&&apt(f.to))fitFlights([f]);
+  modal(`<div class="bpass${f.canceled?' cx':''}">
+      <div class="bp1"><span>${esc(al.name||f.al)}</span><b>${esc(flCode(f))}</b></div>
+      <div class="bp2"><div class="bpa"><b>${esc(a.code)}</b><span>${esc(a.city)}</span><em>${esc(hhmm(flDep(f)))}${late(f.depS,f.depA)}</em></div>
+        <div class="bpm">${svgI('jet',22,1.6)}<span>${km?fmtKm(km)+' km':''}${m?' · ca. '+fmtDur(m):''}</span></div>
+        <div class="bpa r"><b>${esc(b.code)}</b><span>${esc(b.city)}</span><em>${esc(hhmm(flArr(f)))}${late(f.arrS,f.arrA)}</em></div></div>
+      <div class="bpcut"></div>
+      <div class="bp3">${cell('Dato',new Date(k2t(f.date)).toLocaleDateString('da-DK',{weekday:'short',day:'numeric',month:'long',year:'numeric'}))}${cell('Fly',f.ac)}${cell('Halenr.',f.tail)}${cell('Sæde',[f.seat,f.seatType&&f.seatType.toLowerCase()].filter(Boolean).join(' · '))}${cell('Klasse',f.cabin&&f.cabin[0]+f.cabin.slice(1).toLowerCase())}${cell('Afgang',[f.depTerm&&'Terminal '+f.depTerm,f.depGate&&'Gate '+f.depGate].filter(Boolean).join(' · '))}${cell('Ankomst',[f.arrTerm&&'Terminal '+f.arrTerm,f.arrGate&&'Gate '+f.arrGate].filter(Boolean).join(' · '))}${cell('Booking',f.pnr)}${f.canceled?cell('Status','Aflyst'):''}${f.div?cell('Omdirigeret til',f.div):''}</div>
+      ${f.note?`<p class="bpn">${esc(f.note)}</p>`:''}
+    </div>
+    <p style="font-size:13px;color:var(--ink2);margin:10px 2px">${esc(a.name||'')}${a.cc?' '+flag(a.cc):''} → ${esc(b.name||'')}${b.cc?' '+flag(b.cc):''}</p>
+    <div class="row" style="flex-wrap:wrap">${ch?`<button class="btn ghost small" id="bpCh">Åbn ${esc(ch.name)}</button>`:''}<a class="btn ghost small" target="_blank" rel="noopener" href="https://www.flightradar24.com/data/flights/${esc(flCode(f).toLowerCase())}">Flightradar24</a><button class="btn ghost small" id="bpDel">Slet</button><button class="btn accent" id="bpOk">Luk</button></div>`,{onClose:()=>{S.flHi=null;requestDraw()}});
+  $('#bpOk').onclick=()=>closeModal();
+  const c=$('#bpCh');if(c)c.onclick=()=>{closeModal();loadTrip(ch.id)};
+  $('#bpDel').onclick=async()=>{closeModal();await softDel('flights',f);await loadFlights();requestDraw();renderSheet();toast('Flyet er slettet',5000,{label:'Fortryd',undo:async()=>{const r=await DB.get('flights',f.id);if(r){r.deleted=0;await save('flights',r)}await loadFlights();requestDraw();renderSheet()}})};
+}
+
+
+/* ---------- Polarsteps import ---------- */
+const PS_WX={'clear-day':'☀️','clear-night':'☀️','partly-cloudy-day':'⛅','partly-cloudy-night':'⛅',cloudy:'☁️',rain:'🌧️',sleet:'🌧️',snow:'❄️',wind:'💨',fog:'🌫️',thunderstorm:'⛈️',hail:'🌧️'};
+function simplifyTrack(P,maxN=500){
+  // drop points closer than a few hundred metres, then thin evenly to a manageable size
+  const out=[];let last=null;for(const p of P){if(!last||hav(last,p)>.3){out.push(p);last=p}}
+  if(out.length<=maxN)return out;const st=out.length/maxN,r=[];for(let i=0;i<maxN;i++)r.push(out[Math.floor(i*st)]);r.push(out[out.length-1]);return r;
+}
+async function readPolarsteps(file){
+  if(!window.JSZip)throw new Error('Zip-værktøjet kunne ikke indlæses');
+  const z=await JSZip.loadAsync(file);
+  const tripFiles=Object.values(z.files).filter(f=>/(^|\/)trip\/[^/]+\/trip\.json$/i.test(f.name));
+  if(!tripFiles.length)throw new Error('Det ligner ikke en Polarsteps-eksport (fandt ingen trip.json)');
+  const trips=[];
+  for(const tf of tripFiles){
+    const dir=tf.name.replace(/trip\.json$/i,'');let t;try{t=JSON.parse(await tf.async('string'))}catch(e){continue}
+    if(t.is_deleted)continue;
+    let locs=[];const lf=z.file(dir+'locations.json');if(lf)try{const L=JSON.parse(await lf.async('string'));locs=(L.locations||L||[]).filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lon)).sort((a,b)=>a.time-b.time).map(p=>({lat:p.lat,lng:p.lon,t:p.time*1000}))}catch(e){}
+    const steps=(t.all_steps||[]).filter(s=>!s.is_deleted&&s.location).sort((a,b)=>a.start_time-b.start_time).map(s=>({id:s.id,name:(s.display_name||s.name||s.location.name||'').trim(),desc:(s.description||'').trim(),t:s.start_time*1000,
+      lat:s.location.lat,lng:s.location.lon,city:s.location.name,country:s.location.detail,cc:(s.location.country_code||'').toUpperCase(),wx:PS_WX[s.weather_condition]||null,temp:Number.isFinite(s.weather_temperature)?Math.round(s.weather_temperature):null,
+      photos:Object.values(z.files).filter(f=>!f.dir&&f.name.startsWith(dir)&&new RegExp('_'+s.id+'/photos/[^/]+$').test(f.name)&&/\.(jpe?g|png|heic|webp)$/i.test(f.name))}));
+    const s0=t.start_date?dayKey(t.start_date*1000):steps[0]?dayKey(steps[0].t):null,e0=t.end_date?dayKey(t.end_date*1000):steps.length?dayKey(steps[steps.length-1].t):null;
+    trips.push({psid:t.id,name:(t.name||'Rejse').trim(),start:s0,end:e0,km:t.total_km||0,steps,track:simplifyTrack(locs).map(p=>[+p.lat.toFixed(5),+p.lng.toFixed(5)]),nphotos:steps.reduce((n,s)=>n+s.photos.length,0)});
+  }
+  trips.sort((a,b)=>(a.start||'')<(b.start||'')?-1:1);
+  // home = the place most trips start from
+  const firsts=trips.map(t=>t.steps[0]).filter(Boolean);let home=null,hn=0;for(const a of firsts){const n=firsts.filter(b=>hav(a,b)<60).length;if(n>hn){hn=n;home=a}}
+  return{trips,home:hn>=2?home:null};
+}
+async function importPolarsteps(file){
+  let R;prog(true,0,1,'Læser Polarsteps…');
+  try{R=await readPolarsteps(file)}catch(e){prog(false);return toast(e.message||'Filen kunne ikke læses',4500)}
+  prog(false);if(!R.trips.length)return toast('Fandt ingen rejser i filen');
+  const info=S.info||new Map(),ex=realTrips(),isHome=s=>R.home&&hav(s,R.home)<60;
+  const norm=x=>(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9æøå]+/g,' ').trim();
+  const haveIds=new Set(ex.filter(t=>t.psid).map(t=>String(t.psid)));
+  for(const r of R.trips){
+    r.done=haveIds.has(String(r.psid));
+    // the same trip may already exist (made by hand, from flights or from the timeline): score name and overlap
+    let best=null,bo=0;const rn=norm(r.name).replace(/\b\d{4}\b/g,'').trim(),ra=r.start?k2t(r.start):null,rb=r.end?k2t(r.end):ra;
+    for(const t of ex){const x=chRange(t,info.get(t.id));
+      if(t.psid&&String(t.psid)===String(r.psid)){best=t;bo=100;break}
+      const nm=norm(t.name).replace(/\b\d{4}\b/g,'').trim(),yr=(t.name.match(/\b(19|20)\d\d\b/)||[])[0];
+      const same=!!(nm&&rn&&(nm===rn||(rn.length>3&&nm.includes(rn))||(nm.length>3&&rn.includes(nm))||(nm.slice(0,5)===rn.slice(0,5)&&nm.length>4)))&&(!yr||!r.start||yr===r.start.slice(0,4))&&(!x.s||!r.start||Math.abs(k2t(x.s)-ra)<200*864e5);
+      let sc=same?3:0;
+      if(x.s&&ra){const xa=k2t(x.s),xb=k2t(x.e||x.s),len=(xb-xa)/864e5+1,o=(Math.min(rb,xb)-Math.max(ra,xa))/864e5+1,rl=(rb-ra)/864e5+1;
+        const trip=['rejse','begivenhed'].includes(kindOf(t));
+        if(t.src==='flighty'){if(o>-7)sc+=2+Math.max(0,o/rl)}
+        else if(trip&&len<=Math.max(90,rl*3)&&o/rl>.5&&o/len>.3)sc+=2+o/rl}
+      if(sc>bo){bo=sc;best=t}}
+    if(bo<2)best=null;
+    r.into=best;r.on=!r.done;
+    const away=r.steps.filter(s=>!isHome(s));r.main=away.length?away.reduce((m,s,i,a)=>{const nx=a[i+1];const d=(nx?nx.t:k2t(r.end||dayKey(s.t)))-s.t;return d>m.d?{s,d}:m},{s:away[0],d:-1}).s:r.steps[0];
+  }
+  const tot=R.trips.reduce((n,r)=>n+r.nphotos,0),cities=R.trips.reduce((n,r)=>n+r.steps.filter(s=>!isHome(s)).length,0);
+  const row=(r,i)=>`<label class="opt" style="align-items:flex-start"><input type="checkbox" data-ps="${i}" ${r.on?'checked':''} style="margin-top:4px"><span style="flex:1;min-width:0"><b>${esc(r.name)}</b>${r.main&&r.main.cc?' '+flag(r.main.cc):''}<br><span style="font-size:12px;color:var(--ink2)">${r.start?esc(fmtShort(k2t(r.start))):''}${r.end&&r.end!==r.start?' – '+esc(fmtShort(k2t(r.end))):''} · ${r.steps.length} stop${r.nphotos?` · ${r.nphotos} billeder`:''}${r.track.length>1?' · GPS-spor':''}<br>${r.done?'Allerede importeret':r.into?`Flettes ind i <b>${esc(r.into.name)}</b>`:'Nyt kapitel'}</span></span></label>`;
+  modal(`<h3>🧭 Polarsteps</h3><p style="font-size:13px;color:var(--ink2);margin-top:-4px">${R.trips.length} rejser. Rejser der allerede findes i Spor, bliver flettet sammen – du får ikke dubletter.</p>
+    <div style="max-height:48vh;overflow:auto;margin:0 -4px;padding:0 4px">${R.trips.map(row).join('')}</div>
+    <label class="opt" style="margin-top:8px"><input type="checkbox" id="psPh" ${tot?'checked':''} ${tot?'':'disabled'}><span>Hent ${tot} billeder (placeres ved det stop, de hører til)</span></label>
+    <label class="opt"><input type="checkbox" id="psCity" checked><span>Tilføj ${cities} stop som besøgte byer på kortet</span></label>
+    <label class="opt"><input type="checkbox" id="psWx" checked><span>Brug vejret fra Polarsteps i dagbogen</span></label>
+    <div class="row" style="margin-top:6px;flex-wrap:wrap"><button class="btn ghost small" id="psAll">Vælg alle</button><button class="btn ghost" id="psNo">Annullér</button><button class="btn accent" id="psGo">Importér</button></div>`);
+  $('#psNo').onclick=()=>closeModal();
+  $('#psAll').onclick=()=>{const bx=[...document.querySelectorAll('#mbox [data-ps]')],all=bx.every(b=>b.checked);bx.forEach(b=>b.checked=!all)};
+  $('#psGo').onclick=async()=>{
+    const pick=[...document.querySelectorAll('#mbox [data-ps]')].filter(b=>b.checked).map(b=>R.trips[+b.dataset.ps]);
+    const doPh=$('#psPh').checked,doCity=$('#psCity').checked,doWx=$('#psWx').checked;closeModal();
+    let nt=0,nm=0,np=0,nc=0,nd=0;const total=pick.reduce((n,r)=>n+(doPh?r.nphotos:0)+1,0);let k=0;
+    const have=await haveKeys();
+    prog(true,0,total,'Importerer Polarsteps…');
+    for(const r of pick){
+      let t=r.into;
+      const place=r.main?{lat:r.main.lat,lng:r.main.lng,name:r.main.city}:null;
+      if(t){t=await DB.get('trips',t.id)||t;if(t.src==='flighty'){t.name=r.name;t.src='polarsteps'}if(!t.start&&r.start)t.start=r.start;if(!t.end&&r.end)t.end=r.end;if(!t.place&&place)t.place=place;if((!t.track||t.track.length<2)&&r.track.length>1)t.track=r.track;t.psid=r.psid;await save('trips',t);nm++}
+      else{t={id:uid(),name:r.name,kind:'rejse',start:r.start,end:r.end,place,created:Date.now()+nt,src:'polarsteps',psid:r.psid};if(r.track.length>1)t.track=r.track;await save('trips',t);S.trips.push(t);nt++}
+      // days: weather + step text
+      for(const s of r.steps){if(isHome(s)&&!s.desc)continue;const dk=dayKey(s.t),key=t.id+'|'+dk;const d=await DB.get('days',key)||{key,tripId:t.id,day:dk,note:''};let ch=false;
+        if(s.desc&&!(d.note||'').includes(s.desc)){d.note=[d.note,s.desc].filter(x=>x&&x.trim()).join('\n\n');ch=true}
+        if(doWx&&s.wx&&!d.w){d.w=s.wx;ch=true}if(doWx&&s.temp!=null&&d.temp==null){d.temp=s.temp;ch=true}
+        if(ch){d.keep=true;d.deleted=0;await save('days',d);nd++}}
+      // cities
+      if(doCity)for(const s of r.steps){if(isHome(s))continue;const nmx=(s.city||s.name||'').trim();if(!nmx)continue;const dk=dayKey(s.t);
+        const ex2=S.places.find(p=>!p.deleted&&catOf(p)==='by'&&(norm(p.name)===norm(nmx)&&hav(p,s)<40||hav(p,s)<4));
+        if(ex2){if(!(ex2.visits||[]).includes(dk)){ex2.visits=[...new Set([...(ex2.visits||[]),dk])].sort();if(stOf(ex2)!=='besogt')ex2.st='besogt';await save('places',ex2)}}
+        else{const pl={id:uid(),name:nmx,lat:s.lat,lng:s.lng,cat:'by',st:'besogt',layer:'Polarsteps',visits:[dk],date:dk,note:'',created:Date.now()};await save('places',pl);S.places.push(pl);nc++}}
+      prog(true,++k,total,'Importerer Polarsteps…');
+      // photos: no GPS/date inside, so they get the stop's place and time
+      if(doPh)for(const s of r.steps)for(let i=0;i<s.photos.length;i++){const f=s.photos[i];
+        try{const time=s.t+i*60000,keys=dupKeys(f.name.split('/').pop(),time,s.lat,s.lng,false);if(keys.some(x=>have.has(x))){prog(true,++k,total,'Importerer billeder…');continue}keys.forEach(x=>have.add(x));
+          const blob=new Blob([await f.async('arraybuffer')],{type:'image/jpeg'});const img=await decode(blob);
+          const full=await shrink(img,1800,.84),thumb=await square(img,200,.8);
+          const p={id:uid(),tripId:t.id,lat:s.lat,lng:s.lng,approx:1,time,note:'',name:(s.name||'polarsteps')+'-'+(i+1)+'.jpg',w:full.w,h:full.h,full:full.blob,thumb,created:Date.now(),src:'polarsteps'};
+          const cc=countryOf(p);if(cc)p.cc=cc;await save('photos',p);np++}catch(e){}
+        prog(true,++k,total,'Importerer billeder…')}
+    }
+    prog(false);
+    // chapters made automatically from flights that now sit on top of a Polarsteps trip are folded away
+    {const all=(await DB.all('trips')).filter(t=>!t.deleted),P=await DB.all('photos'),D=await DB.all('days');
+      for(const f of all.filter(t=>t.src==='flighty')){if(P.some(p=>p.tripId===f.id&&!p.deleted)||D.some(d=>d.tripId===f.id&&!d.deleted))continue;
+        const fa=k2t(f.start),fb=k2t(f.end||f.start);
+        if(all.some(t=>t!==f&&t.src!=='flighty'&&['rejse','begivenhed'].includes(kindOf(t))&&t.start&&k2t(t.start)<=fb+3*864e5&&k2t(t.end||t.start)>=fa-3*864e5)){await softDel('trips',f);nm++}}}
+    S.trips=(await DB.all('trips')).filter(t=>!t.deleted).sort((a,b)=>a.created-b.created);await loadPlaces();
+    toast(`Polarsteps: ${nt} nye kapitler${nm?`, ${nm} flettet`:''}${np?` · ${np} billeder`:''}${nc?` · ${nc} byer`:''}`,5000);await loadLife();
+  };
+}
+
+
+/* ---------- Booking.com import (GDPR "report.json") ---------- */
+const nrm=x=>(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/&/g,' and ').replace(/[^a-z0-9æøå]+/g,' ').trim();
+const STOPW=new Set(['hotel','hostel','the','and','apartment','apartments','apart','house','guesthouse','guest','rooms','room','city','center','centre','central','by','in','de','la','le','del','b','bnb','inn','stay','premium','youth','free','parking','with']);
+function nameSim(a,b){a=nrm(a);b=nrm(b);if(!a||!b)return 0;if(a===b)return 1;const ca=a.replace(/ /g,''),cb=b.replace(/ /g,'');if(ca===cb)return 1;
+  if(a.length>5&&b.includes(a)||b.length>5&&a.includes(b))return .9;
+  const tk=x=>x.split(' ').filter(w=>w.length>2&&!STOPW.has(w)),ta=tk(a),tb=tk(b);if(!ta.length||!tb.length)return 0;
+  const [sh,lo]=ta.length<=tb.length?[ta,cb]:[tb,ca];if(sh.every(w=>w.length>=5&&lo.includes(w)))return .85;
+  const sb=new Set(tb);let n=0,big=false;for(const w of ta)if(sb.has(w)){n++;if(w.length>=5)big=true}
+  return Math.max(n/Math.min(ta.length,tb.length)*(n>1?1:.8),big?.7:0)}
+function readBooking(J){
+  if(!J||(!J.TRIPS_POWERHOUSE&&!J.RESERVATION_SERVICE))throw new Error('Det ligner ikke en Booking.com-fil (report.json)');
+  const res=((J.RESERVATION_SERVICE||{}).data||[]).filter(r=>r['Hotel name']);
+  const state=(n,d)=>{const r=res.find(x=>x['Hotel name']===n&&x['Checkin date']===d);return r||null};
+  const out=new Map();
+  for(const t of ((J.TRIPS_POWERHOUSE||[])[0]||{}).data||[])for(const r of t.reservations||[]){
+    if(r.reservation_type!=='BOOKING_HOTEL'||!r.hotel)continue;const ci=(r.start||'').slice(0,10),co=(r.end||'').slice(0,10),nm=(r.hotel.name||'').trim();if(!nm||!ci)continue;
+    const st=state(nm,ci);if(st&&/cancel/i.test(st['Reservation state']||''))continue;
+    const loc=r.hotel.location||{};out.set(nm+'|'+ci,{name:nm,in:ci,out:co||ci,cc:(loc.cc1||'').toUpperCase(),addr:((loc.address||{}).value||'')+(loc.city?', '+loc.city:''),room:st&&st['Room name']||'',guests:st&&st['Number of guests']||null})}
+  // reservations that are not part of a "trip" in the export
+  for(const r of res){if(/cancel/i.test(r['Reservation state']||''))continue;const k=r['Hotel name'].trim()+'|'+r['Checkin date'];if(!out.has(k))out.set(k,{name:r['Hotel name'].trim(),in:r['Checkin date'],out:r['Checkout date']||r['Checkin date'],cc:'',addr:'',room:r['Room name']||'',guests:r['Number of guests']||null})}
+  const reviews=[];for(const g of J.REVIEWS||[])for(const v of Object.values(g.data||{}))if(v&&v.hotel_name)reviews.push(v);
+  return{stays:[...out.values()].sort((a,b)=>a.in<b.in?-1:1),reviews};
+}
+// where were you that night? photos with GPS first, then cities you visited, flights landing, the chapter's own place
+async function whereOn(day){
+  const P=(await DB.all('photos')).filter(p=>!p.deleted&&hasPos(p)&&dayKey(p.time)===day);
+  const exact=P.filter(p=>!p.approx),use=exact.length?exact:P;
+  if(use.length){use.sort((a,b)=>b.time-a.time);return{lat:use[0].lat,lng:use[0].lng,how:exact.length?'billeder':'Polarsteps'}}
+  const c=S.places.filter(p=>!p.deleted&&catOf(p)==='by'&&((p.visits||[]).includes(day)||p.date===day));if(c.length)return{lat:c[c.length-1].lat,lng:c[c.length-1].lng,how:'by'};
+  const f=FLIGHTS.filter(x=>x.date===day&&!x.canceled).pop();if(f){const a=apt(f.to);if(a)return{lat:a.lat,lng:a.lng,how:'fly'}}
+  const t=realTrips().find(t=>{const x=chRange(t,S.info&&S.info.get(t.id));return t.place&&x.s&&kindOf(t)!=='bosted'&&x.s<=day&&(x.e||x.s)>=day});if(t)return{lat:t.place.lat,lng:t.place.lng,how:'kapitel'};
+  return null;
+}
+async function importBooking(file){
+  let B;try{B=readBooking(JSON.parse(await file.text()))}catch(e){return toast(e.message&&!/JSON/.test(e.message)?e.message:'Filen kunne ikke læses som Booking.com-data',4500)}
+  if(!B.stays.length)return toast('Fandt ingen overnatninger i filen');
+  try{await loadAir()}catch(e){}await loadFlights();
+  const hotels=S.places.filter(p=>!p.deleted&&catOf(p)==='hotel');
+  for(const s of B.stays){
+    // same hotel = similar name, and in the same country when both are known
+    // same hotel = similar name, near where you were that night (when we know)
+    s.pos=await whereOn(s.in);let best=null,bs=0;
+    for(const p of hotels){const v=nameSim(p.name,s.name);if(s.pos&&hav(p,s.pos)>(v>=.85?1500:400))continue;if(v>bs){bs=v;best=p}}
+    s.match=bs>=.6?best:null;s.done=!!(s.match&&(s.match.stays||[]).some(x=>x.in===s.in));
+    const rv=B.reviews.find(r=>nameSim(r.hotel_name,s.name)>=.9);if(rv)s.review=rv;
+  }
+  // a second stay at a new hotel lands on the same new place
+  const groups=new Map();for(const s of B.stays)if(!s.match){const k=nrm(s.name);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(s)}
+  const nNew=groups.size,nMatch=B.stays.filter(s=>s.match&&!s.done).length,nDone=B.stays.filter(s=>s.done).length,noPos=[...groups.values()].filter(g=>!g.some(s=>s.pos)).length;
+  const nights=s=>Math.max(1,Math.round((k2t(s.out)-k2t(s.in))/864e5));
+  const row=s=>`<div class="bkrow${s.done?' done':''}"><span class="bkd">${esc(fmtShort(k2t(s.in)))}<em>${nights(s)} ${nights(s)===1?'nat':'nætter'}</em></span><span class="bkn"><b>${esc(s.name)}</b>${s.cc?' '+flag(s.cc):''}<em>${s.done?'Allerede lagt ind':s.match?`Findes – lægges på <b>${esc(s.match.name)}</b>`:s.pos?`Nyt sted · placeret ud fra ${s.pos.how==='billeder'?'dine billeder':s.pos.how==='Polarsteps'?'Polarsteps':s.pos.how==='by'?'byen du var i':s.pos.how==='fly'?'lufthavnen du landede i':'kapitlet'}`:'Nyt sted · kan ikke placeres'}</em></span></div>`;
+  modal(`<h3>🛏️ Booking.com</h3><p style="font-size:13px;color:var(--ink2);margin-top:-4px">${B.stays.length} overnatninger. <b>${nMatch}</b> passer med steder du allerede har, <b>${nNew}</b> er nye${nDone?`, ${nDone} er lagt ind før`:''}. Aflyste bookinger er sorteret fra.</p>
+    <div class="bklist">${B.stays.map(row).join('')}</div>
+    ${noPos?`<p style="font-size:12.5px;color:var(--ink3);margin-top:8px">${noPos} ${noPos===1?'hotel':'hoteller'} kan ikke placeres, fordi der ikke er billeder, byer eller fly den dag – de springes over.</p>`:''}
+    <p style="font-size:12.5px;color:var(--ink3)">Nye steder sættes ved byen eller stedet, du var den dag. Du kan flytte dem præcist bagefter.</p>
+    <div class="row"><button class="btn ghost" id="bkNo">Annullér</button><button class="btn accent" id="bkGo">Læg ind</button></div>`);
+  $('#bkNo').onclick=()=>closeModal();
+  $('#bkGo').onclick=async()=>{closeModal();let a=0,n=0;
+    const stayOf=s=>({in:s.in,out:s.out,src:'booking',...(s.room?{room:s.room}:{}),...(s.guests?{guests:s.guests}:{})});
+    const revTxt=r=>[r.title&&'“'+r.title+'”',r.hotel_positive&&'👍 '+r.hotel_positive,r.hotel_negative&&'👎 '+r.hotel_negative].filter(Boolean).join('\n');
+    for(const s of B.stays)if(s.match&&!s.done){const p=s.match;p.stays=[...(p.stays||[]),stayOf(s)].sort((x,y)=>x.in<y.in?-1:1);p.visits=[...new Set([...(p.visits||[]),s.in])].sort();p.st='besogt';if(s.review&&!(p.note||'').includes(s.review.hotel_positive||'§'))p.note=[p.note,revTxt(s.review)].filter(Boolean).join('\n\n');if(s.addr&&!p.addr)p.addr=s.addr;await save('places',p);a++}
+    for(const g of groups.values()){const s0=g.find(s=>s.pos);if(!s0)continue;const rv=g.find(s=>s.review);
+      const p={id:uid(),name:s0.name,lat:s0.pos.lat,lng:s0.pos.lng,approx:1,cat:'hotel',st:'besogt',layer:'Booking.com',addr:s0.addr||'',stays:g.map(stayOf),visits:[...new Set(g.map(s=>s.in))].sort(),date:g[0].in,note:rv?revTxt(rv.review):'',created:Date.now()};
+      await save('places',p);S.places.push(p);n++}
+    await loadPlaces();requestDraw();toast(`Booking.com: ${n} nye overnatningssteder${a?`, ${a} ophold lagt på steder du havde`:''}`,5000);if(S.tab==='places')renderSheet();
+  };
+}
+function staysHtml(p){const L=p.stays||[];if(!L.length)return'';
+  return `<p class="mlabel">Ophold</p><div class="bkstays">${L.map(s=>{const n=Math.max(1,Math.round((k2t(s.out)-k2t(s.in))/864e5));return`<div><b>${esc(fmtShort(k2t(s.in)))}</b> · ${n} ${n===1?'nat':'nætter'}${s.room?` · ${esc(s.room)}`:''}${s.src==='booking'?' <em>Booking.com</em>':s.src==='airbnb'?' <em>Airbnb</em>':''}</div>`}).join('')}</div>${p.addr?`<p style="font-size:13px;margin:-4px 0 12px">📍 ${esc(p.addr)}</p>`:''}${p.approx?`<p style="font-size:12.5px;color:var(--ink3);margin:-6px 0 12px">Placeringen er anslået ud fra hvor du var den dag – tryk "Flyt" for at sætte den præcist.</p>`:''}`}
+
 /* ---------- share a chapter with family ---------- */
 function shareChapter(){
   if(isEmptyTrip())return toast('Kapitlet er tomt');
@@ -50274,7 +50766,7 @@ async function deleteLayer(layer){
 
 /* ---------- Spor's own icon set: 24px grid, 1.8 stroke, round joins ---------- */
 const ICO={
-  plane:'M21 3 3 10.5l7 2.5 2.5 7z|M10 13 21 3',home:'M3 11l9-7 9 7|M5 9.5V20h14V9.5|M10 20v-5.5h4V20',
+  plane:'M21 3 3 10.5l7 2.5 2.5 7z|M10 13 21 3',jet:'M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z',home:'M3 11l9-7 9 7|M5 9.5V20h14V9.5|M10 20v-5.5h4V20',
   cap:'M2 9l10-5 10 5-10 5z|M6 11v5c0 1.4 2.7 3 6 3s6-1.6 6-3v-5|M22 9v5.5',brief:'M3 8h18v12H3z|M8.5 8V5h7v3|M3 13.5h18',
   shield:'M12 3l8 3v5.5c0 5-3.4 8.3-8 9.5-4.6-1.2-8-4.5-8-9.5V6z|M12 8.2l1.3 2.7 3 .4-2.2 2.1.5 3L12 15l-2.6 1.4.5-3-2.2-2.1 3-.4z',
   star:'M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z',
@@ -50344,7 +50836,7 @@ async function editMe(){
 const CAT={by:['🏙️','By','#3b6fc4'],restaurant:['🍽️','Restaurant','#d0633f'],hotel:['🛏️','Overnatning','#8a5cc4'],sevaerdighed:['🏛️','Seværdighed','#2f7d5b'],andet:['📍','Andet','#7a6a4f']};
 const PST={besogt:['Besøgt','✓'],onske:['Vil gerne','☆'],misset:['Misset','✕']};
 const catOf=p=>CAT[p.cat]?p.cat:'andet',stOf=p=>PST[p.st]?p.st:'besogt';
-const LAYER_DEF={heat:0,countries:1,chapters:1,photos:1,by:1,restaurant:1,hotel:1,sevaerdighed:1,andet:1,besogt:1,onske:1,misset:1};
+const LAYER_DEF={flights:1,heat:0,countries:1,chapters:1,photos:1,by:1,restaurant:1,hotel:1,sevaerdighed:1,andet:1,besogt:1,onske:1,misset:1};
 S.layers=(()=>{try{return{...LAYER_DEF,...JSON.parse(store.get('spor-layers')||'{}')}}catch(e){return{...LAYER_DEF}}})();
 S.places=[];
 async function loadPlaces(){try{S.places=(await DB.all('places')).filter(p=>!p.deleted)}catch(e){S.places=[]}}
@@ -50404,7 +50896,7 @@ function openPlace(p){
     <div class="pick" id="plSt">${Object.entries(PST).map(([k,[l,i]])=>`<button data-st="${k}" class="${stOf(p)===k?'on':''}">${i} ${l}</button>`).join('')}</div>
     <p class="mlabel">Kategori</p><div class="pick" id="plCat">${Object.entries(CAT).map(([k,[ee,l]])=>`<button data-c="${k}" class="${catOf(p)===k?'on':''}">${ee} ${l}</button>`).join('')}</div>
     <p class="mlabel">Hvornår?</p><input type="date" id="plDate" class="din" value="${p.date||''}" style="margin:0 0 12px">
-    <p class="mlabel">Besøg</p><div class="vis" id="plVis"></div>
+    ${staysHtml(p)}<p class="mlabel">Besøg</p><div class="vis" id="plVis"></div>
     <div style="display:flex;gap:8px;margin:-2px 0 12px"><button class="btn small ghost" id="plVToday">+ Besøg i dag</button><button class="btn small ghost" id="plVOther">+ Andet besøg</button></div>
     <p class="mlabel">Noter</p><textarea id="plNote" class="dnote" style="margin:0 0 12px;border-color:var(--line);min-height:60px" placeholder="Hvad spiste du? Hvordan var det? Hvorfor blev det ikke til noget?">${esc(p.note||'')}</textarea>
     ${p.desc?`<details style="margin-bottom:12px;font-size:13px;color:var(--ink2)"><summary>Beskrivelse fra Google My Maps</summary><p style="white-space:pre-wrap;margin-top:6px">${esc(p.desc)}</p></details>`:''}
@@ -50534,6 +51026,9 @@ async function importKml(file){
   };
 }
 $('#tlFile').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)importTimeline(f)};
+$('#bkFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importBooking(f)};
+$('#psFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importPolarsteps(f)};
+$('#flFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importFlighty(f)};
 $('#kmlFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importKml(f)};
 function howToImport(){
   modal(`<h3>Hent dit Google My Maps-kort</h3>
@@ -50590,7 +51085,7 @@ function renderPlacesTab(){
 function openLayers(){
   const L=S.layers,row=(k,l)=>`<button data-ly="${k}" class="${L[k]?'on':''}">${l}</button>`;
   modal(`<h3>Vis på kortet</h3>
-    <p class="mlabel">Dit liv</p><div class="pick">${row('countries','🗺️ Besøgte lande')}${row('chapters','📌 Kapitler')}${row('photos','📷 Billeder og ruter')}${row('heat','🔥 Varmekort')}</div>
+    <p class="mlabel">Dit liv</p><div class="pick">${row('countries','🗺️ Besøgte lande')}${row('chapters','📌 Kapitler')}${row('photos','📷 Billeder og ruter')}${row('flights','✈️ Fly')}${row('heat','🔥 Varmekort')}</div>
     <p class="mhint" style="margin:-2px 0 10px;font-size:13px;color:var(--ink2)">Varmekortet gløder dér, hvor du har tilbragt mest tid – hjem, rejser og billeddage. Det følger tidslinjen.</p>
     <p class="mlabel">Steder</p><div class="pick">${Object.entries(CAT).map(([k,[e,l]])=>row(k,e+' '+l)).join('')}</div>
     <p class="mlabel">Status</p><div class="pick">${Object.entries(PST).map(([k,[l,i]])=>row(k,i+' '+l)).join('')}</div>
@@ -50959,7 +51454,7 @@ async function exportLifeZip(){
   const places=(await DB.all('places')).filter(p=>!p.deleted);
   const people=(await DB.all('people')).filter(x=>!x.deleted);
   const strip=o=>{const{dirty,_c,_pl,full,thumb,...r}=o;return r};
-  const base={app:'spor',v:3,type:'life',made:Date.now(),trips:trips.map(strip),days:days.map(strip),places:places.map(strip),people:people.map(strip),capsules:(await DB.all('capsules')).filter(x=>!x.deleted).map(strip)};
+  const base={app:'spor',v:3,type:'life',made:Date.now(),trips:trips.map(strip),days:days.map(strip),places:places.map(strip),people:people.map(strip),capsules:(await DB.all('capsules')).filter(x=>!x.deleted).map(strip),flights:(await DB.all('flights')).filter(x=>!x.deleted).map(strip)};
   // photos are read in small batches so a big library never sits in memory at once; big backups are split into parts
   const keys=await DB.keys('photos'),LIMIT=window.SPOR_BKLIMIT||(window.SPOR_PWA?150e6:400e6),files=[];
   let z=new JSZip(),man={...base,photos:[]},bytes=0,miss=0,done=0,total=0;
@@ -50982,6 +51477,8 @@ async function exportLifeZip(){
     if(!r){ok=false;break}}
   if(ok){store.set('spor-lastbackup',String(Date.now()));store.set('spor-lastbackup-n',String(total));BKD=0;store.set('spor-bk-dirty','0');renderSheet()}
 }
+async function readable(b){if(!b)return true;try{await (b instanceof Blob?b:new Blob([b.__ab||b])).slice(0,2).arrayBuffer();return true}catch(e){return false}}
+async function brokenPhoto(id){const l=await DB.get('photos',id);return !!l&&!l.deleted&&(!(await readable(l.thumb))||!(await readable(l.full)))}
 async function restoreZip(file,multi){
   let z,man;try{z=await JSZip.loadAsync(file);man=JSON.parse(await z.file('spor.json').async('string'));if(man.app!=='spor')throw 0}catch(e){return toast('Filen er ikke en Spor-backup',3500)}
   const newer=async(st,key,upd)=>{const l=await DB.get(st,key);return !l||(l.upd||0)<(upd||0)||l.deleted};
@@ -50991,9 +51488,10 @@ async function restoreZip(file,multi){
   for(const p of man.places||[])if(await newer('places',p.id,p.upd)){await save('places',{...p});npl++}
   for(const p of man.people||[])if(await newer('people',p.id,p.upd))await save('people',{...p});S.persons=null;
   for(const c of man.capsules||[])if(await newer('capsules',c.id,c.upd))await save('capsules',{...c});await loadCaps();
+  let nf=0;for(const f of man.flights||[])if(await newer('flights',f.id,f.upd)){await save('flights',{...f});nf++}if(nf){await loadFlights();try{await loadAir()}catch(e){}}
   prog(true,0,total,'Gendanner billeder…');
   for(let i=0;i<total;i++){const m=man.photos[i];
-    if(await newer('photos',m.id,m.upd)){const{file,th,...r}=m;
+    if(await newer('photos',m.id,m.upd)||await brokenPhoto(m.id)){const{file,th,...r}=m;
       const full=file?await z.file('photos/'+m.id+'.jpg').async('blob'):null,thumb=th?await z.file('thumbs/'+m.id+'.jpg').async('blob'):null;
       await save('photos',{...r,full:full?new Blob([full],{type:'image/jpeg'}):null,thumb:thumb?new Blob([thumb],{type:'image/jpeg'}):null});np++}
     if(i%10===0)prog(true,i+1,total,'Gendanner billeder…')}
@@ -51355,6 +51853,7 @@ async function boot(){
   await loadPlaces();
   if(!S.trips.length)await newTrip('Min rejse');
   setTimeout(()=>computeVisited().then(requestDraw),1200);
+  loadFlights().then(L=>{if(L.length)loadAir().then(()=>{requestDraw();if(S.tab==='fly')renderSheet()}).catch(()=>{})});
   const last=store.get('spor-trip');let V=null;try{V=JSON.parse(store.get('spor-view')||'null')}catch(e){}
   if(V&&V.trip!==last)V=null;if(V&&V.trip!=='__life'&&!S.trips.some(t=>t.id===V.trip))V=null;
   if(last==='__life'&&realTrips().length)await loadLife(!!V);else await loadTrip(last&&last!=='__life'?last:S.trips[0].id,!!V&&last!=null);
@@ -51404,7 +51903,7 @@ addEventListener('pagehide',viewSnap);document.addEventListener('visibilitychang
 $('#body').addEventListener('scroll',viewDirty,{passive:true});zoom.on('end.view',viewDirty);
 function viewRestore(V){
   try{
-    if(V.tab&&['diary','stats','places'].includes(V.tab)){S.tab=V.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===V.tab))}
+    if(V.tab&&['diary','stats','places','fly'].includes(V.tab)){S.tab=V.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===V.tab))}
     if(V.lim)S.dayLimit=V.lim;renderSheet();if(V.sheet!=null)setSheet(V.sheet);
     if(Array.isArray(V.c)&&V.k){LAM0=V.lam||0;const b=d3.geoMercator().rotate([-LAM0,0]).scale(s0).translate([W/2,H/2]),q=b(V.c);if(q)sel.call(zoom.transform,d3.zoomIdentity.translate(W/2-V.k*q[0],H/2-V.k*q[1]).scale(V.k))}
     const sc=()=>{$('#body').scrollTop=V.sc||0};requestAnimationFrame(sc);setTimeout(sc,380);
