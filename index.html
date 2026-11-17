@@ -48519,6 +48519,20 @@ addEventListener('keydown',e=>{if(!ST||$('#modal').classList.contains('on'))retu
 const CLOUD={avail:false,on:false,db:null,assets:null,uid:null,state:'off',pending:0,last:null,busy:false,err:null,timer:null};
 const cloudPref=()=>store.get('spor-cloud');
 const ucol=()=>CLOUD.db.collection('data/users/'+CLOUD.uid);
+// a quick health check on this device: local storage of images, writing/reading the cloud, uploading/downloading an image
+async function cloudTest(){
+  const R=[];const row=(ok,t,d)=>R.push(`<div style="display:flex;gap:10px;padding:7px 0;border-top:1px solid var(--line)"><span style="color:${ok?'var(--ok)':'var(--danger)'};font-weight:700">${ok?'✓':'✕'}</span><span><b style="font-weight:600">${t}</b>${d?`<br><span style="font-size:12.5px;color:var(--ink2)">${esc(d)}</span>`:''}</span></div>`);
+  modal('<h3>Tjekker skyen…</h3><p>Det tager et par sekunder.</p>');
+  const cv=document.createElement('canvas');cv.width=cv.height=32;const g=cv.getContext('2d');g.fillStyle='#16707f';g.fillRect(0,0,32,32);const blob=await toBlob(cv,.9);
+  try{await DB.put('tiles',{key:'selftest',b:blob,saved:Date.now()});const back=await DB.get('tiles','selftest');const b2=back&&(back.b instanceof Blob?back.b:back.b&&back.b.__ab?new Blob([back.b.__ab]):null);row(!!(b2&&(await b2.arrayBuffer()).byteLength),'Billeder gemmes sikkert på enheden',(/AppleWebKit/.test(navigator.userAgent)&&!/Chrome|Chromium|Edg\//.test(navigator.userAgent))?'Gemmes som rå data – den sikre metode på iPhone':'Gemmes som filer');await DB.del('tiles','selftest')}catch(e){row(false,'Billeder gemmes på enheden',String(e&&e.message||e))}
+  if(!CLOUD.avail){row(false,'Skyen er ikke tilgængelig','Åbn Spor i Claude for at bruge skyen');}
+  else{const id='x_selftest_'+uid();
+    try{const t0=performance.now();await TO(ucol().doc(id).set({kind:'selftest',upd:Date.now()}),20000,'gem');const d=await TO(ucol().doc(id).get(),20000,'hent');await ucol().doc(id).delete();row(!!(d&&d.exists),'Data skrives og læses i skyen',`${Math.round(performance.now()-t0)} ms`)}catch(e){row(false,'Data i skyen',String(e&&(e.code||e.message)||e))}
+    try{const t0=performance.now();const a=await upAsset(blob,'selftest');let ok=false;try{const r=await TO(fetch(assetUrl(a.id)),20000,'hent');ok=r.ok&&(await r.blob()).size>0}catch(e){}try{CLOUD.assets.delete&&await CLOUD.assets.delete(a.id)}catch(e){}row(ok,'Billeder sendes op og hentes ned igen',`${Math.round(performance.now()-t0)} ms`)}catch(e){row(false,'Billeder i skyen',String(e&&(e.code||e.message)||e))}
+    let waiting=0;try{waiting=(await DB.all('photos')).filter(p=>p.dirty&&!p.deleted).length+(await DB.all('trips')).filter(p=>p.dirty).length}catch(e){}
+    row(!waiting,waiting?`${waiting} ting venter på at blive sendt`:'Alt er sendt',waiting?'Tryk "Synkronisér nu" og hold Spor åben':'')}
+  modal(`<h3>Tjek af skyen</h3><div style="font-size:14px">${R.join('')}</div><div class="row" style="margin-top:12px"><button class="btn accent" id="ctOk">Luk</button></div>`);$('#ctOk').onclick=()=>closeModal();
+}
 async function cloudInit(){
   try{
     if(!(window.claude&&claude.use))return;
@@ -48715,6 +48729,7 @@ async function setCloud(on){
 }
 // Inside Claude the page's own browser storage is not guaranteed to last (the iPhone app can clear it on reload), so warn until Sky is on
 function volatileHtml(){
+  if(window.SPOR_PWA&&!sessionStorage.getItem('spor-vol-hide'))return `<div class="slimw"><span>${svgI('cloud',18)}<span><b>Offline-udgaven</b> – din rigtige dagbog er i Claude. Tag en backup her, og gendan den i Claude, når du har net.</span></span><button class="btn small accent" id="volBk">Backup</button><button class="slimx" id="volHide" aria-label="Skjul">×</button></div>`;
   if(window.SPOR_PWA||CLOUD.on||sessionStorage.getItem('spor-vol-hide'))return'';
   return `<div class="slimw"><span>${svgI('cloud',18)}<span><b>Slå skyen til</b> – så kan dagbogen ikke forsvinde, og du har den på både pc og telefon.</span></span>${CLOUD.avail?'<button class="btn small accent" id="volSky">Slå til</button>':'<button class="btn small accent" id="volBk">Backup</button>'}<button class="slimx" id="volHide" aria-label="Skjul">×</button></div>`}
 function bindVolatile(){const a=$('#volSky');if(a)a.onclick=()=>setCloud(true);const b=$('#volBk');if(b)b.onclick=exportLifeZip;const c=$('#volHide');if(c)c.onclick=()=>{try{sessionStorage.setItem('spor-vol-hide','1')}catch(e){}renderSheet()}}
@@ -48749,7 +48764,8 @@ function updateCloudUI(){
 function renderCloudBox(){
   const box=$('#cloudBox');if(!box)return;const[c,t]=cloudText();
   box.innerHTML=`<div class="cstat"><span class="cdot ${c}"></span><span style="flex:1">${esc(t)}</span></div>`+
-    (CLOUD.avail?`<div class="row" style="justify-content:flex-start;flex-wrap:wrap">${CLOUD.on?`<button class="btn small ghost" id="cSync">Synkronisér nu</button><button class="btn small ghost" id="cStop">Slå fra</button>`:`<button class="btn small accent" id="cStart">Slå skysynkronisering til</button>`}</div>`:'');
+    (CLOUD.avail?`<div class="row" style="justify-content:flex-start;flex-wrap:wrap">${CLOUD.on?`<button class="btn small ghost" id="cSync">Synkronisér nu</button><button class="btn small ghost" id="cTest">Tjek skyen</button><button class="btn small ghost" id="cStop">Slå fra</button>`:`<button class="btn small accent" id="cStart">Slå skysynkronisering til</button>`}</div>`:'');
+  {const ct=$('#cTest');if(ct)ct.onclick=cloudTest}
   const a=$('#cSync'),b=$('#cStop'),s=$('#cStart');
   if(a)a.onclick=()=>syncNow(true);if(b)b.onclick=()=>setCloud(false);if(s)s.onclick=()=>setCloud(true);
 }
@@ -49728,6 +49744,7 @@ async function renamePerson(a,b){
 function chapterCardHtml(){
   const t=S.trip;if(!t||t.demo)return'';const mem=t.memories||[],pp=pplOf(t);
   const show=mem.slice(-3).reverse();
+  if(!mem.length&&!t.story&&!S.photos.length&&!Object.values(S.days).some(v=>(v||'').trim()))return'';
   if(!mem.length&&!t.story)return `<div class="card memc slim"><button class="slimrow" id="ivGo">${svgI('mic',18)}<span><b>Livsinterview</b><small>${S.ai?'Claude':'Spor'} spørger ind til ${esc(t.name)} – du svarer med dine egne ord</small></span>${svgI('chevron',16)}</button>
     <button class="slimrow" id="chPpl">${svgI('users',18)}<span>${pp.length?'Med: <b>'+esc(pp.join(', '))+'</b>':'<b>Hvem var med?</b><small>Markér personerne i kapitlet</small>'}</span>${svgI('chevron',16)}</button></div>`;
   return `<div class="card memc"><div class="mh"><div class="k">${svgI('mic',16)}Erindringer${mem.length?' · '+mem.length:''}</div><button class="btn small ${mem.length?'ghost':'accent'}" id="ivGo">${mem.length?'Fortsæt interview':'Start livsinterview'}</button></div>
@@ -50522,30 +50539,33 @@ async function tidyScan(){
   const has=t=>{const x=info.get(t.id);return (x&&(x.n||x.days))||(t.memories||[]).length||t.story||(t.note||'').trim()||pplOf(t).length};
   const rng=t=>{const x=chRange(t,info.get(t.id));if(!x.s)return null;return[k2t(x.s),k2t(x.e||(kindOf(t)==='bosted'||kindOf(t)==='arbejde'||kindOf(t)==='uddannelse'?dayKey(Date.now()):x.s))+864e5]};
   const dups=[];
-  for(let i=0;i<ch.length;i++)for(let j=i+1;j<ch.length;j++){const a=ch[i],b=ch[j];
+  for(let i=0;i<ch.length;i++)for(let j=i+1;j<ch.length;j++){const a=ch[i],b=ch[j];if(kidsOf(a).length||kidsOf(b).length||a.parent===b.id||b.parent===a.id)continue;
     const sameName=fold(a.name)===fold(b.name);
     const ra=rng(a),rb=rng(b);let ov=0;if(ra&&rb){const o=Math.min(ra[1],rb[1])-Math.max(ra[0],rb[0]);ov=o>0?o/Math.min(ra[1]-ra[0],rb[1]-rb[0]):0}
     const near=a.place&&b.place?hav(a.place,b.place)<60:true;
     const cls=t=>{const k=kindOf(t);return k==='bosted'?0:['rejse','militaer','begivenhed'].includes(k)?1:2};
     if((sameName&&(ov>0||!ra||!rb))||(cls(a)===cls(b)&&ov>=.7&&near))dups.push([a,b])}
-  const empty=ch.filter(t=>!has(t)&&!t.start&&!t.place&&!t.track);
+  const empty=ch.filter(t=>!has(t)&&!kidsOf(t).length&&!t.start&&!t.place&&!t.track);
+  const names=ch.filter(t=>!empty.includes(t)&&(t.src==='flighty'||/^min rejse$/i.test(t.name.trim())));
   const seen=new Map(),dupPh=[];for(const p of all.sort((a,b)=>(a.created||0)-(b.created||0))){const k=(p.name||'')+'|'+p.time;if(p.name&&seen.has(k))dupPh.push(p);else seen.set(k,p)}
   const nodate=ch.filter(t=>!chRange(t,info.get(t.id)).s&&!empty.includes(t));
-  return{dups,empty,dupPh,nodate,nopos:all.filter(p=>!hasPos(p)).length};
+  return{dups,empty,dupPh,nodate,names,nopos:all.filter(p=>!hasPos(p)).length};
 }
 async function openTidy(){
   modal('<h3>🧹 Ryd op</h3><p>Leder efter dubletter og tomme kapitler…</p>');
   const r=await tidyScan(),info=S.info||new Map();
-  const n=r.dups.length+r.empty.length+(r.dupPh.length?1:0)+r.nodate.length;
+  const n=r.dups.length+r.empty.length+(r.dupPh.length?1:0)+r.nodate.length+r.names.length;
   const keep=(a,b)=>{const xa=info.get(a.id)||{},xb=info.get(b.id)||{};return((xa.n||0)+(xa.days||0)*3+((a.memories||[]).length*5))>=((xb.n||0)+(xb.days||0)*3+((b.memories||[]).length*5))?[a,b]:[b,a]};
   modal(`<h3>🧹 Ryd op</h3>${!n?'<p>Alt ser fint ud – ingen dubletter eller tomme kapitler. 👍</p>':''}
     ${r.dups.length?`<div class="sect">Kapitler der ligner hinanden · ${r.dups.length}</div>${r.dups.map(([a,b],i)=>{const[k,g]=keep(a,b);return`<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="font-size:14px">${svgI(KICO[kindOf(k)],16)} <b>${esc(k.name)}</b> <span style="color:var(--ink3)">${esc(fmtRange(k,info.get(k.id)))}</span><br>${svgI(KICO[kindOf(g)],16)} <b>${esc(g.name)}</b> <span style="color:var(--ink3)">${esc(fmtRange(g,info.get(g.id)))}</span></div><div style="display:flex;gap:8px;margin-top:6px"><button class="btn small accent" data-merge="${i}">Slå sammen</button><button class="btn small ghost" data-skip="${i}">Behold begge</button></div></div>`}).join('')}`:''}
     ${r.empty.length?`<div class="sect">Tomme kapitler · ${r.empty.length}</div><p style="font-size:13px;color:var(--ink2);margin:0 0 6px">Ingen billeder, tekst, datoer eller sted.</p>${r.empty.map(t=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span>${svgI(KICO[kindOf(t)],16)} ${esc(t.name)}</span><button class="btn small ghost" data-del="${t.id}" style="color:#c4362b">Slet</button></div>`).join('')}`:''}
     ${r.dupPh.length?`<div class="sect">Dobbelte billeder · ${r.dupPh.length}</div><p style="font-size:13px;color:var(--ink2);margin:0 0 6px">Samme fil og samme tidspunkt findes flere gange. Den ældste beholdes.</p><button class="btn small accent" id="tdPh">Fjern ${r.dupPh.length} ${r.dupPh.length===1?'dublet':'dubletter'}</button>`:''}
     ${r.nodate.length?`<div class="sect">Kapitler uden tidspunkt · ${r.nodate.length}</div><p style="font-size:13px;color:var(--ink2);margin:0 0 6px">Giv dem datoer, så de kommer det rigtige sted i livsbåndet og livsbogen.</p>${r.nodate.map(t=>`<button class="pline" data-edit="${t.id}" style="display:block;padding:5px 0">${svgI(KICO[kindOf(t)],16)} ${esc(t.name)} ›</button>`).join('')}`:''}
+    ${r.names.length?`<div class="sect">Navne at tjekke · ${r.names.length}</div><p style="font-size:13px;color:var(--ink2);margin:0 0 6px">Disse navne er lavet automatisk ud fra dine fly. Giv dem dine egne navne – ret direkte her.</p>${r.names.map(t=>{const x=chRange(t,info.get(t.id));return`<div style="display:flex;gap:8px;align-items:center;margin:0 0 6px"><input type="text" data-rn="${t.id}" value="${esc(t.name)}" style="flex:1;margin:0"><span style="font-size:12px;color:var(--ink3);white-space:nowrap">${x.s?esc(fmtShort(k2t(x.s))):''}</span></div>`}).join('')}<button class="btn small accent" id="tdNames">Gem navne</button>`:''}
     ${r.nopos?`<p style="font-size:13px;color:var(--ink2);margin-top:12px">${r.nopos} ${r.nopos===1?'billede':'billeder'} mangler position – importér din Google-tidslinje (⋯ → Importér Google-tidslinje) for at placere dem automatisk.</p>`:''}
     <div class="row" style="margin-top:12px"><button class="btn accent" id="tdNo">Færdig</button></div>`);
   $('#tdNo').onclick=()=>{closeModal();isLife()?loadLife(true):renderSheet()};
+  const nm=$('#tdNames');if(nm)nm.onclick=async()=>{let c=0;for(const i of document.querySelectorAll('#mbox [data-rn]')){const t=S.trips.find(x=>x.id===i.dataset.rn),v=i.value.trim();if(t&&v&&v!==t.name){t.name=v;if(t.src==='flighty')t.src='flighty-ok';await save('trips',t);c++}else if(t&&t.src==='flighty'){t.src='flighty-ok';await save('trips',t)}}toast(c?`${c} ${c===1?'navn':'navne'} gemt`:'Navnene er godkendt');openTidy()};
   document.querySelectorAll('#mbox [data-merge]').forEach(b=>b.onclick=async()=>{const[k,g]=keep(...r.dups[+b.dataset.merge]);b.disabled=true;await mergeInto(g,k);openTidy()});
   document.querySelectorAll('#mbox [data-skip]').forEach(b=>b.onclick=()=>b.closest('div[style]').parentElement.remove());
   document.querySelectorAll('#mbox [data-del]').forEach(b=>b.onclick=async()=>{const t=S.trips.find(x=>x.id===b.dataset.del);if(!t)return;await softDel('trips',t);S.trips=S.trips.filter(x=>x!==t);b.parentElement.remove();toast(`“${t.name}” er slettet`)});
